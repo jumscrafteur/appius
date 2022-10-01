@@ -7,4 +7,4 @@
 - [x] Hugo
 - [ ] Mael
 - [ ] Tuan
-- [ ] Yacine
+- [x] Yacine
