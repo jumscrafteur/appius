@@ -30,5 +30,3 @@ class Save():
     def deserialize(self):
         # TODO : https://www.notion.so/Syst-me-de-sauvegarde-d5fece67d098448b8737b92e4dd3f8c1
         return
-    
-    #pouet
