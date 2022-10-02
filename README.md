@@ -6,5 +6,5 @@
 - [ ] Ines
 - [x] Hugo
 - [ ] Mael
-- [ ] Tuan
+- [x] Tuan
 - [x] Yacine
