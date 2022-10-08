@@ -26,3 +26,6 @@ class Engineer(Walker):
     def work():
         # TODO : https://www.notion.so/Syst-me-de-metier-bf7209c3a02f48bfb3ebee1af0316be7
         return
+
+
+print("iness test")
