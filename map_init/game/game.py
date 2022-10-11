@@ -32,12 +32,6 @@ class Game:
     def update(self):
         pass
 
-    def settileval(self):
-        for x in range(self.world.grid_lx):
-            for y in range(self.world.grid_ly):
-                self.world.setval(0)
-        return
-
     def draw(self):
         self.screen.fill((220, 220, 220))
         self.screen.blit(self.world.land_tile, (0, 0))
