@@ -22,10 +22,34 @@ class Engineer(Walker):
     def __init__(self, save):
         Walker.__init__(self, save)
         self.type = "Engineer"
+    
+    
+    def work(self,save):
+        MR=save.map.layers["risk_feu"] #donne la matirce a modifier
+        r=self.rayonDAction
+        for i in range(self.pos[0]-r,self.pos[0]+r):
+            for j in range(self.pos[1]-r,self.pos[1]+r):
+                MR[i][j]==0	 
+        
+		
+
+class Prefect(Walker):
+    def __init__(self,save):
+	    Walker.__init__(self, save)
+        self.type = "Prefect"
+        
 
     def work():
-        # TODO : https://www.notion.so/Syst-me-de-metier-bf7209c3a02f48bfb3ebee1af0316be7
-        return
-
-
-print("iness test")
+        #work of prefect
+        return 
+    
+class Citizen(Walker):
+    def __init__(self,save):
+	    Walker.__init__(self, save)
+        self.type = "Citizen"
+         
+         
+         
+    def work():
+        #work of Citizen
+        return 
