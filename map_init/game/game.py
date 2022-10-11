@@ -10,7 +10,7 @@ class Game:
         self.clock = clock
         self.width, self.height = self.screen.get_size()
 
-        self.world = World(8, 8, self.width, self.height)
+        self.world = World(10, 10, self.width, self.height)
 
     def run(self):
         self.playing = True
@@ -31,6 +31,12 @@ class Game:
 
     def update(self):
         pass
+
+    def settileval(self):
+        for x in range(self.world.grid_lx):
+            for y in range(self.world.grid_ly):
+                self.world.setval(0)
+        return
 
     def draw(self):
         self.screen.fill((220, 220, 220))
