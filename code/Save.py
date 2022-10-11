@@ -1,5 +1,11 @@
+import os
+import pathlib
+import pickle
+import typing
+
+
 class Save():
-    def __init__(self):
+    def __init__(self, name):
         # NOTE : Carte temporaire
         self.layers = {
             "paths": [[1, 1, 1, 0, 0, 0, 0, 0, 0, 1],
@@ -20,13 +26,16 @@ class Save():
         self.date = 0
         self.desirability = 0
         self.religions = {}
-        self.name
+        self.name = name
         self.size = 0
 
     def serialize(self):
-        # TODO : https://www.notion.so/Syst-me-de-sauvegarde-d5fece67d098448b8737b92e4dd3f8c1
-        return
+        path = pathlib.PurePath(os.path.dirname(
+            os.path.abspath(__file__)), "../saves")
+        with open(pathlib.Path(path, f"{self.name}.save"), "wb") as f:
+            pickle.dump(self, f)
 
-    def deserialize(self):
-        # TODO : https://www.notion.so/Syst-me-de-sauvegarde-d5fece67d098448b8737b92e4dd3f8c1
-        return
+    @staticmethod
+    def deserialize(path: str) -> object:
+        with open(path, "rb") as f:
+            return pickle.load(f)
