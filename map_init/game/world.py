@@ -11,16 +11,18 @@ class World:
         self.grid_ly = grid_l_y
         self.width = width
         self.height = height
-        self.tileval = [[13, 22, 20, 27, 00, 00, 00, 31, 00, 00],  # 1
-                        [14, 26, 20, 27, 00, 00, 00, 31, 00, 00],  # 2
-                        [12, 26, 20, 27, 00, 00, 00, 31, 00, 00],  # 3
-                        [11, 26, 30, 23, 00, 00, 00, 31, 00, 00],  # 4
-                        [22, 29, 27, 00, 00, 00, 00, 31, 00, 00],  # 5
-                        [28, 28, 23, 00, 00, 00, 00, 31, 00, 00],  # 6
-                        [00, 00, 00, 00, 00, 00, 00, 31, 00, 35],  # 7
-                        [32, 32, 32, 32, 32, 32, 32, 33, 32, 32],  # 8
-                        [36, 00, 00, 00, 00, 00, 00, 00, 00, 00],  # 9
-                        [00, 00, 00, 00, 00, 00, 00, 00, 00, 00],  # 10
+        self.tileval = [[13, 22, 20, 27, 13, 76, 13, 31, 13, 14, 13, 71],  # 1
+                        [14, 26, 20, 27, 74, 12, 00, 31, 71, 12, 74, 13],  # 2
+                        [12, 26, 20, 27, 71, 00, 12, 31, 00, 11, 12, 12],  # 3
+                        [11, 26, 30, 23, 71, 11, 12, 31, 11, 12, 00, 11],  # 4
+                        [22, 29, 27, 00, 00, 11, 74, 31, 74, 11, 00, 13],  # 5
+                        [28, 28, 23, 00, 00, 00, 00, 31, 74, 00, 00, 12],  # 6
+                        [00, 00, 00, 00, 00, 00, 00, 31, 00, 00, 00, 35],  # 7
+                        [32, 32, 32, 32, 32, 32, 32, 33, 32, 32, 32, 32],  # 8
+                        [36, 00, 11, 00, 11, 00, 12, 00, 12, 00, 12, 11],  # 9
+                        [00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 11, 12],  # 10
+                        [00, 00, 00, 00, 00, 00, 00, 00, 00, 14, 12, 12],  # 11
+                        [00, 00, 00, 00, 00, 00, 00, 00, 00, 14, 13, 14],  # 12
                         ]
 
         self.land_tile = pg.Surface((self.width, self.height))
@@ -129,6 +131,12 @@ class World:
                 tile = {"name": "flagR", "offset": 23}
             case 36:
                 tile = {"name": "flagB", "offset": 23}
+            case 71:
+                tile = {"name": "nrock3", "offset": 0}
+            case 74:
+                tile = {"name": "nrock1", "offset": 4}
+            case 76:
+                tile = {"name": "nrock2", "offset": 1}
             case _:
                 tile = {"name": "", "offset": 0}
 
@@ -210,7 +218,7 @@ class World:
         nrock2 = pg.image.load(
             "appius/map_init/asset_graphis/land3a_00076.png")
         nrock3 = pg.image.load(
-            "appius/map_init/asset_graphis/land3a_00077.png")
+            "appius/map_init/asset_graphis/land3a_00071.png")
 
         return {"land": land, "tree1": tree1, "tree2": tree2, "rock1": rock1, "rock2": rock2, "water": water,
                 "water_e1": watere1, "water_e2": watere2, "water_e3": watere3, "water_e4": watere4,
@@ -218,5 +226,5 @@ class World:
                 "water_s1": waters1, "water_s3": waters3,
                 "path1": path1, "path2": path2, "path_31": path_31,
                 "flagR": flagR, "flagB": flagB,
-                "nrock1": nrock1, "nrock2": nrock2, "nrock1": nrock2
+                "nrock1": nrock1, "nrock2": nrock2, "nrock1": nrock2, "nrock3": nrock3
                 }
