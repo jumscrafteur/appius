@@ -16,6 +16,7 @@ class World:
 
         self.tiles = self.load_images()
         self.world = self.cree_world()
+        self.tileval = 0
         #
         #
 
@@ -42,6 +43,9 @@ class World:
         #                   [output(gridx,0),.....,output(gridx,gridy)]      ]
         #
 
+    def setval(self, r):
+        self.tileval = r
+
     def grid_to_world(self, grid_x, grid_y):
 
         rect = [
@@ -58,20 +62,42 @@ class World:
         minx = min([x for x, y in iso_poly])
         miny = min([y for x, y in iso_poly])
 
-        r = random.randint(1, 50)
-# --------
-#   random tile/ map is randomized
-# ----
-        if r <= 9:
-            tile = {"name": "tree1", "offset": 28}
-        elif r > 10 and r <= 15:
-            tile = {"name": "tree2", "offset": 38}
-        elif r > 15 and r <= 18:
-            tile = {"name": "rock1", "offset": 36}
-        elif r > 20 and r <= 25:
-            tile = {"name": "rock2", "offset": 10}
-        else:
-            tile = {"name": "", "offset": 0}
+        #r = random.randint(1, 50)
+# # --------
+# #   random tile/ map is randomized
+# # ----
+#         if r <= 9:
+#             tile = {"name": "tree1", "offset": 28}
+#         elif r > 10 and r <= 15:
+#             tile = {"name": "tree2", "offset": 38}
+#         elif r > 15 and r <= 18:
+#             tile = {"name": "rock1", "offset": 36}
+#         elif r > 20 and r <= 25:
+#             tile = {"name": "rock2", "offset": 10}
+#         else:
+#             tile = {"name": "", "offset": 0}
+
+        match self.tileval:
+            case 1:
+                tile = {"name": "tree1", "offset": 14}
+            case 2:
+                tile = {"name": "tree2", "offset": 19}
+            case 3:
+                tile = {"name": "rock1", "offset": 18}
+            case 4:
+                tile = {"name": "rock2", "offset": 5}
+            case 5:
+                tile = {"name": "water", "offset": 0}
+            case 6:
+                tile = {"name": "water_e1", "offset": 0}
+            case 7:
+                tile = {"name": "water_e2", "offset": 0}
+            case 8:
+                tile = {"name": "water_e3", "offset": 0}
+            case 9:
+                tile = {"name": "water_e4", "offset": 0}
+            case _:
+                tile = {"name": "", "offset": 0}
 
         output = {
             "grid": [grid_x, grid_y],
@@ -105,15 +131,26 @@ class World:
     def load_images(self):
 
         land = pg.image.load(
-            "appius/map_init/asset_graphis/Land1a_00078_2X.png")
+            "map_init/asset_graphis/Land1a_00078.png")
         tree1 = pg.image.load(
-            "appius/map_init/asset_graphis/Land1a_00016_2X.png")
+            "map_init/asset_graphis/Land1a_00016.png")
         tree2 = pg.image.load(
-            "appius/map_init/asset_graphis/Land1a_00045_2X.png")
+            "map_init/asset_graphis/Land1a_00045.png")
         rock1 = pg.image.load(
-            "appius/map_init/asset_graphis/plateau_00001_2X.png")
+            "map_init/asset_graphis/plateau_00001.png")
         rock2 = pg.image.load(
-            "appius/map_init/asset_graphis/plateau_00005_2X.png")
+            "map_init/asset_graphis/plateau_00005.png")
+        water = pg.image.load(
+            "map_init/asset_graphis/plateau_00120.png")
+        watere1 = pg.image.load(
+            "map_init/asset_graphis/plateau_00174.png")
+        watere2 = pg.image.load(
+            "map_init/asset_graphis/plateau_00175.png")
+        watere3 = pg.image.load(
+            "map_init/asset_graphis/plateau_00176.png")
+        watere4 = pg.image.load(
+            "map_init/asset_graphis/plateau_00177.png")
         #land2 = pg.image.load("appius/map_init/asset_graphis_graphis/Land1a_00003.png")
 
-        return {"land": land, "tree1": tree1, "tree2": tree2, "rock1": rock1, "rock2": rock2}
+        return {"land": land, "tree1": tree1, "tree2": tree2, "rock1": rock1, "rock2": rock2, "water": water, "water_e1": watere1,
+                "water_e2": watere2, "water_e3": watere3, "water_e4": watere4}
