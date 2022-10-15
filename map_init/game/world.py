@@ -12,7 +12,7 @@ class World:
         self.width = width
         self.height = height
         self.tileval = [[13, 22, 20, 27, 13, 76, 13, 31, 13, 14, 13, 71],  # 1
-                        [14, 26, 20, 27, 74, 12, 00, 31, 71, 12, 74, 13],  # 2
+                        [14, 26, 20, 27, 74, 12, 00, 31, 74, 12, 74, 13],  # 2
                         [12, 26, 20, 27, 71, 00, 12, 31, 00, 11, 12, 12],  # 3
                         [11, 26, 30, 23, 71, 11, 12, 31, 11, 12, 00, 11],  # 4
                         [22, 29, 27, 00, 00, 11, 74, 31, 74, 11, 00, 13],  # 5
@@ -25,7 +25,9 @@ class World:
                         [00, 00, 00, 00, 00, 00, 00, 00, 00, 14, 13, 14],  # 12
                         ]
 
-        self.land_tile = pg.Surface((self.width, self.height))
+        self.land_tile = pg.Surface(
+            (self.grid_lx * TILE_SIZE * 2, self.grid_ly * TILE_SIZE + 2*TILE_SIZE))
+        # self.land_tile = pg.Surface((self.width, self.height)).convert_alpha()
 
         self.tiles = self.load_images()
         self.world = self.cree_world()
@@ -47,7 +49,7 @@ class World:
             #
                 render_pos = world_tile["render_pos"]
                 self.land_tile.blit(
-                    self.tiles["land"], (render_pos[0] + self.width/2, render_pos[1] + self.height/4))
+                    self.tiles["land"], (render_pos[0] + self.land_tile.get_width()/2, render_pos[1]))
 
         return world
         #
@@ -172,53 +174,53 @@ class World:
     def load_images(self):
 
         land = pg.image.load(
-            "appius/map_init/asset_graphis/Land1a_00078.png")
+            "appius/map_init/asset_graphis/Land1a_00078.png").convert_alpha()
         tree1 = pg.image.load(
-            "appius/map_init/asset_graphis/Land1a_00016.png")
+            "appius/map_init/asset_graphis/Land1a_00016.png").convert_alpha()
         tree2 = pg.image.load(
-            "appius/map_init/asset_graphis/Land1a_00045.png")
+            "appius/map_init/asset_graphis/Land1a_00045.png").convert_alpha()
         rock1 = pg.image.load(
-            "appius/map_init/asset_graphis/plateau_00001.png")
+            "appius/map_init/asset_graphis/plateau_00001.png").convert_alpha()
         rock2 = pg.image.load(
-            "appius/map_init/asset_graphis/plateau_00005.png")
+            "appius/map_init/asset_graphis/plateau_00005.png").convert_alpha()
         water = pg.image.load(
-            "appius/map_init/asset_graphis/Land1a_00120.png")
+            "appius/map_init/asset_graphis/Land1a_00120.png").convert_alpha()
         watere1 = pg.image.load(
-            "appius/map_init/asset_graphis/Land1a_00145.png")
+            "appius/map_init/asset_graphis/Land1a_00145.png").convert_alpha()
         watere2 = pg.image.load(
-            "appius/map_init/asset_graphis/Land1a_00148.png")
+            "appius/map_init/asset_graphis/Land1a_00148.png").convert_alpha()
         watere3 = pg.image.load(
-            "appius/map_init/asset_graphis/Land1a_00159.png")
+            "appius/map_init/asset_graphis/Land1a_00159.png").convert_alpha()
         watere4 = pg.image.load(
-            "appius/map_init/asset_graphis/Land1a_00153.png")
+            "appius/map_init/asset_graphis/Land1a_00153.png").convert_alpha()
         waterd1 = pg.image.load(
-            "appius/map_init/asset_graphis/Land1a_00135.png")
+            "appius/map_init/asset_graphis/Land1a_00135.png").convert_alpha()
         waterd2 = pg.image.load(
-            "appius/map_init/asset_graphis/Land1a_00136.png")
+            "appius/map_init/asset_graphis/Land1a_00136.png").convert_alpha()
         waterd3 = pg.image.load(
-            "appius/map_init/asset_graphis/Land1a_00128.png")
+            "appius/map_init/asset_graphis/Land1a_00128.png").convert_alpha()
         waterd4 = pg.image.load(
-            "appius/map_init/asset_graphis/Land1a_00141.png")
+            "appius/map_init/asset_graphis/Land1a_00141.png").convert_alpha()
         waters1 = pg.image.load(
-            "appius/map_init/asset_graphis/Land1a_00171.png")
+            "appius/map_init/asset_graphis/Land1a_00171.png").convert_alpha()
         waters3 = pg.image.load(
-            "appius/map_init/asset_graphis/Land1a_00173.png")
+            "appius/map_init/asset_graphis/Land1a_00173.png").convert_alpha()
         path1 = pg.image.load(
-            "appius/map_init/asset_graphis/Land2a_00096.png")
+            "appius/map_init/asset_graphis/Land2a_00096.png").convert_alpha()
         path2 = pg.image.load(
-            "appius/map_init/asset_graphis/Land2a_00093.png")
+            "appius/map_init/asset_graphis/Land2a_00093.png").convert_alpha()
         path_31 = pg.image.load(
-            "appius/map_init/asset_graphis/Land2a_00108.png")
+            "appius/map_init/asset_graphis/Land2a_00108.png").convert_alpha()
         flagR = pg.image.load(
-            "appius/map_init/asset_graphis/Land3a_00085.png")
+            "appius/map_init/asset_graphis/Land3a_00085.png").convert_alpha()
         flagB = pg.image.load(
-            "appius/map_init/asset_graphis/Land3a_00089.png")
+            "appius/map_init/asset_graphis/Land3a_00089.png").convert_alpha()
         nrock1 = pg.image.load(
-            "appius/map_init/asset_graphis/land3a_00074.png")
+            "appius/map_init/asset_graphis/land3a_00074.png").convert_alpha()
         nrock2 = pg.image.load(
-            "appius/map_init/asset_graphis/land3a_00076.png")
+            "appius/map_init/asset_graphis/land3a_00076.png").convert_alpha()
         nrock3 = pg.image.load(
-            "appius/map_init/asset_graphis/land3a_00071.png")
+            "appius/map_init/asset_graphis/land3a_00071.png").convert_alpha()
 
         return {"land": land, "tree1": tree1, "tree2": tree2, "rock1": rock1, "rock2": rock2, "water": water,
                 "water_e1": watere1, "water_e2": watere2, "water_e3": watere3, "water_e4": watere4,
