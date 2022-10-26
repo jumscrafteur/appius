@@ -1,4 +1,3 @@
-from ast import PyCF_ALLOW_TOP_LEVEL_AWAIT
 import pygame
 from Button import Button
 from const import*
@@ -15,10 +14,10 @@ waitingscreen = pygame.image.load("C3title_00001.png")
 fond = pygame.image.load("0_fired_00001.png").convert()
 
 #BOUCLE INFINIE
-button = Button(screen_height/4, screen_width/2, "paneling_00231.png")
+button = Button(screen_height/4, screen_width/2, 200, 100, "paneling_00231.png", "Load game")
 
 running = True
-screen.blit(waitingscreen, (0,0))
+screen.blit(pygame.transform.scale(waitingscreen, (screen_height, screen_width)), (0,0))
 while running:
     # Test d'un bouton simple avec son décor
     
@@ -28,6 +27,6 @@ while running:
             running = False
         if event.type == pygame.MOUSEBUTTONDOWN:
             screen.blit(fond, (0,0))
-            screen.fill((245,245,220), (100, 200, screen_height-100, screen_width-200))
-            button.show(screen) 
+            screen.fill((210,180,140), (screen_height/4, screen_width/4, screen_height/2, screen_width/2))
+            button.draw(screen) 
             pygame.display.flip()
