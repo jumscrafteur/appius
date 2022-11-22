@@ -53,7 +53,7 @@ class Engineer(Walker):
         self.type = "Engineer"
 
     def work(self, Buildings):
-        assert(type(Buildings)==Buildings)
+        assert(type(Buildings)==Buildings) #ca pour forcer que le builfdings est de type Buildings qui est la listee des batiments 
         r = self.rayonDAction
         for i in range(self.pos[0]-r, self.pos[0]+r):
             for j in range(self.pos[1]-r, self.pos[1]+r):
@@ -82,7 +82,8 @@ class Citizen(Walker):
         self.type = "Citizen"
 
     def work(self, save, Buildings):
-        assert(type(Buildings)==Buildings)
+        r = self.rayonDAction
+        assert(type(Buildings)==Buildings) # de meme ici 
         for i in range(self.pos[0]-r, self.pos[0]+r):
             for j in range(self.pos[1]-r, self.pos[1]+r):
                 for b in Buildings.building:
