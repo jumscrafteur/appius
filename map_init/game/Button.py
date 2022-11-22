@@ -21,7 +21,7 @@ class Button:
     def ButtonClicked(self, actionMouse, posMouse):
         if (self.MouseonButton(posMouse) == 1):
             if actionMouse[0]:
-                self.action
+                print("click\n")
 
 
 class Button_img(Button):
