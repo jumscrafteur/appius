@@ -13,71 +13,38 @@ class Camera:
         self.scroll = pg.Vector2(0, 0)
         self.dx = 0
         self.dy = 0
-        self.speed = 10
+        self.mx = 0
+        self.my = 0
+        self.m_speed = 10
+        self.k_speed = 5
         self.m_up = False
         self.m_down = False
         self.m_left = False
         self.m_right = False
 
-    def movement(self):
-        for key in pg.event.get():
-            if key.type == pg.QUIT:
-                pg.quit()
-                sys.exit()
-            if key.type == pg.KEYDOWN:
-                if key.key == pg.K_ESCAPE:
-                    pg.quit()
-                    sys.exit()
-                elif key.key == pg.K_UP:
-                    self.m_up = True
-                elif key.key == pg.K_DOWN:
-                    self.m_down = True
-                elif key.key == pg.K_RIGHT:
-                    self.m_right = True
-                elif key.key == pg.K_LEFT:
-                    self.m_left = True
-            if key.type == pg.KEYUP:
-                if key.key == pg.K_UP:
-                    self.m_up = False
-                elif key.key == pg.K_DOWN:
-                    self.m_down = False
-                elif key.key == pg.K_RIGHT:
-                    self.m_right = False
-                elif key.key == pg.K_LEFT:
-                    self.m_left = False
-            if self.m_up:
-                self.dy = self.speed
-            elif self.m_down:
-                self.dy = -self.speed
-            else:
-                self.dy = 0
-            if self.m_right:
-                self.dx = -self.speed
-                # self.scroll.x = self.dx
-            elif self.m_left:
-                self.dx = self.speed
-            else:
-                self.dx = 0
-                # self.scroll.x = self.dx
+    def movement_arrow(self, key_press):
+        self.scroll.x += (key_press[pg.K_LEFT] -
+                          key_press[pg.K_RIGHT])*self.k_speed
+        self.scroll.y += (key_press[pg.K_UP]-key_press[pg.K_DOWN])*self.k_speed
 
-        # mouse_pos = pg.mouse.get_pos()
+    def movement_mouse(self, mouse_pos):
 
-        # # x movement
-        # if mouse_pos[0] > self.width * 0.97:
-        #     self.dx = -self.speed
-        # elif mouse_pos[0] < self.width * 0.03:
-        #     self.dx = self.speed
-        # else:
-        #     self.dx = 0
+        # x movement
+        if mouse_pos[0] > self.width * 0.97:
+            self.mx = -self.m_speed
+        elif mouse_pos[0] < self.width * 0.03:
+            self.mx = self.m_speed
+        else:
+            self.mx = 0
 
-        # # y movement
-        # if mouse_pos[1] > self.height * 0.97:
-        #     self.dy = -self.speed
-        # elif mouse_pos[1] < self.height * 0.03:
-        #     self.dy = self.speed
-        # else:
-        #     self.dy = 0
+        # y movement
+        if mouse_pos[1] > self.height * 0.97:
+            self.my = -self.m_speed
+        elif mouse_pos[1] < self.height * 0.03:
+            self.my = self.m_speed
+        else:
+            self.my = 0
 
         # update camera scroll
-        self.scroll.x += self.dx
-        self.scroll.y += self.dy
+        self.scroll.x += self.mx
+        self.scroll.y += self.my

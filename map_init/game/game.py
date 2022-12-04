@@ -5,6 +5,7 @@ from .setting import TILE_SIZE
 from .utils import draw_text
 from .camera import Camera
 from .gamehud import *
+from .Game_event import *
 
 
 class Game:
@@ -17,6 +18,7 @@ class Game:
         # camera
         self.camera = Camera(self.width, self.height)
         # hud
+        self.grid = True
         self.hudup = Hudupper(0, 0)
         self.hudleft = Hudbigleft(self.width-24, self.height+25)
         self.hudstick = Hudstick(self.width-24, 24)
@@ -30,20 +32,27 @@ class Game:
         while self.playing:
             self.clock.tick(60)
             self.events()
-            self.update()
             self.draw()
 
-    def events(self):
-        self.camera.movement()
-        self.hudleft.action()
-        # for event in pg.event.get():
-        #     if event.type == pg.QUIT:
-        #         pg.quit()
-        #         sys.exit()
-        #     self.camera.movement()
+    def event_key(self):
+        self.camera.movement_arrow(pg.key.get_pressed())
 
-    def update(self):
-        pass
+    def event_souris(self):
+        # mouse_pos = pg.mouse.get_pos()
+        # mouse_action = pg.mouse.get_pressed()
+        # self.camera.movement_mouse( pg.mouse.get_pos())
+        self.hudleft.action(self.grid)
+
+    def events(self):
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                pg.quit()
+                sys.exit()
+            if (event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE):
+                pg.quit()
+                sys.exit()
+        self.event_souris()
+        self.event_key()
 
     def draw(self):
 
@@ -80,20 +89,13 @@ class Game:
                 p = self.world.world[x][y]["iso_poly"]
                 p = [(x + self.world.land_tile.get_width() *
                       0.5 + self.camera.scroll.x, y + self.world.land_tile.get_height()*0+self.camera.scroll.y) for x, y in p]
-                pg.draw.polygon(self.screen, (0, 0, 0), p, 1)
+                if self.grid == True:
+                    pg.draw.polygon(self.screen, (0, 0, 0), p, 1)
+
         self.hudleft.draw(self.screen)
         self.hudstick.draw(self.screen)
         self.hudup.draw(self.screen)
         self.infofps.draw(self.screen)
         self.infopop.draw(self.screen)
-
-        # draw_text(
-        #     self.screen,
-        #     f"fps={round(self.clock.get_fps())}",
-        #     25,
-        #     (0, 0, 0),
-        #     (10, 10)
-
-        # )
 
         pg.display.flip()

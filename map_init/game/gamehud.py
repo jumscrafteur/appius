@@ -102,7 +102,7 @@ class Hudbigleft:
             "appius/ingamehud/panelwindows_00013.png").convert_alpha()
         #hud in out
         self.button_098 = Button_img(
-            self.width-20, 20+21, "appius/ingamehud/paneling_00098.png", imprimer())
+            self.width-20, 20+21, "appius/ingamehud/paneling_00098.png")
         # gap 77/ 2 long af button
         self.button_080 = Button_img(
             self.width-120, 170+21, "appius/ingamehud/paneling_00080.png")
@@ -195,7 +195,6 @@ class Hudbigleft:
         self.button_115.show(screen)
         self.button_122.show(screen)
 
-    def action(self):
-        mouse_pos = pg.mouse.get_pos()
-        mouse_action = pg.mouse.get_pressed()
-        self.button_098.ButtonClicked(mouse_action, mouse_pos)
+    def action(self, grid):
+        self.button_098.setAction(toggle_grid_2_5D, grid)
+        self.button_098.Clicked()
