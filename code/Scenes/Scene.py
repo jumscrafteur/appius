@@ -1,25 +1,20 @@
-from __future__ import annotations
-from time import sleep
-from typing import Callable, Optional, TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from Game import Game
-
-
 class Scene():
-    def __init__(self, id: int, name: str,
-                 createFunc: Callable[['Scene'], None] = lambda scene: None,
-                 runFunc: Callable[['Scene'], None] = lambda scene: None,
-                 destroyFunc: Callable[['Scene'], None] = lambda scene: None
-                 ) -> None:
+    def __init__(self, id, name,
+                 createFunc=lambda scene: None,
+                 runFunc=lambda scene: None,
+                 destroyFunc=lambda scene: None
+                 ):
         self.name = name
         self.id = id
-        self.game: Optional[Game] = None
+        self.game = None
         self.createFunc = createFunc
         self.runFunc = runFunc
         self.destroyFunc = destroyFunc
 
-    def create(self, game: Game) -> None:
+        self.images = {}
+        self.buttons = {}
+
+    def create(self, game):
         self.game = game
         self.createFunc(self)
         return
