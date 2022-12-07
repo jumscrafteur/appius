@@ -158,6 +158,11 @@ class Hudbigleft:
                             self.button_085, "088": self.button_088, "091": self.button_091, "094": self.button_094, }
         #
 
+    # def action(self, screen):
+    #     self.button_123.setAction(
+    #         building, self.button_123.image.copy(), pg.mouse.get_pressed())
+    #     self.button_123.Clicked()
+
     def draw(self, screen):
         screen.blit(self.paneling_017, (self.width - 162, 4+21))
         screen.blit(self.map_panels_00003, (self.width - 162, 450+4+21))
@@ -194,7 +199,17 @@ class Hudbigleft:
         self.button_246.show(screen)
         self.button_115.show(screen)
         self.button_122.show(screen)
+        # action
+        self.button_123.setAction(
+            building, self.button_123.image.copy(), pg.mouse.get_pressed())
+        self.button_123.Clicked()
+        if pg.mouse.get_pressed()[2]:
+            self.button_123.foncret = None
+        if self.button_123.foncret != None:
+            screen.blit(self.button_123.foncret, pg.mouse.get_pos())
 
-    def action(self, grid):
-        self.button_098.setAction(toggle_grid_2_5D, grid)
-        self.button_098.Clicked()
+    # def action(self):
+    #     self.button_123.setAction(building)
+    # #     self.button_123.Clicked()
+    #     self.button_098.setAction(toggle_grid_2_5D, grid)
+    #     self.button_098.Clicked()

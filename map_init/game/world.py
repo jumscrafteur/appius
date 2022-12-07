@@ -19,6 +19,7 @@ class World:
         self.tiles = self.load_images()
         self.world = self.cree_world()
 
+        self.temp_tile = None
         #
         #
 
@@ -44,8 +45,8 @@ class World:
         #                   [output(gridx,0),.....,output(gridx,gridy)]      ]
         #
 
-    def setval(self, r):
-        self.tileval = r
+    # def setval(self, r):
+    #     self.tileval = r
 
     def grid_to_world(self, grid_x, grid_y):
 

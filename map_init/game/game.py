@@ -1,7 +1,7 @@
 import pygame as pg
 import sys
 from .world import World
-from .setting import TILE_SIZE
+from .setting import *
 from .utils import draw_text
 from .camera import Camera
 from .gamehud import *
@@ -41,7 +41,8 @@ class Game:
         # mouse_pos = pg.mouse.get_pos()
         # mouse_action = pg.mouse.get_pressed()
         # self.camera.movement_mouse( pg.mouse.get_pos())
-        self.hudleft.action(self.grid)
+        # self.hudleft.action(self.screen)
+        pass
 
     def events(self):
         for event in pg.event.get():
@@ -51,6 +52,11 @@ class Game:
             if (event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE):
                 pg.quit()
                 sys.exit()
+            # if event.type == pg.MOUSEBUTTONDOWN:
+            #     self.hudleft.button_123.MouseonButton()
+            # if event.type == pg.USEREVENT:
+            #     event.action(self.hudleft.button_123.image.copy(
+            #     ), pg.mouse.get_pos(), pg.mouse.get_pressed(), self.screen)
         self.event_souris()
         self.event_key()
 
@@ -74,7 +80,6 @@ class Game:
 #                   different tiles
 #
                 if self.world.world[x][y]["tile"]["name"] != "":
-                    # tile = self.world.world[x][y]["tile"]
                     name_tile = self.world.world[x][y]["tile"]["name"]
                     offset = self.world.world[x][y]["tile"]["offset"]
                     self.screen.blit(self.world.tiles[name_tile], (
@@ -89,8 +94,8 @@ class Game:
                 p = self.world.world[x][y]["iso_poly"]
                 p = [(x + self.world.land_tile.get_width() *
                       0.5 + self.camera.scroll.x, y + self.world.land_tile.get_height()*0+self.camera.scroll.y) for x, y in p]
-                if self.grid == True:
-                    pg.draw.polygon(self.screen, (0, 0, 0), p, 1)
+
+                pg.draw.polygon(self.screen, (0, 0, 0), p, 1)
 
         self.hudleft.draw(self.screen)
         self.hudstick.draw(self.screen)
