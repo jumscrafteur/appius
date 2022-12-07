@@ -42,7 +42,7 @@ class Button_text(Button):
         self.text_render = font.render(self.text, 1, (0,0,0))
         super().__init__(x, y, width, height, action)
         
-    def show(self, screen, border=None):
+    def show(self, screen):
             pygame.draw.rect(screen, (225,225,225), ((self.x-self.width/2), (self.y-self.height/2), self.width, self.height))
             screen.blit(self.text_render, (self.x-self.text_render.get_width()/2, self.y-self.text_render.get_height()/2))
         
