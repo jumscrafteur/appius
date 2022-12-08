@@ -1,6 +1,17 @@
+import pygame
+
+
 class Game():
     def __init__(self, save):
+        pygame.init()
+
+        self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+
+        [(self.screen_width, self.screen_height
+          )] = pygame.display.get_desktop_sizes()
+
         self.save = save
+
         self.actualScene = None
         self.running = True
         self.sceneMap = {}
