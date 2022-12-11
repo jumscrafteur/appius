@@ -26,6 +26,13 @@ class Game():
 
         self.sceneMap[scene.id] = scene
 
+    def switchScene(self, sceneId):
+        if sceneId not in self.sceneMap.keys():
+            raise Exception(
+                f"No Scene with id {sceneId}"
+            )
+        self.actualScene = sceneId
+
     def run(self):
         while self.running:
 
@@ -41,8 +48,12 @@ class Game():
             scene.create(self)
 
             # Run the scene
-            while self.actualScene == scene.id:
+            while self.running and self.actualScene == scene.id:
+                scene.handleEvents()
                 scene.run()
 
             # End the scene
             scene.destroy()
+
+    def end(self):
+        self.running = False

@@ -1,8 +1,12 @@
+import pygame
+
+
 class Scene():
     def __init__(self, id, name,
                  createFunc=lambda scene: None,
                  runFunc=lambda scene: None,
-                 destroyFunc=lambda scene: None
+                 destroyFunc=lambda scene: None,
+                 handleEventsFunc=lambda scene, event, : None
                  ):
         self.name = name
         self.id = id
@@ -10,6 +14,7 @@ class Scene():
         self.createFunc = createFunc
         self.runFunc = runFunc
         self.destroyFunc = destroyFunc
+        self.handleEventsFunc = handleEventsFunc
 
         self.images = {}
         self.buttons = {}
@@ -19,8 +24,20 @@ class Scene():
         self.createFunc(self)
         return
 
-    def run(self) -> None:
+    def run(self):
         self.runFunc(self)
 
-    def destroy(self) -> None:
+    def handleEvents(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.game.end()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                for key in self.buttons.keys():
+                    self.buttons[key].MouseonButton(event.pos)
+            if event.type == pygame.USEREVENT:
+                event.action()
+
+            self.handleEventsFunc(self, event)
+
+    def destroy(self):
         self.destroyFunc(self)
