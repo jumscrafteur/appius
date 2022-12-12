@@ -15,6 +15,7 @@ class Game():
         self.actualScene = None
         self.running = True
         self.sceneMap = {}
+        self.map = None
 
     def addScene(self, scene) -> None:
         if scene.id in self.sceneMap.keys():

@@ -15,6 +15,7 @@ class Button:
         self.box = pg.Rect(self.x, self.y, self.width, self.height)
         self.box.topleft = (self.x, self.y)
         self.clicked = False
+        self.foncret = None
         for _i in args:
             self.args.append(_i)
 
@@ -36,9 +37,14 @@ class Button:
         if self.box.collidepoint(pg.mouse.get_pos()):
             if pg.mouse.get_pressed()[0] == 1 and self.clicked == False:
                 self.clicked = True
-                self.action(*self.args)
+                self.foncret = self.action(*self.args)
             if pg.mouse.get_pressed()[0] == 0:
                 self.clicked = False
+
+    def MouseonButton(self):
+        if self.box.collidepoint(pg.mouse.get_pos()):
+            pygame.event.post(pygame.event.Event(
+                pygame.USEREVENT, {"action": self.action}))
 
 
 class Button_img(Button):
