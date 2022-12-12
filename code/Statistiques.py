@@ -1,6 +1,6 @@
 class Stat():
     def fire_Risks(homeLocation,prefetCurrentLocation):
-        Distance_=distance(homeLocation,prefetCurrentLocation)
+        Distance_=Distance(homeLocation,prefetCurrentLocation)
         if (Distance_>10):
             return 0.5
         elif (Distance_>10):
@@ -11,7 +11,7 @@ class Stat():
             return 0
         return False
     def criminality_Risks(homeLocation,prefetOfficeLocation):
-        Distance_=distance(homeLocation,prefetOfficeLocation)
+        Distance_=Distance(homeLocation,prefetOfficeLocation)
         if (Distance_>10):
             return 0.5
         elif (Distance_>10):
@@ -22,7 +22,7 @@ class Stat():
             return 0
         return False 
     def collapse_Risks(homeLocation,ingineerOfficeLocation):
-        Distance_=distance(homeLocation,ingineerOfficeLocation)
+        Distance_=Distance(homeLocation,ingineerOfficeLocation)
         if (Distance_>10):
             return 0.5
         elif (Distance_>10):
