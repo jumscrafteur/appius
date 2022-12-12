@@ -1,7 +1,6 @@
 import os
 import pathlib
 import pickle
-import typing
 
 
 class Save():
@@ -18,8 +17,8 @@ class Save():
                       [1, 1, 1, 1, 1, 1, 0, 0, 0, 1],
                       [0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
                       [0, 0, 0, 0, 0, 1, 0, 0, 0, 1]],
-            "risk_feu": [[0]*10]*10
-            "Buildings":
+            "risk_feu": [[0]*10]*10,
+            "Buildings": ""
         }
         self.walkers = []
         self.pop = 0

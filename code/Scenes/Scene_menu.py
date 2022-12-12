@@ -2,20 +2,56 @@ from Scene import *
 import pygame
 from Button import *
 from const import *
+from .Scene_ids import SCENE_MENU_ID, SCENE_GAME_ID
+from Utils import GenerateGridLayout
 
 
+def SceneMenuCreate(self):
+    self.images["fond"] = pygame.image.load(
+        "assets/0_fired_00001.png").convert()
+
+    # GENERATE GRID LAYOUT 1 column 4 rows centered on self.game.screen_width/2, self.game.screen_height/2
+    #         200 px
+    #         -------
+    # 100 px |       |
+    #         -------
+    # 50px
+    #         -------
+    # 100 px |       |
+    #         -------
+    # 50 px
+    #         -------
+    # 100 px |       |
+    #         -------
+    # 50px
+    #         -------
+    # 100 px |       |
+    #         -------
+
+    layout = GenerateGridLayout(
+        self.game.screen_width/2, self.game.screen_height/2, 1, 4, 0, 50, 200, 100)
+
+    self.buttons["button_start"] = Button_text(
+        *next(layout), 200, 100, lambda: self.game.switchScene(SCENE_GAME_ID), "Start Game")
+    self.buttons["button_load"] = Button_text(
+        *next(layout), 200, 100, lambda: print("ok"), "Load a Game")
+    self.buttons["button_options"] = Button_text(
+        *next(layout), 200, 100, lambda: print("ok"), "Options")
+    self.buttons["button_exit"] = Button_text(
+        *next(layout), 200, 100, self.game.end, "Exit Game")
 
 
+def SceneMenuRun(self):
 
-def SceneMenurun():
-    fond = pygame.image.load("assets/0_fired_00001.png").convert()
-    
-    
-    
-    button_start = Button_text(screen_width/2, 128 , 200, 100, lambda : print("ok"),"Start Game")
-    button_load = Button_text(screen_width/2, 384, 200, 100, lambda : print("ok"),"Load a Game")
-    button_options = Button_text(screen_width/2, 640, 200, 100, lambda : print("ok"),"Options")
-    button_exit = Button_text(screen_width/2, 896, 200, 100, lambda : print("ok"),"Exit Game")
-    
+    pygame.time.Clock().tick(60)
+    self.game.screen.blit(pygame.transform.scale(
+        self.images["fond"], (self.game.screen_width, self.game.screen_height)), (0, 0))
 
-MAIN_SCENE = Scene(1, 'Scene_Menu', runFunc=SceneMenurun)
+    for key in self.buttons.keys():
+        self.buttons[key].show(self.game.screen)
+
+    pygame.display.flip()
+
+
+SCENE = Scene(SCENE_MENU_ID, 'Scene_Menu', createFunc=SceneMenuCreate,
+              runFunc=SceneMenuRun)

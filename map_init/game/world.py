@@ -37,7 +37,7 @@ class World:
             #
                 render_pos = world_tile["render_pos"]
                 self.land_tile.blit(
-                    self.tiles["land"], (render_pos[0] + self.land_tile.get_width()*0.5, render_pos[1] + self.land_tile.get_height()*0))
+                    self.tiles[self.world[grid_x][grid_y]["tile"]["name"]], (render_pos[0] + self.land_tile.get_width()*0.5, render_pos[1] - self.world[grid_x][grid_y]["tile"]["offset"] + self.land_tile.get_height()*0))
         return world
         #
         #          WORLD=[  [output(0,0),output(0,1)....,output(0,gridy)],
