@@ -1,15 +1,15 @@
 from Scene import Scene
 from .Scene_ids import SCENE_GAME_ID
-from map_init.game.game import MapGame
+from map_init.game.map import MapGame
 import pygame
 
 
 def SceneGameCreate(self):
-    self.map = MapGame(self.game.screen, pygame.time.Clock())
+    self.game.map = MapGame(self.game.screen, pygame.time.Clock())
 
 
 def SceneGameRun(self):
-    self.map.run()
+    self.game.map.run()
 
 
 def SceneGameHandleEvents(self, event):

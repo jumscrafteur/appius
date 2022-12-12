@@ -19,7 +19,6 @@ class Scene():
         self.images = {}
         self.buttons = {}
         self.box = {}
-        self.map = None
 
     def create(self, game):
         self.game = game
@@ -43,7 +42,7 @@ class Scene():
                     self.box[clé].write(event)
             if event.type == pygame.USEREVENT:
                 event.action()
-                
+
             self.handleEventsFunc(self, event)
 
     def destroy(self):

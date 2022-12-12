@@ -1,5 +1,5 @@
 import pygame as pg
-from game.game import MapGame
+from game.map import MapGame
 
 SCREENSIZE = WIDTH, HEIGHT = 1200, 760
 
