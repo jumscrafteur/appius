@@ -1,7 +1,6 @@
 import os
 import pathlib
 import pickle
-import shutil
 
 
 class Save():
@@ -40,6 +39,13 @@ class Save():
     def deserialize(path: str) -> object:
         with open(path, "rb") as f:
             return pickle.load(f)
-        
-        
 
+    @staticmethod
+    def getSavesNames():
+        path = pathlib.PurePath(os.path.dirname(
+            os.path.abspath(__file__)), "../saves")
+
+        return [
+            fileName.split(".")[0]
+            for fileName in os.listdir(path)
+            if fileName.endswith(".save")]
