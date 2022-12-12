@@ -14,7 +14,7 @@ def SceneNewGameCreate(self):
         self.game.screen_width/2, self.game.screen_height/2, 600, 30)
     
     self.buttons["btn1"] = Button_text(self.game.screen_width/2-150, self.game.screen_height/2+50, 100, 100,  lambda: self.game.switchScene(SCENE_MENU_ID), "Back to Menu")
-    self.buttons["btn2"] = Button_text(self.game.screen_width/2+150, self.game.screen_height/2+50, 100, 100,  lambda: self.game.switchScene(SCENE_MENU_ID), "Go to Game")
+    self.buttons["btn2"] = Button_text(self.game.screen_width/2+150, self.game.screen_height/2+50, 100, 100,  lambda : print(self.box["inputbox"].text), "Go to Game")
 
 
 def SceneNewGameRun(self):

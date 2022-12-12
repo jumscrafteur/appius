@@ -32,11 +32,14 @@ class Scene():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.game.end()
-            for clé in self.box.keys():
-                    self.box[clé].handle_event(event)
             if event.type == pygame.MOUSEBUTTONDOWN:
                 for key in self.buttons.keys():
                     self.buttons[key].MouseonButton(event.pos)
+                for clé in self.box.keys():
+                    self.box[clé].OverBox(event)
+            if event.type == pygame.KEYDOWN:
+                for clé in self.box.keys():
+                    self.box[clé].write(event)
             if event.type == pygame.USEREVENT:
                 event.action()
 
