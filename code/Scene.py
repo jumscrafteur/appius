@@ -43,7 +43,7 @@ class Scene():
                     self.box[clé].write(event)
             if event.type == pygame.USEREVENT:
                 event.action()
-
+                
             self.handleEventsFunc(self, event)
 
     def destroy(self):

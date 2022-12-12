@@ -16,7 +16,7 @@ def SceneNewGameCreate(self):
     self.buttons["btn1"] = Button_text(self.game.screen_width/2-150, self.game.screen_height /
                                        2+50, 100, 100, lambda: self.game.switchScene(SCENE_MENU_ID), "Back to Menu")
     self.buttons["btn2"] = Button_text(self.game.screen_width/2+150, self.game.screen_height /
-                                       2+50, 100, 100, lambda: self.game.switchScene(SCENE_GAME_ID), "Go to Game")
+                                       2+50, 100, 100, lambda: print(self.box["inputbox"].text), "Go to Game")
 
 
 def SceneNewGameRun(self):
@@ -34,5 +34,13 @@ def SceneNewGameRun(self):
     pygame.display.flip()
 
 
+def SceneNewGamehandleEventsFunc(self, event):
+    print("ok1")
+    if event.type == event_types["LaunchGame"]:
+        print("ok2")
+        self.game.save = self.box["inputbox"].text
+        self.game.switchScene(SCENE_GAME_ID)
+
+
 SCENE = Scene(SCENE_NEWGAME_ID, 'Scene_newgame', createFunc=SceneNewGameCreate,
-              runFunc=SceneNewGameRun)
+              runFunc=SceneNewGameRun, handleEventsFunc=SceneNewGamehandleEventsFunc)
