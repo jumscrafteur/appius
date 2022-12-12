@@ -35,5 +35,8 @@ class Stat():
     def attractivity(fire,collapse,criminality):
         return (1.5-((fire+collapse,criminality)/1.5))*100,"%"
     
-    
+    def Distance(x1,y1,x2,y2):
+        return abs(x2-x1)+abs(y2-y1)
+        
+        
     
