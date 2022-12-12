@@ -1,5 +1,6 @@
 import pygame 
 from const import font1
+from Save import *
 
 
 
@@ -18,24 +19,20 @@ class InputBox:
         self.active = False
         
         
-    def handle_event(self, event):
-        if event.type == pygame.MOUSEBUTTONDOWN:
-
-            if self.rect.collidepoint(event.pos):
-                self.active = not self.active
-            else:
-                self.active = False
+    def OverBox(self, event):
+        if self.rect.collidepoint(event.pos):
+            self.active = not self.active
+        else:
+            self.active = False
+            
+        if self.active:
+            self.color =(190,190,190)
+        else:
+            self.color = pygame.Color(109,109,109)
                 
-            if self.active:
-                self.color =(190,190,190)
-            else:
-                self.color = pygame.Color(109,109,109)
-                
-        
-        if event.type == pygame.KEYDOWN:
+    def write(self, event):
             if self.active:
                 if event.key == pygame.K_RETURN:
-                    print(f"vous avez écrit : {self.text}")
                     self.text = ''
                 elif event.key == pygame.K_BACKSPACE:
                     self.text = self.text[:-1]
