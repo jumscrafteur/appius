@@ -6,7 +6,9 @@ from .Scene_ids import SCENE_PREMENU_ID, SCENE_MENU_ID
 
 def preMenuCreate(self):
     self.buttons['btn1'] = Button_img(self.game.screen_width/2, self.game.screen_height/2,
-                                      lambda: self.game.switchScene(SCENE_MENU_ID), "/Users/jumscrafteur/workspace/cours/STI3A/python/Projet-Appius/appius/assets/C3title_00001.png")
+                                      lambda: self.game.switchScene(SCENE_MENU_ID), "assets/C3title_00001.png")
+    
+    
 
 
 def preMenuRun(self):

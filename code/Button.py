@@ -10,11 +10,13 @@ class Button:
         self.width = width
         self.height = height
         self.action = action
+        self.color = (109,109,109)
         
     def MouseonButton(self, posMouse):
         if(posMouse[0] > (self.x - self.width/2) and posMouse[0] < (self.x + self.width/2)):
             if (posMouse[1] > (self.y - self.height/2) and posMouse[1] < (self.y + self.height/2)):
-                 pygame.event.post(pygame.event.Event(
+                self.color = (180,180,180)
+                pygame.event.post(pygame.event.Event(
                     pygame.USEREVENT, {"action": self.action}))
                 
         
@@ -35,16 +37,17 @@ class Button_text(Button):
     
     def __init__(self, x, y, width, height, action, text, font=font1):
         self.text = text
-        font = pygame.font.SysFont(font1, 24)
+        font = pygame.font.SysFont(font1, 48, True)
         self.font = font
         self.width = width
         self.height = height
         self.text_render = font.render(self.text, 1, (0,0,0))
         super().__init__(x, y, width, height, action)
         
-    def show(self, screen):
-            pygame.draw.rect(screen, (225,225,225), ((self.x-self.width/2), (self.y-self.height/2), self.width, self.height))
-            screen.blit(self.text_render, (self.x-self.text_render.get_width()/2, self.y-self.text_render.get_height()/2))
+    def show(self, screen, background=True):
+        if background:
+            pygame.draw.rect(screen, self.color, ((self.x-self.width/2), (self.y-self.height/2), self.width, self.height))
+        screen.blit(self.text_render, (self.x-self.text_render.get_width()/2, self.y-self.text_render.get_height()/2))
         
     
     

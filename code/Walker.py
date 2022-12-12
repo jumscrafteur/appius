@@ -18,7 +18,7 @@ class Buildings:
         ''' Une simple liste vide '''
         self.Building = []
 
-    def ajouter(self, Building):
+    def ajouter(self, Building):  #ajouter 
         self.Building.append(Building)
 
     def retirer(self, Building):
