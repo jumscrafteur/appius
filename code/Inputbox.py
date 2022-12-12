@@ -1,11 +1,11 @@
 import pygame 
-from const import font1
+from const import *
 from Save import *
 
 
 
 class InputBox:
-    def __init__(self,  x, y, width, height, text='', font=font1):
+    def __init__(self,  x, y, width, height, action, text='', font=font1):
         self.x= x
         self.y = y
         self.width = width
@@ -17,7 +17,7 @@ class InputBox:
         self.font = font
         self.txt_render = self.font.render(text, True, self.color)
         self.active = False
-        
+        self.action = action
         
     def OverBox(self, event):
         if self.rect.collidepoint(event.pos):
@@ -33,6 +33,7 @@ class InputBox:
     def write(self, event):
             if self.active:
                 if event.key == pygame.K_RETURN:
+                    self.action
                     self.text = ''
                 elif event.key == pygame.K_BACKSPACE:
                     self.text = self.text[:-1]
