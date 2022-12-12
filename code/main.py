@@ -1,5 +1,5 @@
 from Game import Game
-from Scenes import Scene_PreMenu, Scene_menu, Scene_newgame
+from Scenes import Scene_PreMenu, Scene_menu, Scene_game, Scene_newgame
 
 if __name__ == '__main__':
     g = Game("")
@@ -7,5 +7,6 @@ if __name__ == '__main__':
     g.addScene(Scene_PreMenu.SCENE)
     g.addScene(Scene_menu.SCENE)
     g.addScene(Scene_newgame.SCENE)
+    g.addScene(Scene_game.SCENE)
 
     g.run()

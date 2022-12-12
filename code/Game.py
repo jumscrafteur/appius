@@ -55,5 +55,9 @@ class Game():
             # End the scene
             scene.destroy()
 
+        pygame.display.quit()
+        pygame.quit()
+        exit()
+
     def end(self):
         self.running = False
