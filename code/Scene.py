@@ -18,6 +18,7 @@ class Scene():
 
         self.images = {}
         self.buttons = {}
+        self.box = {}
 
     def create(self, game):
         self.game = game
@@ -31,6 +32,8 @@ class Scene():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.game.end()
+            for clé in self.box.keys():
+                    self.box[clé].handle_event(event)
             if event.type == pygame.MOUSEBUTTONDOWN:
                 for key in self.buttons.keys():
                     self.buttons[key].MouseonButton(event.pos)
