@@ -1,5 +1,5 @@
 import pygame as pg
-from game.game import Game
+from game.game import MapGame
 
 SCREENSIZE = WIDTH, HEIGHT = 1200, 760
 
@@ -16,7 +16,7 @@ def main():
 
     # implement menu
     # implement game
-    game = Game(screen, clock)
+    game = MapGame(screen, clock)
     while running:
         # menu
 

@@ -9,12 +9,14 @@ from .Scene_ids import *
 def SceneNewGameCreate(self):
     self.images["fond"] = pygame.image.load(
         "assets/01b_00001.png").convert()
-    
+
     self.box["inputbox"] = InputBox(
         self.game.screen_width/2, self.game.screen_height/2, 600, 30)
-    
-    self.buttons["btn1"] = Button_text(self.game.screen_width/2-150, self.game.screen_height/2+50, 100, 100,  lambda: self.game.switchScene(SCENE_MENU_ID), "Back to Menu")
-    self.buttons["btn2"] = Button_text(self.game.screen_width/2+150, self.game.screen_height/2+50, 100, 100,  lambda : print(self.box["inputbox"].text), "Go to Game")
+
+    self.buttons["btn1"] = Button_text(self.game.screen_width/2-150, self.game.screen_height /
+                                       2+50, 100, 100, lambda: self.game.switchScene(SCENE_MENU_ID), "Back to Menu")
+    self.buttons["btn2"] = Button_text(self.game.screen_width/2+150, self.game.screen_height /
+                                       2+50, 100, 100, lambda: self.game.switchScene(SCENE_GAME_ID), "Go to Game")
 
 
 def SceneNewGameRun(self):
@@ -25,10 +27,10 @@ def SceneNewGameRun(self):
 
     for key in self.box.keys():
         self.box[key].show(self.game.screen)
-        
+
     for key in self.buttons.keys():
         self.buttons[key].show(self.game.screen, False)
-        
+
     pygame.display.flip()
 
 

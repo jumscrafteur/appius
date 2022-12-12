@@ -8,7 +8,7 @@ from .gamehud import *
 from .Game_event import *
 
 
-class Game:
+class MapGame:
     def __init__(self, screen, clock):
         self.screen = screen
         self.clock = clock

@@ -11,7 +11,7 @@ class InfoShow:
         self.font_size = font_size
         self.color = color
         self.box = pg.image.load(
-            "appius/ingamehud/paneling_00015.png").convert_alpha()
+            "ingamehud/paneling_00015.png").convert_alpha()
 
     def draw(self, screen):
         screen.blit(self.box, (self.x, self.y))
@@ -27,7 +27,7 @@ class Hudupper:
         self.x = x
         self.y = y
         self.image = pg.image.load(
-            "appius/ingamehud/paneling_00235.png").convert_alpha()
+            "ingamehud/paneling_00235.png").convert_alpha()
 
     def draw(self, screen):
         screen.blit(self.image, (self.x, self.y))
@@ -49,7 +49,7 @@ class Hudstick:
         self.x = x
         self.y = y
         self.image = pg.image.load(
-            "appius/ingamehud/paneling_00014.png").convert_alpha()
+            "ingamehud/paneling_00014.png").convert_alpha()
 
     def draw(self, screen):
         screen.blit(self.image, (self.x, self.y))
@@ -95,64 +95,64 @@ class Hudbigleft:
         self.width = width
         self.height = height
         self.paneling_017 = pg.image.load(
-            "appius/ingamehud/paneling_00017.png").convert_alpha()
+            "ingamehud/paneling_00017.png").convert_alpha()
         self.map_panels_00003 = pg.image.load(
-            "appius/ingamehud/map_panels_00003.png").convert_alpha()
+            "ingamehud/map_panels_00003.png").convert_alpha()
         self.panelwindow_013 = pg.image.load(
-            "appius/ingamehud/panelwindows_00013.png").convert_alpha()
+            "ingamehud/panelwindows_00013.png").convert_alpha()
         #hud in out
         self.button_098 = Button_img(
-            self.width-20, 20+21, "appius/ingamehud/paneling_00098.png")
+            self.width-20, 20+21, "ingamehud/paneling_00098.png")
         # gap 77/ 2 long af button
         self.button_080 = Button_img(
-            self.width-120, 170+21, "appius/ingamehud/paneling_00080.png")
+            self.width-120, 170+21, "ingamehud/paneling_00080.png")
         self.button_082 = Button_img(
-            self.width-43, 170+21,  "appius/ingamehud/paneling_00082.png")
+            self.width-43, 170+21,  "ingamehud/paneling_00082.png")
         # gap 39 /small button
         self.button_085 = Button_img(
-            self.width-139, 199+21,  "appius/ingamehud/paneling_00085.png")
+            self.width-139, 199+21,  "ingamehud/paneling_00085.png")
         self.button_088 = Button_img(
-            self.width-100, 199+21,  "appius/ingamehud/paneling_00088.png")
+            self.width-100, 199+21,  "ingamehud/paneling_00088.png")
         self.button_091 = Button_img(
-            self.width-62, 199+21,  "appius/ingamehud/paneling_00091.png")
+            self.width-62, 199+21,  "ingamehud/paneling_00091.png")
         self.button_094 = Button_img(
-            self.width-23, 199+21,  "appius/ingamehud/paneling_00094.png")
+            self.width-23, 199+21,  "ingamehud/paneling_00094.png")
         # gap width 50 gap height 36 /big button
         self.button_123 = Button_img(
-            self.width-130, 294+21,  "appius/ingamehud/paneling_00123.png")
+            self.width-130, 294+21,  "ingamehud/paneling_00123.png")
         self.button_131 = Button_img(
-            self.width-80, 294+21, "appius/ingamehud/paneling_00131.png")
+            self.width-80, 294+21, "ingamehud/paneling_00131.png")
         self.button_135 = Button_img(
-            self.width-30, 294+21,  "appius/ingamehud/paneling_00135.png")
+            self.width-30, 294+21,  "ingamehud/paneling_00135.png")
         #
         self.button_127 = Button_img(
-            self.width-130, 330+21,  "appius/ingamehud/paneling_00127.png")
+            self.width-130, 330+21,  "ingamehud/paneling_00127.png")
         self.button_163 = Button_img(
-            self.width-80, 330+21,  "appius/ingamehud/paneling_00163.png")
+            self.width-80, 330+21,  "ingamehud/paneling_00163.png")
         self.button_151 = Button_img(
-            self.width-30, 330+21,  "appius/ingamehud/paneling_00151.png")
+            self.width-30, 330+21,  "ingamehud/paneling_00151.png")
         #
 
         self.button_147 = Button_img(
-            self.width-130, 366+21,  "appius/ingamehud/paneling_00147.png")
+            self.width-130, 366+21,  "ingamehud/paneling_00147.png")
         self.button_143 = Button_img(
-            self.width-80, 366+21,  "appius/ingamehud/paneling_00143.png")
+            self.width-80, 366+21,  "ingamehud/paneling_00143.png")
         self.button_139 = Button_img(
-            self.width-30, 366+21,  "appius/ingamehud/paneling_00139.png")
+            self.width-30, 366+21,  "ingamehud/paneling_00139.png")
         #
         self.button_167 = Button_img(
-            self.width-130, 402+21,  "appius/ingamehud/paneling_00167.png")
+            self.width-130, 402+21,  "ingamehud/paneling_00167.png")
         self.button_159 = Button_img(
-            self.width-80, 402+21,  "appius/ingamehud/paneling_00159.png")
+            self.width-80, 402+21,  "ingamehud/paneling_00159.png")
         self.button_155 = Button_img(
-            self.width-30, 402+21,  "appius/ingamehud/paneling_00155.png")
+            self.width-30, 402+21,  "ingamehud/paneling_00155.png")
         #
         self.button_246 = Button_img(
-            self.width-130, 438+21,  "appius/ingamehud/paneling_00246.png")
+            self.width-130, 438+21,  "ingamehud/paneling_00246.png")
         self.button_115 = Button_img(
-            self.width-80, 436+21,  "appius/ingamehud/paneling_00115.png")
+            self.width-80, 436+21,  "ingamehud/paneling_00115.png")
         self.button_122 = Button_img(
-            self.width-30, 436+21,  "appius/ingamehud/paneling_00122.png")
+            self.width-30, 436+21,  "ingamehud/paneling_00122.png")
         #
         self.mini_button = {"098": self.button_098, "080": self.button_080, "082": self.button_082, "085":
                             self.button_085, "088": self.button_088, "091": self.button_091, "094": self.button_094, }

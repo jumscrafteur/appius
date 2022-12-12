@@ -19,6 +19,7 @@ class Scene():
         self.images = {}
         self.buttons = {}
         self.box = {}
+        self.map = None
 
     def create(self, game):
         self.game = game
