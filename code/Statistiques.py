@@ -28,7 +28,7 @@ class Stat:
             return 0
         return False 
     def collapse_Risks(homeLocation,ingineerLocation):
-        Distance_=distance(homeLocation,ingineerOfficeLocation)
+        Distance_=distance(homeLocation,ingineerLocation)
         if (Distance_>10):
             return 0.5
         elif (Distance_>10):
