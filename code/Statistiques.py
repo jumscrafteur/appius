@@ -39,7 +39,7 @@ class Stat:
             return 0
         return Falses
     def attractivity(fire,collapse,criminality):
-        return (1.5-((fire+collapse,criminality)/1.5))*100,"%"
+        return (1.5-((fire+collapse+criminality)/1.5))*100
     
     
     
