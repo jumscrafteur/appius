@@ -11,7 +11,7 @@ def SceneNewGameCreate(self):
         "assets/01b_00001.png").convert()
 
     self.box["inputbox"] = InputBox(
-        self.game.screen_width/2, self.game.screen_height/2, 600, 30,  pygame.event.post(pygame.event.Event(
+        self.game.screen_width/2, self.game.screen_height/2, 600, 30,  lambda : pygame.event.post(pygame.event.Event(
             event_types["LaunchGame"], {"name": 1})))
 
     self.buttons["btn1"] = Button_text(self.game.screen_width/2-150, self.game.screen_height /
@@ -37,9 +37,7 @@ def SceneNewGameRun(self):
 
 
 def SceneNewGamehandleEventsFunc(self, event):
-    print("ok1")
     if event.type == event_types["LaunchGame"]:
-        print("ok2")
         self.game.save = self.box["inputbox"].text
         self.game.switchScene(SCENE_GAME_ID)
 

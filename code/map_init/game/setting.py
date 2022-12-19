@@ -27,11 +27,11 @@ LAND1A_234 = pg.image.load("newland/Land1a_00234.png")
 LAND1A_235 = pg.image.load("newland/Land1a_00235.png")
 LAND1A_285 = pg.image.load("newland/Land1a_00285.png")
 LAND2A_095 = pg.image.load("newland/Land2a_00095.png")
-LAND3A_071 = pg.image.load("newland/Land3a_00071.png")
-LAND3A_072 = pg.image.load("newland/Land3a_00072.png")
-LAND3A_074 = pg.image.load("newland/Land3a_00074.png")
-LAND3A_081 = pg.image.load("newland/Land3a_00081.png")
-LAND3A_082 = pg.image.load("newland/Land3a_00082.png")
+LAND3A_071 = pg.image.load("newland/land3a_00071.png")
+LAND3A_072 = pg.image.load("newland/land3a_00072.png")
+LAND3A_074 = pg.image.load("newland/land3a_00074.png")
+LAND3A_081 = pg.image.load("newland/land3a_00081.png")
+LAND3A_082 = pg.image.load("newland/land3a_00082.png")
 
 
 TILE_VAL = [[35, 35, 35, 35, 35, 35, 35, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
