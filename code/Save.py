@@ -2,24 +2,16 @@ import os
 import pathlib
 import pickle
 
+from Building import *
+
 
 class Save():
     def __init__(self, name):
         # NOTE : Carte temporaire
-        self.layers = {
-            "paths": [[1, 1, 1, 0, 0, 0, 0, 0, 0, 1],
-                      [1, 0, 1, 0, 0, 0, 0, 0, 0, 1],
-                      [1, 1, 1, 0, 0, 0, 0, 0, 0, 1],
-                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-                      [0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
-                      [0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
-                      [0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
-                      [1, 1, 1, 1, 1, 1, 0, 0, 0, 1],
-                      [0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
-                      [0, 0, 0, 0, 0, 1, 0, 0, 0, 1]],
-            "risk_feu": [[0]*10]*10,
-            "Buildings": ""
-        }
+        self.map = Buildings()
+        for y in range(40):
+            for x in range(40):
+                self.map.ajouter(Grass((x, y)))
         self.walkers = []
         self.pop = 0
         self.PO = 0
