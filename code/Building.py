@@ -20,8 +20,8 @@ class Building:
 
 
 class Grass(Building):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, pos):
+        super().__init__(pos)
         self.tileImage = pygame.image.load("newland/Land1a_00285.png")
 
 
@@ -29,6 +29,9 @@ class Buildings:
     def __init__(self):
         ''' Une simple liste vide '''
         self.Building = []
+
+    def __iter__(self):
+        return iter(self.Building)
 
     def ajouter(self, Building):  # ajouter
         self.Building.append(Building)

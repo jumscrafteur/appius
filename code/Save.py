@@ -2,6 +2,7 @@ import os
 import pathlib
 import pickle
 
+from const import MAP_SIZE
 from Building import *
 
 
@@ -9,8 +10,8 @@ class Save():
     def __init__(self, name):
         # NOTE : Carte temporaire
         self.map = Buildings()
-        for y in range(40):
-            for x in range(40):
+        for y in range(MAP_SIZE[0]):
+            for x in range(MAP_SIZE[1]):
                 self.map.ajouter(Grass((x, y)))
         self.walkers = []
         self.pop = 0
