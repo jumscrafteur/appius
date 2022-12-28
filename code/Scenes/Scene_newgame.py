@@ -2,6 +2,7 @@ from Scene import *
 import pygame
 from Button import *
 from Inputbox import InputBox
+from Save import *
 from const import *
 from .Scene_ids import *
 
@@ -45,8 +46,10 @@ def SceneNewGameRun(self):
 
 def SceneNewGamehandleEventsFunc(self, event):
     if event.type == event_types["LaunchGame"]:
-        self.game.save = self.box["inputbox"].text
+        print(event)
+        self.game.save = Save(self.box["inputbox"].text)
         self.game.switchScene(SCENE_GAME_ID)
+        self.box['inputbox'].text = ""
 
 
 SCENE = Scene(SCENE_NEWGAME_ID, 'Scene_newgame', createFunc=SceneNewGameCreate,
