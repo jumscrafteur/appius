@@ -13,7 +13,7 @@ class InputBox:
             ((self.x-self.width/2), (self.y-self.height/2), self.width, self.height))
         self.text = text
         self.color = pygame.Color(109, 109, 109)
-        font = pygame.font.SysFont(font1, 32, True)
+        font = pygame.font.SysFont(font1, 46, True)
         self.font = font
         self.txt_render = self.font.render(text, True, self.color)
         self.active = False
@@ -26,7 +26,7 @@ class InputBox:
             self.active = False
 
         if self.active:
-            self.color = (190, 190, 190)
+            self.color = (145, 145, 145)
         else:
             self.color = pygame.Color(109, 109, 109)
 
