@@ -44,51 +44,6 @@ class Hudupper:
         screen.blit(self.image, (self.x+1170, self.y))
 
 
-class Hudstick:
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
-        self.image = pg.image.load(
-            "ingamehud/paneling_00014.png").convert_alpha()
-
-    def draw(self, screen):
-        screen.blit(self.image, (self.x, self.y))
-        screen.blit(self.image, (self.x, self.y+24))
-        screen.blit(self.image, (self.x, self.y+48))
-        screen.blit(self.image, (self.x, self.y+72))
-        screen.blit(self.image, (self.x, self.y+95))
-        screen.blit(self.image, (self.x, self.y+119))
-        screen.blit(self.image, (self.x, self.y+142))
-        screen.blit(self.image, (self.x, self.y+166))
-        screen.blit(self.image, (self.x, self.y+190))
-        screen.blit(self.image, (self.x, self.y+214))
-        screen.blit(self.image, (self.x, self.y+238))
-        screen.blit(self.image, (self.x, self.y+262))
-        screen.blit(self.image, (self.x, self.y+286))
-        screen.blit(self.image, (self.x, self.y+310))
-        screen.blit(self.image, (self.x, self.y+334))
-        screen.blit(self.image, (self.x, self.y+358))
-        screen.blit(self.image, (self.x, self.y+382))
-        screen.blit(self.image, (self.x, self.y+406))
-        screen.blit(self.image, (self.x, self.y+430))
-        screen.blit(self.image, (self.x, self.y+454))
-        screen.blit(self.image, (self.x, self.y+478))
-        screen.blit(self.image, (self.x, self.y+502))
-        screen.blit(self.image, (self.x, self.y+526))
-        screen.blit(self.image, (self.x, self.y+550))
-        screen.blit(self.image, (self.x, self.y+574))
-        screen.blit(self.image, (self.x, self.y+598))
-        screen.blit(self.image, (self.x, self.y+622))
-        screen.blit(self.image, (self.x, self.y+646))
-        screen.blit(self.image, (self.x, self.y+670))
-        screen.blit(self.image, (self.x, self.y+694))
-        screen.blit(self.image, (self.x, self.y+718))
-        screen.blit(self.image, (self.x, self.y+742))
-        screen.blit(self.image, (self.x, self.y+766))
-        screen.blit(self.image, (self.x, self.y+790))
-        screen.blit(self.image, (self.x, self.y+814))
-
-
 class Hudbigleft:
     def __init__(self, width, height):
 

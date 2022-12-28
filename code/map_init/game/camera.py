@@ -5,7 +5,7 @@ import sys
 
 class Camera:
 
-    def __init__(self, width, height):
+    def __init__(self, width, height, boundary):
 
         self.width = width
         self.height = height
@@ -23,6 +23,15 @@ class Camera:
         self.m_right = False
 
     def movement_arrow(self, key_press):
+        # map boundary
+        if self.scroll.x > self.width*0.05:
+            self.scroll.x = self.width*0.05
+        elif self.scroll.x < -self.width*1.2:
+            self.scroll.x = -self.width*1.2
+        elif self.scroll.y > self.height*0.08:
+            self.scroll.y = self.height*0.08
+        elif self.scroll.y < -self.height*0.65:
+            self.scroll.y = -self.height*0.65
         self.scroll.x += (key_press[pg.K_LEFT] -
                           key_press[pg.K_RIGHT])*self.k_speed
         self.scroll.y += (key_press[pg.K_UP]-key_press[pg.K_DOWN])*self.k_speed
@@ -44,7 +53,15 @@ class Camera:
             self.my = self.m_speed
         else:
             self.my = 0
-
+        # map boundary
+        if self.scroll.x > self.width*0.05:
+            self.scroll.x = self.width*0.05
+        elif self.scroll.x < -self.width*1.2:
+            self.scroll.x = -self.width*1.2
+        elif self.scroll.y > self.height*0.08:
+            self.scroll.y = self.height*0.08
+        elif self.scroll.y < -self.height*0.65:
+            self.scroll.y = -self.height*0.65
         # update camera scroll
         self.scroll.x += self.mx
         self.scroll.y += self.my

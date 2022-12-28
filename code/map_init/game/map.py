@@ -16,12 +16,11 @@ class MapGame:
         # world
         self.world = World(40, 40, self.width, self.height)
         # camera
-        self.camera = Camera(self.width, self.height)
+        self.camera = Camera(self.width, self.height, self.world.boundary)
         # hud
         self.grid = True
         self.hudup = Hudupper(0, 0)
         self.hudleft = Hudbigleft(self.width-24, self.height+25)
-        self.hudstick = Hudstick(self.width-24, 24)
         self.infofps = InfoShow(
             self.width*0.5, 2, f"fps={round(self.clock.get_fps())}", 18, (255, 255, 255))
         self.infopop = InfoShow(
@@ -40,7 +39,7 @@ class MapGame:
     def event_souris(self):
         # mouse_pos = pg.mouse.get_pos()
         # mouse_action = pg.mouse.get_pressed()
-        # self.camera.movement_mouse( pg.mouse.get_pos())
+        # self.camera.movement_mouse(pg.mouse.get_pos())
         # self.hudleft.action(self.screen)
         pass
 
@@ -61,44 +60,9 @@ class MapGame:
         self.event_key()
 
     def draw(self):
-
-        self.screen.fill((0, 0, 0))
-        self.screen.blit(self.world.land_tile,
-                         (self.camera.scroll.x, self.camera.scroll.y))
-
-        for x in range(self.world.grid_lx):
-            for y in range(self.world.grid_ly):
-
-                #   2D grid
-
-                # sq = self.world.world[x][y]["cart_rect"]
-                # rect = pg.Rect(sq[0][0], sq[0][1], TILE_SIZE, TILE_SIZE)
-                # pg.draw.rect(self.screen, (0, 0, 255), rect, 2)
-
-                render_pos = self.world.world[x][y]["render_pos"]
-
-#                   different tiles
-#
-                if self.world.world[x][y]["tile"]["name"] != "":
-                    name_tile = self.world.world[x][y]["tile"]["name"]
-                    offset = self.world.world[x][y]["tile"]["offset"]
-                    self.screen.blit(self.world.tiles[name_tile], (
-                        render_pos[0]+self.world.land_tile.get_width() *
-                        0.5 + self.camera.scroll.x,
-                        render_pos[1]+self.world.land_tile.get_height()*0 - offset + self.camera.scroll.y))
-
-
-#
-#                   2.5D grid
-
-                p = self.world.world[x][y]["iso_poly"]
-                p = [(x + self.world.land_tile.get_width() *
-                      0.5 + self.camera.scroll.x, y + self.world.land_tile.get_height()*0+self.camera.scroll.y) for x, y in p]
-
-                pg.draw.polygon(self.screen, (0, 0, 0), p, 1)
+        self.world.draw(self.camera, self.screen)
 
         self.hudleft.draw(self.screen)
-        self.hudstick.draw(self.screen)
         self.hudup.draw(self.screen)
         self.infofps.draw(self.screen)
         self.infopop.draw(self.screen)

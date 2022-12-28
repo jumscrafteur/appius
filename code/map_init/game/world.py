@@ -18,10 +18,13 @@ class World:
         # self.land_tile = pg.Surface((self.width, self.height)).co2nvert_alpha()
         self.tiles = self.load_images()
         self.world = self.cree_world()
-
+        self.boundary = [self.land_tile.get_height, self.land_tile.get_width]
         self.temp_tile = None
         #
         #
+
+    def update(self, mouse_pos):
+        pass
 
     def cree_world(self):
         world = []
@@ -45,8 +48,35 @@ class World:
         #                   [output(gridx,0),.....,output(gridx,gridy)]      ]
         #
 
-    # def setval(self, r):
-    #     self.tileval = r
+    def draw(self, camera, screen):
+        screen.fill((0, 0, 0))
+        screen.blit(self.land_tile,
+                    (camera.scroll.x, camera.scroll.y))
+
+        for x in range(self.grid_lx):
+            for y in range(self.grid_ly):
+
+                render_pos = self.world[x][y]["render_pos"]
+
+#                   different tiles
+#
+                if self.world[x][y]["tile"]["name"] != "":
+                    name_tile = self.world[x][y]["tile"]["name"]
+                    offset = self.world[x][y]["tile"]["offset"]
+                    screen.blit(self.tiles[name_tile], (
+                        render_pos[0]+self.land_tile.get_width() *
+                        0.5 + camera.scroll.x,
+                        render_pos[1]+self.land_tile.get_height()*0 - offset + camera.scroll.y))
+
+
+#
+#                   2.5D grid
+
+                p = self.world[x][y]["iso_poly"]
+                p = [(x + self.land_tile.get_width() *
+                      0.5 + camera.scroll.x, y + self.land_tile.get_height()*0+camera.scroll.y) for x, y in p]
+
+                pg.draw.polygon(screen, (0, 0, 0), p, 1)
 
     def grid_to_world(self, grid_x, grid_y):
 
@@ -73,6 +103,18 @@ class World:
         }
 
         return output
+
+    def mouse_to_grid(self, x, y, scroll):
+        # remove camera scrolling & offset
+        world_x = x - scroll.x - self.land_tile.get_height*0.5
+        world_y = y - scroll.y - self.land_tile.get_width*0
+        # transform iso to cartesian
+        cart_x = cart_y - world_x
+        cart_y = (2*world_y - world_x)/2
+        # transform back to grid matrix
+        grid_x = int(cart_x // TILE_SIZE)
+        grid_y = int(cart_y // TILE_SIZE)
+        return grid_x, grid_y
 
     def cart_to_iso(self, x, y):
         iso_x = x - y
