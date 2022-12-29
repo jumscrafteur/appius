@@ -32,7 +32,7 @@ class InputBox:
     def write(self, event):
         if self.active:
             if event.key == pygame.K_RETURN:
-                self.action(self.text)
+                self.action()
 
             elif event.key == pygame.K_BACKSPACE:
                 self.text = self.text[:-1]

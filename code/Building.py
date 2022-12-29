@@ -22,7 +22,8 @@ class Building:
 class Grass(Building):
     def __init__(self, pos):
         super().__init__(pos)
-        self.tileImage = pygame.image.load("newland/Land1a_00285.png")
+        # self.tileImage = pygame.image.load("newland/Land1a_00285.png")
+        self.tileImage = pygame.image.load("newland/Land1a_00035.png")
 
 
 class Buildings:

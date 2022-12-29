@@ -6,13 +6,13 @@ from Utils import cartCoToIsoCo
 
 
 # NOTE de Hugo : Variable pour que je puisse debug sans casser le code pour vous.
-REFACTO_HUGO = False
+REFACTO_HUGO = True
 
 
 def SceneGameCreate(self):
     self.map = MapGame(self.game.screen, pygame.time.Clock())
     # TODO : modifier les valeurs de width and height
-    self.camera = Camera(100, 100)
+    self.camera = Camera(self.game.screen_width, self.game.screen_height)
 
 
 def SceneGameRun(self):
@@ -20,6 +20,7 @@ def SceneGameRun(self):
         self.map.run()
     else:
         self.game.screen.fill((0, 0, 0))
+        self.camera.movement_arrow()
 
         for building in self.game.save.map:
             # Get de position from de building
@@ -33,43 +34,29 @@ def SceneGameRun(self):
 
             self.game.screen.blit(building.tileImage,
                                   (mapIsoPosX + self.camera.scroll.x, mapIsoPosY + self.camera.scroll.y))
-        # self.game.screen.blit(self.map.world.land_tile,
-        #                       (self.map.camera.scroll.x, self.map.camera.scroll.y))
-
-        # for y in range(len(self.game.save.map)):
-        #     for x in range(len(self.game.save.map[y])):
-
-        #         render_pos = self.map.world.world[x][y]["render_pos"]
-
-        #         if self.map.world.world[x][y]["tile"]["name"] != "":
-        #             name_tile = self.map.world.world[x][y]["tile"]["name"]
-        #             offset = self.map.world.world[x][y]["tile"]["offset"]
-        #             self.game.screen.blit(self.map.world.tiles[name_tile], (
-        #                 render_pos[0]+self.map.world.land_tile.get_width() *
-        #                 0.5 + self.map.camera.scroll.x,
-        #                 render_pos[1]+self.map.world.land_tile.get_height()*0 - offset + self.map.camera.scroll.y))
-
-        #         p = self.map.world.world[x][y]["iso_poly"]
-        #         p = [(x + self.map.world.land_tile.get_width() *
-        #               0.5 + self.map.camera.scroll.x, y + self.map.world.land_tile.get_height()*0+self.map.camera.scroll.y) for x, y in p]
 
         self.map.hudleft.draw(self.game.screen)
-        self.map.hudstick.draw(self.game.screen)
+        # self.map.hudstick.draw(self.game.screen)
         self.map.hudup.draw(self.game.screen)
         self.map.infofps.draw(self.game.screen)
         self.map.infopop.draw(self.game.screen)
 
         pygame.display.flip()
-    # pass
 
 
 def SceneGameHandleEvents(self, event):
     if REFACTO_HUGO:
-        if event.type in [pygame.KEYUP, pygame.KEYDOWN]:
-            print(pygame.key.get_pressed()[pygame.K_UP])
-            print(pygame.key.get_pressed()[pygame.K_DOWN])
+        if event.type in [pygame.KEYUP, pygame.KEYDOWN] and event.key in [pygame.K_LEFT, pygame.K_RIGHT, pygame.K_DOWN, pygame.K_UP]:
+            self.camera.keys[event.key] = not self.camera.keys[event.key]
 
-        self.camera.movement_arrow(pygame.key.get_pressed())
+        # self.camera.movement_arrow(pygame.key.get_pressed())
+
+
+# 1073741906
+# 1073741903
+
+# 1073741905
+# 1073741904
 
 
 SCENE = Scene(SCENE_GAME_ID, 'Scene_Menu', createFunc=SceneGameCreate,
@@ -83,15 +70,22 @@ class Camera:
         self.width = width
         self.height = height
 
-        self.scroll = pygame.Vector2(0, 500)
-        self.mousseMouvSpeed = 10
-        self.keyboardMouvSpeed = 5
+        self.keys = {
+            pygame.K_UP: False,
+            pygame.K_LEFT: False,
+            pygame.K_DOWN: False,
+            pygame.K_RIGHT: False,
+        }
 
-    def movement_arrow(self, key_press):
-        self.scroll.x += (key_press[pygame.K_LEFT] -
-                          key_press[pygame.K_RIGHT])*self.keyboardMouvSpeed
-        self.scroll.y += (key_press[pygame.K_UP] -
-                          key_press[pygame.K_DOWN])*self.keyboardMouvSpeed
+        self.scroll = pygame.Vector2(width/2, height/2)
+        self.mousseMouvSpeed = 10
+        self.keyboardMouvSpeed = 10
+
+    def movement_arrow(self):
+        self.scroll.x += (self.keys[pygame.K_LEFT] -
+                          self.keys[pygame.K_RIGHT])*self.keyboardMouvSpeed
+        self.scroll.y += (self.keys[pygame.K_UP] -
+                          self.keys[pygame.K_DOWN])*self.keyboardMouvSpeed
 
     def movement_mouse(self, mouse_pos):
 
