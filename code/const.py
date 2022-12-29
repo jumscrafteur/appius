@@ -1,5 +1,18 @@
 # Fichier pour nos constantes
-font1 = "JSL Ancient"
+import pygame
+
+pygame.init()
+
+#font scene Pre_Menu
+font0= pygame.font.SysFont('JSL ANCIENT', 24, True)
+#font scene Menu
+font1 = pygame.font.SysFont('JSL ANCIENT', 48, True)
+
+#foot scene New_game
+font2 = pygame.font.SysFont('JSL ANCIENT', 46, True)
+
+#foot scene Load_game
+font3 = pygame.font.SysFont('JSL ANCIENT', 46, True)
 
 screen_height = 1024
 screen_width = 768

@@ -4,7 +4,7 @@ from Save import *
 
 
 class InputBox:
-    def __init__(self,  x, y, width, height, action, text='', font=font1):
+    def __init__(self,  x, y, width, height, action, font=font2, text=''):
         self.x = x
         self.y = y
         self.width = width
@@ -13,7 +13,6 @@ class InputBox:
             ((self.x-self.width/2), (self.y-self.height/2), self.width, self.height))
         self.text = text
         self.color = pygame.Color(109, 109, 109)
-        font = pygame.font.SysFont(font1, 46, True)
         self.font = font
         self.txt_render = self.font.render(text, True, self.color)
         self.active = False

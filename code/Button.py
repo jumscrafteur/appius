@@ -37,7 +37,7 @@ class Button_text(Button):
     
     def __init__(self, x, y, width, height, action, text, font=font1):
         self.text = text
-        font = pygame.font.SysFont(font1, 48, True)
+        
         self.font = font
         self.width = width
         self.height = height

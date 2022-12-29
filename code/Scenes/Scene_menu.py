@@ -32,13 +32,13 @@ def SceneMenuCreate(self):
         self.game.screen_width/2, self.game.screen_height/2, 1, 4, 0, 50, 300, 100)
 
     self.buttons["button_start"] = Button_text(
-        *next(layout), 300, 100, lambda: self.game.switchScene(SCENE_NEWGAME_ID), "Start Game")
+        *next(layout), 300, 100, lambda: self.game.switchScene(SCENE_NEWGAME_ID), "Start Game", font1)
     self.buttons["button_load"] = Button_text(
-        *next(layout), 300, 100, lambda: self.game.switchScene(SCENE_LOADGAME_ID), "Load a Game")
+        *next(layout), 300, 100, lambda: self.game.switchScene(SCENE_LOADGAME_ID), "Load a Game", font1)
     self.buttons["button_options"] = Button_text(
-        *next(layout), 300, 100, lambda: print("ok"), "Options")
+        *next(layout), 300, 100, lambda: print("ok"), "Options", font1)
     self.buttons["button_exit"] = Button_text(
-        *next(layout), 300, 100, self.game.end, "Exit Game")
+        *next(layout), 300, 100, self.game.end, "Exit Game", font1)
 
 
 def SceneMenuRun(self):

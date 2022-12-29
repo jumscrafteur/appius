@@ -2,6 +2,7 @@ import pygame
 from Button import Button_img
 from Scene import Scene
 from .Scene_ids import SCENE_PREMENU_ID, SCENE_MENU_ID
+from const import *
 
 
 def preMenuCreate(self):
@@ -15,6 +16,8 @@ def preMenuRun(self):
     pygame.time.Clock().tick(60)
 
     self.buttons['btn1'].show(self.game.screen)
+    text = font0.render("Click to start",1, (255,255,255))
+    self.game.screen.blit(text, (self.game.screen_width/2-text.get_width()/2, self.game.screen_height/2+210))
 
     pygame.display.flip()
 

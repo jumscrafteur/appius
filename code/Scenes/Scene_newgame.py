@@ -13,7 +13,7 @@ def SceneNewGameCreate(self):
 
     self.box["inputbox"] = InputBox(
         self.game.screen_width/2, self.game.screen_height/2-50, 600, 50,  lambda : pygame.event.post(pygame.event.Event(
-            event_types["LaunchGame"], {"name": 1})))
+            event_types["LaunchGame"], {"name": 1})), font2)
 
     self.buttons["btn1"] = Button_text(self.game.screen_width/2-150, self.game.screen_height /
                                        2+50, 300, 100, lambda: self.game.switchScene(SCENE_MENU_ID), "Back to Menu")
