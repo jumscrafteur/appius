@@ -1,7 +1,7 @@
 import pygame as pg
-TILE_SIZE = 30
+TILE_SIZE = 60
 
-
+# map
 LAND1A_078 = pg.image.load("newland/Land1a_00078.png")
 LAND1A_035 = pg.image.load("newland/Land1a_00035.png")
 LAND1A_036 = pg.image.load("newland/Land1a_00036.png")
@@ -33,13 +33,15 @@ LAND3A_074 = pg.image.load("newland/land3a_00074.png")
 LAND3A_081 = pg.image.load("newland/land3a_00081.png")
 LAND3A_082 = pg.image.load("newland/land3a_00082.png")
 
+# fonction
+HOUSE_01 = pg.image.load("fonction_render/house/Housng1a_00045.png")
 
 TILE_VAL = [[35, 35, 35, 35, 35, 35, 35, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            [120, 120, 120, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                120, 3074, 3074, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [120, 120, 120, 3074, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            [120, 120, 120, 3074, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -115,14 +117,16 @@ TILE_VAL = [[35, 35, 35, 35, 35, 35, 35, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 12
             ]
 
+DEFAULT_HOUSING = {"house": {"name": "house", "offset": 0}}
 
-def matchcasetileval(grid_x, grid_y):
+
+def matchcasetileval(mattrix, grid_x, grid_y):
     # tile = {"name": "", "offset": 0}
-    match TILE_VAL[grid_x][grid_y]:
-        case 35:
-            tile = {"name": "l1a35", "offset": 11}
-        case 36:
-            tile = {"name": "l1a36", "offset": 11}
+    match mattrix[grid_x][grid_y]:
+        case 35:  # 2x
+            tile = {"name": "l1a35", "offset": 22}
+        case 36:  # 2x
+            tile = {"name": "l1a36", "offset": 22}
         case 49:
             tile = {"name": "l1a49", "offset": 10}
         case 57:
@@ -133,7 +137,7 @@ def matchcasetileval(grid_x, grid_y):
             tile = {"name": "l1a60", "offset": 22}
         case 61:
             tile = {"name": "l1a61", "offset": 27}
-        case 120:
+        case 120:  # 2x
             tile = {"name": "l1a120", "offset": 0}
         case 128:
             tile = {"name": "l1a128", "offset": 0}
@@ -171,12 +175,15 @@ def matchcasetileval(grid_x, grid_y):
             tile = {"name": "l3a071", "offset": 0}
         case 3072:
             tile = {"name": "l3a072", "offset": 2}
-        case 3074:
-            tile = {"name": "l3a074", "offset": 4}
+        case 3074:  # 2x
+            tile = {"name": "l3a074", "offset": 8}
         case 3081:
             tile = {"name": "l3a081", "offset": 0}
         case 3082:
             tile = {"name": "l3a082", "offset": 0}
+        # special
+        case -1:
+            tile = {"name": "house", "offset": 0}
         case _:
             tile = {"name": "", "offset": 0}
     return tile

@@ -12,6 +12,7 @@ class InfoShow:
         self.color = color
         self.box = pg.image.load(
             "ingamehud/paneling_00015.png").convert_alpha()
+        self.rect = pg.Rect(x, y, self.box.get_width(), self.box.get_height())
 
     def draw(self, screen):
         screen.blit(self.box, (self.x, self.y))
@@ -23,34 +24,32 @@ class InfoShow:
 
 
 class Hudupper:
-    def __init__(self, x, y):
+    def __init__(self, x, y, width):
         self.x = x
         self.y = y
         self.image = pg.image.load(
             "ingamehud/paneling_00235.png").convert_alpha()
+        self.rect = pg.Rect(x, y, width, self.image.get_height())
 
     def draw(self, screen):
-        screen.blit(self.image, (self.x, self.y))
-        screen.blit(self.image, (self.x+117, self.y))
-        screen.blit(self.image, (self.x+234, self.y))
-        screen.blit(self.image, (self.x+351, self.y))
-        screen.blit(self.image, (self.x+438, self.y))
-        screen.blit(self.image, (self.x+490, self.y))
-        screen.blit(self.image, (self.x+585, self.y))
-        screen.blit(self.image, (self.x+702, self.y))
-        screen.blit(self.image, (self.x+819, self.y))
-        screen.blit(self.image, (self.x+936, self.y))
-        screen.blit(self.image, (self.x+1053, self.y))
-        screen.blit(self.image, (self.x+1170, self.y))
+        screen.blit(pygame.transform.scale(
+            self.image, (self.rect.width, self.rect.height)), self.rect)
 
 
 class Hudbigleft:
     def __init__(self, width, height):
 
+        #button in interaction
+        self.interaction = None
         self.width = width
         self.height = height
+
         self.paneling_017 = pg.image.load(
             "ingamehud/paneling_00017.png").convert_alpha()
+
+        self.rect = pg.Rect((self.width - 162, 25),
+                            (self.paneling_017.get_width(), self.height-25))
+
         self.map_panels_00003 = pg.image.load(
             "ingamehud/map_panels_00003.png").convert_alpha()
         self.panelwindow_013 = pg.image.load(
@@ -74,7 +73,8 @@ class Hudbigleft:
             self.width-23, 199+21,  "ingamehud/paneling_00094.png")
         # gap width 50 gap height 36 /big button
         self.button_123 = Button_img(
-            self.width-130, 294+21,  "ingamehud/paneling_00123.png")
+            self.width-130, 294+21,  "ingamehud/paneling_00123.png", "Palette_droite_Principale/Boutons/Construire des maison/Maisons_Click.png")
+
         self.button_131 = Button_img(
             self.width-80, 294+21, "ingamehud/paneling_00131.png")
         self.button_135 = Button_img(
@@ -112,59 +112,32 @@ class Hudbigleft:
         self.mini_button = {"098": self.button_098, "080": self.button_080, "082": self.button_082, "085":
                             self.button_085, "088": self.button_088, "091": self.button_091, "094": self.button_094, }
         #
+        self.main_button = {"house": self.button_123, "shovel": self.button_131, "road": self.button_135, "water": self.button_127, "medic": self.button_163, "thunder": self.button_151,
+                            "scroll": self.button_147, "mask": self.button_143, "bighouse": self.button_139, "hammer": self.button_167, "sword": self.button_159, "wagon": self.button_155,
+                            "X": self.button_246, "notice": self.button_115, "bell": self.button_122}
 
-    # def action(self, screen):
-    #     self.button_123.setAction(
-    #         building, self.button_123.image.copy(), pg.mouse.get_pressed())
-    #     self.button_123.Clicked()
+        self.cursor = {"house": pg.cursors.Cursor((30, 30), pg.image.load(
+            "cursor/hammer.png").convert_alpha())}
 
     def draw(self, screen):
         screen.blit(self.paneling_017, (self.width - 162, 4+21))
         screen.blit(self.map_panels_00003, (self.width - 162, 450+4+21))
         screen.blit(self.map_panels_00003, (self.width - 162, 1000))
         screen.blit(self.panelwindow_013, (self.width-162+6, 216+4+21))
-        # hud move in move out
-        self.button_098.show(screen)
-        # 2 long button
-        self.button_080.show(screen)
-        self.button_082.show(screen)
-        # 4 mini button
-        self.button_085.show(screen)
-        self.button_088.show(screen)
-        self.button_091.show(screen)
-        self.button_094.show(screen)
-        # 15 big button
-        # l1
-        self.button_123.show(screen)
-        self.button_131.show(screen)
-        self.button_135.show(screen)
-        # l2
-        self.button_127.show(screen)
-        self.button_163.show(screen)
-        self.button_151.show(screen)
-        # l3
-        self.button_147.show(screen)
-        self.button_143.show(screen)
-        self.button_139.show(screen)
-        # l4
-        self.button_167.show(screen)
-        self.button_159.show(screen)
-        self.button_155.show(screen)
-        # l5
-        self.button_246.show(screen)
-        self.button_115.show(screen)
-        self.button_122.show(screen)
-        # action
-        self.button_123.setAction(
-            building, self.button_123.image.copy(), pg.mouse.get_pressed())
-        self.button_123.Clicked()
-        if pg.mouse.get_pressed()[2]:
-            self.button_123.foncret = None
-        if self.button_123.foncret != None:
-            screen.blit(self.button_123.foncret, pg.mouse.get_pos())
 
-    # def action(self):
-    #     self.button_123.setAction(building)
-    # #     self.button_123.Clicked()
-    #     self.button_098.setAction(toggle_grid_2_5D, grid)
-    #     self.button_098.Clicked()
+        for mini in self.mini_button.values():
+            mini.show(screen)
+        for main in self.main_button.values():
+            main.show(screen)
+
+    def update(self, mouse_pos, mouse_action):
+        for main in self.main_button.items():
+            if main[1].IsHoverOn(mouse_pos):
+                if main[1].Clicked(mouse_action):
+                    pg.mouse.set_cursor(self.cursor[main[0]])
+                    self.interaction = main[0]
+
+        if mouse_action[2]:
+            pg.mouse.set_cursor(
+                pg.cursors.Cursor(pg.SYSTEM_CURSOR_ARROW))
+            self.interaction = None

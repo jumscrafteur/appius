@@ -27,19 +27,21 @@ class Button:
     #                 pygame.USEREVENT, {"action": self.action}))
     #             return 1
 
+    def IsHoverOn(self, mouse_pos):
+        return self.box.collidepoint(mouse_pos)
+
+    def Clicked(self, mouse_action):
+        if self.IsHoverOn:
+            if mouse_action[0]:
+                return True
+            else:
+                return False
+
     def setAction(self, action, *args):
         self.args = []
         for _i in args:
             self.args.append(_i)
         self.action = action
-
-    def Clicked(self):
-        if self.box.collidepoint(pg.mouse.get_pos()):
-            if pg.mouse.get_pressed()[0] == 1 and self.clicked == False:
-                self.clicked = True
-                self.foncret = self.action(*self.args)
-            if pg.mouse.get_pressed()[0] == 0:
-                self.clicked = False
 
     def MouseonButton(self):
         if self.box.collidepoint(pg.mouse.get_pos()):
@@ -48,15 +50,28 @@ class Button:
 
 
 class Button_img(Button):
-    def __init__(self, x, y, image, action=imprimer):
+    def __init__(self, x, y, image, image_click=None, action=imprimer):
         self.image = pygame.image.load(image).convert()
+        self.image_click = image_click
+        if image_click != None:
+            self.image_click = pygame.image.load(image_click).convert()
         super().__init__(x, y, self.image.get_width(), self.image.get_height(), action)
         self.rect = self.image.get_rect(center=(self.x, self.y))
         self.box = self.image.get_rect(center=(self.x, self.y))
 
+    # @Override
+    # def Clicked(self):
+    #     if self.IsHoverOn:
+    #         if pg.mouse.get_pressed()[0]:
+    #             print("hold!!!")
+
     def show(self, screen):
         screen.blit(pygame.transform.scale(
             self.image, (self.image.get_width(), self.image.get_height())), self.rect)
+
+    def show_press(self, screen):
+        screen.blit(pygame.transform.scale(
+            self.image_click, (self.image.get_width(), self.image.get_height())), self.rect)
 
 
 class Button_text(Button):

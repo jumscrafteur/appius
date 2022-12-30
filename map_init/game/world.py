@@ -6,33 +6,58 @@ from .setting import *
 
 class World:
 
-    def __init__(self, grid_l_x, grid_l_y, width, height):
+    def __init__(self, grid_l_x, grid_l_y, width, height, mattrice, hud):
         self.grid_lx = grid_l_x
         self.grid_ly = grid_l_y
         self.width = width
         self.height = height
-        self.tileval = TILE_VAL
+        self.hud = hud
+        self.mattrice = mattrice
 
         self.land_tile = pg.Surface(
             (self.grid_lx * TILE_SIZE * 2, self.grid_ly * TILE_SIZE))
         # self.land_tile = pg.Surface((self.width, self.height)).co2nvert_alpha()
         self.tiles = self.load_images()
-        self.world = self.cree_world()
+        self.tiles_event = self.load_image_event()
+        self.world = self.cree_world(self.mattrice)
         self.boundary = [self.land_tile.get_height, self.land_tile.get_width]
         self.temp_tile = None
         #
         #
 
-    def update(self, mouse_pos):
-        pass
+    def update(self, mouse_pos, mouse_action, camera):
+        self.temp_tile = None
+        if self.hud["main"].interaction != None:
+            grid_pos = self.mouse_to_grid(
+                mouse_pos[0], mouse_pos[1], camera.scroll)
 
-    def cree_world(self):
+            if self.can_place_tile(grid_pos):
+                img = self.tiles_event[self.hud["main"].interaction]
+                img.set_alpha(100)
+
+                render_pos = self.world[grid_pos[0]][grid_pos[1]]["render_pos"]
+                iso_poly = self.world[grid_pos[0]][grid_pos[1]]["iso_poly"]
+                collision = self.world[grid_pos[0]][grid_pos[1]]["collision"]
+
+            self.temp_tile = {
+                "image": img,
+                "render_pos": render_pos,
+                "iso_poly": iso_poly,
+                "collision": collision
+            }
+            if mouse_action[0] and not collision:
+                self.world[grid_pos[0]][grid_pos[1]
+                                        ]["tile"] = DEFAULT_HOUSING[self.hud["main"].interaction]
+                self.world[grid_pos[0]][grid_pos[1]]["collision"] = True
+                self.hud.selected_tile = None
+
+    def cree_world(self, mattrice):
         world = []
 
         for grid_x in range(self.grid_lx):
             world.append([])
             for grid_y in range(self.grid_ly):
-                world_tile = self.grid_to_world(grid_x, grid_y)
+                world_tile = self.grid_to_world(grid_x, grid_y, mattrice)
                 world[grid_x].append(world_tile)
 
             #
@@ -49,6 +74,7 @@ class World:
         #
 
     def draw(self, camera, screen):
+
         screen.fill((0, 0, 0))
         screen.blit(self.land_tile,
                     (camera.scroll.x, camera.scroll.y))
@@ -67,18 +93,32 @@ class World:
                         render_pos[0]+self.land_tile.get_width() *
                         0.5 + camera.scroll.x,
                         render_pos[1]+self.land_tile.get_height()*0 - offset + camera.scroll.y))
-
-
 #
 #                   2.5D grid
-
                 p = self.world[x][y]["iso_poly"]
                 p = [(x + self.land_tile.get_width() *
                       0.5 + camera.scroll.x, y + self.land_tile.get_height()*0+camera.scroll.y) for x, y in p]
-
                 pg.draw.polygon(screen, (0, 0, 0), p, 1)
+        if self.temp_tile != None:
+            iso_poly = self.temp_tile["iso_poly"]
+            iso_poly = [(x + self.grass_tiles.get_width()/2 +
+                         camera.scroll.x, y + camera.scroll.y) for x, y in iso_poly]
+            if self.temp_tile["collision"]:
+                pg.draw.polygon(screen, (255, 0, 0), iso_poly, 3)
+            else:
+                pg.draw.polygon(screen, (255, 255, 255), iso_poly, 3)
+            render_pos = self.temp_tile["render_pos"]
+            screen.blit(
+                self.temp_tile["image"],
+                (
+                    render_pos[0] + self.grass_tiles.get_width() /
+                    2 + camera.scroll.x,
+                    render_pos[1] - (self.temp_tile["image"].get_height() -
+                                     TILE_SIZE) + camera.scroll.y
+                )
+            )
 
-    def grid_to_world(self, grid_x, grid_y):
+    def grid_to_world(self, grid_x, grid_y, mattrix):
 
         rect = [
             (grid_x*TILE_SIZE, grid_y*TILE_SIZE),
@@ -99,7 +139,8 @@ class World:
             "cart_rect": rect,
             "iso_poly": iso_poly,
             "render_pos": [minx, miny],
-            "tile": matchcasetileval(grid_x, grid_y)
+            "tile": matchcasetileval(mattrix, grid_x, grid_y),
+            "collision": False if matchcasetileval(mattrix, grid_x, grid_y) == "" else True
         }
 
         return output
@@ -120,6 +161,18 @@ class World:
         iso_x = x - y
         iso_y = (x + y)/2
         return iso_x, iso_y
+
+    def can_place_tile(self, grid_pos, mouse_pos):
+        mouse_on_panel = False
+        for rect in [self.hud["up"].rect, self.hud["main"].rect, self.hud["fps"].rect, self.hud["pop"].rect]:
+            if rect.collidepoint(mouse_pos):
+                mouse_on_panel = True
+        world_bounds = (0 <= grid_pos[0] <= self.grid_length_x) and (
+            0 <= grid_pos[1] <= self.grid_length_y)
+        if world_bounds and not mouse_on_panel:
+            return True
+        else:
+            return False
 
     def load_images(self):
 
@@ -161,3 +214,9 @@ class World:
                 "l1a235": l1a235, "12a285": l1a285,
                 "l2a095": l2a095,
                 "l3a071": l3a071, "l3a072": l3a072, "l3a074": l3a074, "l3a081": l3a081, "l3a082": l3a082}
+
+    def load_image_event(self):
+        house1 = HOUSE_01.convert_alpha()
+
+        return {"house": house1
+                }
