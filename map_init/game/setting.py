@@ -167,7 +167,7 @@ def matchcasetileval(mattrix, grid_x, grid_y):
             tile = {"name": "l1a234", "offset": 0}
         case 235:
             tile = {"name": "l1a235", "offset": 0}
-        case 285:
+        case 285:  # 2x
             tile = {"name": "l1a285", "offset": 0}
         case 2095:
             tile = {"name": "l2a095", "offset": 0}

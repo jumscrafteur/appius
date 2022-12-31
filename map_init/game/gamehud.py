@@ -137,7 +137,7 @@ class Hudbigleft:
                     pg.mouse.set_cursor(self.cursor[main[0]])
                     self.interaction = main[0]
 
-        if mouse_action[2]:
+        if mouse_action[2] or self.interaction == None:
             pg.mouse.set_cursor(
                 pg.cursors.Cursor(pg.SYSTEM_CURSOR_ARROW))
             self.interaction = None

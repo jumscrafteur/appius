@@ -50,6 +50,7 @@ class MapGame:
         mouse_action = pg.mouse.get_pressed()
         # self.camera.movement_mouse(mouse_pos)
         self.hudleft.update(mouse_pos, mouse_action)
+        self.world.update(mouse_pos, mouse_action, self.camera)
 
     def events(self):
         for event in pg.event.get():
