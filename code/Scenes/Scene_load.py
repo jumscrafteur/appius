@@ -6,7 +6,7 @@ from const import *
 from .Scene_ids import *
 from Save import *
 
-
+dict_event = {}
 
 def SceneLoadCreate(self):
     self.images["fond"] = pygame.image.load(
@@ -29,8 +29,8 @@ def SceneLoadCreate(self):
         scale += 30
         self.buttons[nom] = Button_text(self.game.screen_width/2, self.game.screen_height/2-75-scale, 
                                         200, 20, lambda : pygame.event.post(pygame.event.Event(
-                                           event_types["LoadName"], {nom: 3})), nom, font3)
-    
+                                           event_types["LoadName"], {nom : 30})), nom, font3)
+        
 
 def SceneLoadRun(self):
 
@@ -60,9 +60,6 @@ def SceneLoadGamehandleEventsFunc(self, event):
             self.box["inputbox"].text = self.buttons[key].text
             self.box["inputbox"].txt_render = self.box["inputbox"].font.render(self.box["inputbox"].text, True, (0, 0, 0))
 
-            
-
-
-
+    
 SCENE = Scene(SCENE_LOADGAME_ID, 'Scene_newgame', createFunc=SceneLoadCreate,
               runFunc=SceneLoadRun, handleEventsFunc=SceneLoadGamehandleEventsFunc)
