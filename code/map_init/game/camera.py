@@ -6,6 +6,7 @@ import sys
 class Camera:
 
     def __init__(self, width, height, boundary):
+        assert False, "deprecated code , do not use it"
 
         self.width = width
         self.height = height

@@ -16,7 +16,7 @@ class MapGame:
         # world
         self.world = World(40, 40, self.width, self.height)
         # camera
-        self.camera = Camera(self.width, self.height, self.world.boundary)
+        # self.camera = Camera(self.width, self.height, self.world.boundary)
         # hud
         self.grid = True
         self.hudup = Hudupper(0, 0)
@@ -27,6 +27,7 @@ class MapGame:
             self.width*0.6, 2, f"Pop    xxxx", 18, (255, 255, 255))
 
     def run(self):
+        assert False, "deprecated code , do not use it"
         self.playing = True
         while self.playing:
             self.clock.tick(60)
@@ -34,6 +35,8 @@ class MapGame:
             self.draw()
 
     def event_key(self):
+        assert False, "deprecated code , do not use it"
+
         self.camera.movement_arrow(pg.key.get_pressed())
 
     def event_souris(self):
@@ -44,6 +47,8 @@ class MapGame:
         pass
 
     def events(self):
+        assert False, "deprecated code , do not use it"
+
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 pg.quit()
@@ -60,6 +65,8 @@ class MapGame:
         self.event_key()
 
     def draw(self):
+        assert False, "deprecated code , do not use it"
+
         self.world.draw(self.camera, self.screen)
 
         self.hudleft.draw(self.screen)

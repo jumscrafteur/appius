@@ -5,10 +5,6 @@ import pygame
 from Utils import cartCoToIsoCo
 
 
-# NOTE de Hugo : Variable pour que je puisse debug sans casser le code pour vous.
-REFACTO_HUGO = True
-
-
 def SceneGameCreate(self):
     self.map = MapGame(self.game.screen, pygame.time.Clock())
     # TODO : modifier les valeurs de width and height
@@ -18,6 +14,7 @@ def SceneGameCreate(self):
 def SceneGameRun(self):
     self.game.screen.fill((0, 0, 0))
     self.camera.movement_arrow()
+    self.camera.movement_mouse()
 
     for building in self.game.save.map:
         # Get de position from de building
@@ -43,6 +40,9 @@ def SceneGameRun(self):
 def SceneGameHandleEvents(self, event):
     if event.type in [pygame.KEYUP, pygame.KEYDOWN] and event.key in [pygame.K_LEFT, pygame.K_RIGHT, pygame.K_DOWN, pygame.K_UP]:
         self.camera.keys[event.key] = not self.camera.keys[event.key]
+    elif event.type == pygame.MOUSEMOTION:
+        self.camera.mousePos = event.pos
+        pass
 
 
 SCENE = Scene(SCENE_GAME_ID, 'Scene_Menu', createFunc=SceneGameCreate,
@@ -62,10 +62,11 @@ class Camera:
             pygame.K_DOWN: False,
             pygame.K_RIGHT: False,
         }
+        self.mousePos = (width/2, height/2)
 
         self.scroll = pygame.Vector2(width/2, height/2)
-        self.mousseMouvSpeed = 10
-        self.keyboardMouvSpeed = 10
+        self.mousseMouvSpeed = 20
+        self.keyboardMouvSpeed = 20
 
     def movement_arrow(self):
         self.scroll.x += (self.keys[pygame.K_LEFT] -
@@ -73,16 +74,16 @@ class Camera:
         self.scroll.y += (self.keys[pygame.K_UP] -
                           self.keys[pygame.K_DOWN])*self.keyboardMouvSpeed
 
-    def movement_mouse(self, mouse_pos):
+    def movement_mouse(self):
 
         # x movement
-        if mouse_pos[0] > self.width * 0.97:
+        if self.mousePos[0] > self.width * 0.97:
             self.scroll.x += -self.mousseMouvSpeed
-        elif mouse_pos[0] < self.width * 0.03:
+        elif self.mousePos[0] < self.width * 0.03:
             self.scroll.x += self.mousseMouvSpeed
 
         # y movement
-        if mouse_pos[1] > self.height * 0.97:
+        if self.mousePos[1] > self.height * 0.97:
             self.scroll.y += -self.mousseMouvSpeed
-        elif mouse_pos[1] < self.height * 0.03:
+        elif self.mousePos[1] < self.height * 0.03:
             self.scroll.y += self.mousseMouvSpeed
