@@ -12,7 +12,9 @@ font1 = pygame.font.SysFont('JSL ANCIENT', 48, True)
 font2 = pygame.font.SysFont('JSL ANCIENT', 46, True)
 
 #foot scene Load_game
-font3 = pygame.font.SysFont('JSL ANCIENT', 46, True)
+font_button = pygame.font.SysFont('JSL ANCIENT', 48, True)
+
+font_save = pygame.font.SysFont('JSL ANCIENT', 48, True)
 
 screen_height = 1024
 screen_width = 768

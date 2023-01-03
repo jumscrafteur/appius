@@ -1,6 +1,7 @@
 import pygame
 
 
+
 class Scene():
     def __init__(self, id, name,
                  createFunc=lambda scene: None,
@@ -15,6 +16,7 @@ class Scene():
         self.runFunc = runFunc
         self.destroyFunc = destroyFunc
         self.handleEventsFunc = handleEventsFunc
+        self.last_button_press = ""
 
         self.images = {}
         self.buttons = {}
@@ -34,7 +36,8 @@ class Scene():
                 self.game.end()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 for key in self.buttons.keys():
-                    self.buttons[key].MouseonButton(event.pos)
+                    if self.buttons[key].MouseonButton(event.pos):
+                        self.last_button_press = key
                 for clé in self.box.keys():
                     self.box[clé].OverBox(event)
             if event.type == pygame.KEYDOWN:

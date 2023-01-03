@@ -7,21 +7,20 @@ from .Scene_ids import *
 from Save import *
 
 
-
 def SceneLoadCreate(self):
     self.images["fond"] = pygame.image.load(
         "assets/0_fired_00001.png").convert()
     
     self.box["inputbox"] = InputBox(
         self.game.screen_width/2, self.game.screen_height/2-200, 600, 50,  lambda : pygame.event.post(pygame.event.Event(
-            event_types["LaunchGame"], {"name": 2})), font3)
+            event_types["LaunchGame"], {"name": 2})), font_button)
     
     self.buttons["btn1"] = Button_text(self.game.screen_width/2-150, self.game.screen_height /
-                                       2+230, 300, 100, lambda: self.game.switchScene(SCENE_MENU_ID), "Back to Menu")
+                                       2+230, 300, 100, lambda: self.game.switchScene(SCENE_MENU_ID), "Back to Menu", font_button)
     
     self.buttons["btn2"] = Button_text(self.game.screen_width/2+150, self.game.screen_height /
                                        2+230, 300, 100, lambda: pygame.event.post(pygame.event.Event(
-                                           event_types["LaunchGame"], {"name": 2})), "Go to Game")
+                                           event_types["LaunchGame"], {"name": 2})), "Go to Game", font_button)
     
     
     scale =0
@@ -29,8 +28,8 @@ def SceneLoadCreate(self):
         scale += 30
         self.buttons[nom] = Button_text(self.game.screen_width/2, self.game.screen_height/2-75-scale, 
                                         200, 20, lambda : pygame.event.post(pygame.event.Event(
-                                           event_types["LoadName"], {nom: 3})), nom, font3)
-    
+                                           event_types["LoadName"], {nom : 30})), nom, font_save)
+        
 
 def SceneLoadRun(self):
 
@@ -56,13 +55,9 @@ def SceneLoadGamehandleEventsFunc(self, event):
         self.game.switchScene(SCENE_GAME_ID)
     
     if event.type == event_types["LoadName"]:
-        for key in self.buttons.keys():
-            self.box["inputbox"].text = self.buttons[key].text
-            self.box["inputbox"].txt_render = self.box["inputbox"].font.render(self.box["inputbox"].text, True, (0, 0, 0))
+        self.box["inputbox"].text = self.buttons[self.last_button_press].text
+        self.box["inputbox"].txt_render = self.box["inputbox"].font.render(self.box["inputbox"].text, True, (0, 0, 0))
 
-            
-
-
-
+    
 SCENE = Scene(SCENE_LOADGAME_ID, 'Scene_newgame', createFunc=SceneLoadCreate,
               runFunc=SceneLoadRun, handleEventsFunc=SceneLoadGamehandleEventsFunc)
