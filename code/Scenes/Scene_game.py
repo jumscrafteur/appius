@@ -16,6 +16,9 @@ def SceneGameRun(self):
     self.camera.movement_arrow()
     self.camera.movement_mouse()
 
+    mapRender = pygame.Surface(
+        (self.game.screen_width, self.game.screen_height))
+
     for building in self.game.save.map:
         # Get de position from de building
         gridCartPosX, gridCartPosY = building.pos
@@ -26,8 +29,10 @@ def SceneGameRun(self):
         # Transfer to Isometric space
         mapIsoPosX, mapIsoPosY = cartCoToIsoCo(mapCartPosX, mapCartPosY)
 
-        self.game.screen.blit(building.tileImage,
-                              (mapIsoPosX + self.camera.scroll.x, mapIsoPosY + self.camera.scroll.y))
+        mapRender.blit(building.tileImage.convert_alpha(),
+                       (mapIsoPosX + self.camera.scroll.x, mapIsoPosY + self.camera.scroll.y))
+
+    self.game.screen.blit(mapRender, (0, 0))
 
     self.map.hudleft.draw(self.game.screen)
     self.map.hudup.draw(self.game.screen)
