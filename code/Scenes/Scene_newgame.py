@@ -12,7 +12,7 @@ def SceneNewGameCreate(self):
         "assets/01b_00001.png").convert()
 
     self.box["inputbox"] = InputBox(
-        self.game.screen_width/2, self.game.screen_height/2-50, 600, 50,  lambda : pygame.event.post(pygame.event.Event(
+        self.game.screen_width/2, self.game.screen_height/2-30, 600, 45,  lambda : pygame.event.post(pygame.event.Event(
             event_types["LaunchGame"], {"name": 1})), font2)
 
     self.buttons["btn1"] = Button_text(self.game.screen_width/2-150, self.game.screen_height /
@@ -38,6 +38,9 @@ def SceneNewGameRun(self):
 
     for key in self.buttons.keys():
         self.buttons[key].show(self.game.screen, False)
+    
+    text = font1.render("Enter the name of your save",1, (0,0,0))
+    self.game.screen.blit(text, (self.game.screen_width/2-text.get_width()/2, self.game.screen_height/2-100))
         
         
 

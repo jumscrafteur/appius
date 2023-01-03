@@ -18,6 +18,7 @@ class Button:
                 self.color = (180,180,180)
                 pygame.event.post(pygame.event.Event(
                     pygame.USEREVENT, {"action": self.action}))
+                return True
                 
         
     
@@ -37,7 +38,7 @@ class Button_text(Button):
     
     def __init__(self, x, y, width, height, action, text, font=font1):
         self.text = text
-        
+        self.name = text
         self.font = font
         self.width = width
         self.height = height
