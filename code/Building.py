@@ -46,7 +46,8 @@ class Tent (Building) :
     def update_NB(self):
         self.currentNB+=1
     
-    def up_date_statut(self,): # a faire
+    def up_date_statut(self): # a faire
+        self.statut
         return None
         
     
@@ -151,14 +152,11 @@ class Buildings:
     def __init__(self):
         ''' Une simple liste vide '''
         self.listBuilding = []
-        self.typeBuilding =[Building,Tent,prefecture,water_well,Senat,Venus,Neptune,Mercury,Mars,Ceres,B_engineering] 
-
+        
     def ajouter(self, B):
-        assert(type(B) in self.typeBuilding)
         self.Building.append(B)
 
     def retirer(self, B):
-        assert(type(B) in self.typeBuilding)
         self.Building.remove(B)  
 
     def __iter__(self):                        #

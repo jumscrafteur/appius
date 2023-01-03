@@ -56,7 +56,7 @@ class Prefect(Walker):
                             b._set_riskfire(0)
                 
 
-
+  
 class Citizen(Walker):
     def __init__(self,save):
         Walker.__init__(self, save)
