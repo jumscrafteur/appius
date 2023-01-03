@@ -24,6 +24,15 @@ class Building:
     def _get_riskcollapse(self):
         return self.riskcollapse
 
+    def _set_riskfire(self,n):
+        self.risk_fire=n
+    
+    def _set_risk_criminality(self,n):
+        self.risk_criminality=n
+
+    def _set_risk_collapse(self,n):
+        self.risk_collapse=n
+
 
 class Tent (Building) :
     def __init__(self,pos):
@@ -32,6 +41,10 @@ class Tent (Building) :
         self.capacity=5 #par défaut 
         self.currentNB=0
         self.statut= {"Panneau":1,"Construction":0,"Tent":0,"T_feu":0,"T_collapse":0} # statut du batiment
+
+
+    def update_NB(self):
+        self.currentNB+=1
     
     def up_date_statut(self,): # a faire
         return None

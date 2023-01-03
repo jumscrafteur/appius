@@ -35,7 +35,8 @@ class Engineer(Walker):
                 for b in Buildings.listBuilding.keys():                 # a refaire 
                     for k in Buildings.listBuilding[b]:
                         if ((i, j) == k.pos) and (k.risk_collapse > 0):
-                            k.risk_collapse = 0
+                            k._set_risk_collapse(0)
+
       
 
 
@@ -52,7 +53,7 @@ class Prefect(Walker):
             for j in range(self.pos[1]-r, self.pos[1]+r):
                   for b in Buildings.listBuilding :
                         if ((i, j) == b.pos) and (b.risk_fire > 0):
-                            b.risk_fire = 0
+                            b._set_riskfire(0)
                 
 
 
@@ -69,7 +70,7 @@ class Citizen(Walker):
                 for b in Buildings.listBuilding:
                     if(b.type=='Tent'):
                         if ((i, j) == b.pos) and (b.currentNB < b.capacity):
-                            b.currentNb += 1
+                            b.updateNB()
                             break   
         
 
