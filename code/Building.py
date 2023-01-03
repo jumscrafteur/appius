@@ -12,6 +12,7 @@ class Building:
         self.service = False
         self.needs = []
         self.tileImage = None
+        self.type =None
         
 
     def _get_pos(self):
@@ -137,13 +138,14 @@ class Buildings:
     def __init__(self):
         ''' Une simple liste vide '''
         self.listBuilding = []
+        self.typeBuilding =[Building,Tent,prefecture,water_well,Senat,Venus,Neptune,Mercury,Mars,Ceres,B_engineering] 
 
     def ajouter(self, B):
-        assert(type(B) in [Building,Tent,prefecture,water_well,Senat,Venus,Neptune,Mercury,Mars,Ceres,B_engineering] )
+        assert(type(B) in self.typeBuilding)
         self.Building.append(B)
 
     def retirer(self, B):
-        assert(type(B) in [Building,Tent,prefecture,water_well,Senat,Venus,Neptune,Mercury,Mars,Ceres,B_engineering])
+        assert(type(B) in self.typeBuilding)
         self.Building.remove(B)  
 
     def __iter__(self):                        #
