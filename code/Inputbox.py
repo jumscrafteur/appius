@@ -17,6 +17,7 @@ class InputBox:
         self.txt_render = self.font.render(text, True, self.color)
         self.active = False
         self.action = action
+        self.count = 0
 
     def OverBox(self, event):
         if self.rect.collidepoint(event.pos):
@@ -33,11 +34,15 @@ class InputBox:
         if self.active:
             if event.key == pygame.K_RETURN:
                 self.action()
-
             elif event.key == pygame.K_BACKSPACE:
                 self.text = self.text[:-1]
+                print(self.count)
+                self.count -= 1
             else:
-                self.text += event.unicode
+                if self.count < 15:
+                    self.text += event.unicode
+                    self.count += 1
+                    print(self.count)
             self.txt_render = self.font.render(self.text, True, (0, 0, 0))
 
     def show(self, screen):

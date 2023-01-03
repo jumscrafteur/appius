@@ -24,13 +24,12 @@ def SceneLoadCreate(self):
                                            event_types["LaunchGame"], {"name": 2})), "Go to Game")
     
     
-    font_load = pygame.font.SysFont(font1, 42, True)
     scale =0
     for nom in Save.getSavesNames():
         scale += 30
         self.buttons[nom] = Button_text(self.game.screen_width/2, self.game.screen_height/2-75-scale, 
                                         200, 20, lambda : pygame.event.post(pygame.event.Event(
-                                           event_types["LoadName"], {nom: 3})), nom, font_load)
+                                           event_types["LoadName"], {nom: 3})), nom, font3)
     
 
 def SceneLoadRun(self):
