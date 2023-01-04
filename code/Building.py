@@ -12,6 +12,7 @@ class Building:
         self.service = False
         self.needs = []
         self.tileImage = None
+        self.type =None
         
 
     def _get_pos(self):
@@ -23,6 +24,15 @@ class Building:
     def _get_riskcollapse(self):
         return self.riskcollapse
 
+    def _set_riskfire(self,n):
+        self.risk_fire=n
+    
+    def _set_risk_criminality(self,n):
+        self.risk_criminality=n
+
+    def _set_risk_collapse(self,n):
+        self.risk_collapse=n
+
 
 class Tent (Building) :
     def __init__(self,pos):
@@ -31,8 +41,13 @@ class Tent (Building) :
         self.capacity=5 #par défaut 
         self.currentNB=0
         self.statut= {"Panneau":1,"Construction":0,"Tent":0,"T_feu":0,"T_collapse":0} # statut du batiment
+
+
+    def update_NB(self):
+        self.currentNB+=1
     
-    def up_date_statut(self,): # a faire
+    def up_date_statut(self): # a faire
+        self.statut
         return None
         
     
@@ -137,13 +152,11 @@ class Buildings:
     def __init__(self):
         ''' Une simple liste vide '''
         self.listBuilding = []
-
+        
     def ajouter(self, B):
-        assert(type(B) in [Building,Tent,prefecture,water_well,Senat,Venus,Neptune,Mercury,Mars,Ceres,B_engineering] )
         self.Building.append(B)
 
     def retirer(self, B):
-        assert(type(B) in [Building,Tent,prefecture,water_well,Senat,Venus,Neptune,Mercury,Mars,Ceres,B_engineering])
         self.Building.remove(B)  
 
     def __iter__(self):                        #

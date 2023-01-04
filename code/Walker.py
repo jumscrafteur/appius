@@ -35,7 +35,8 @@ class Engineer(Walker):
                 for b in Buildings.listBuilding.keys():                 # a refaire 
                     for k in Buildings.listBuilding[b]:
                         if ((i, j) == k.pos) and (k.risk_collapse > 0):
-                            k.risk_collapse = 0
+                            k._set_risk_collapse(0)
+
       
 
 
@@ -45,28 +46,32 @@ class Prefect(Walker):
         self.type = "Prefect"
         self.unemployed=False
 
-    def work(self,save):
-        MR = save.layers["risk_feu"] 
+    def work(self,Buildings):
         r = self.rayonDAction
+        assert(type(Buildings)==Buildings)
         for i in range(self.pos[0]-r, self.pos[0]+r):  # a refaire 
             for j in range(self.pos[1]-r, self.pos[1]+r):
-                MR[i][j] = 0
+                  for b in Buildings.listBuilding :
+                        if ((i, j) == b.pos) and (b.risk_fire > 0):
+                            b._set_riskfire(0)
+                
 
-
+  
 class Citizen(Walker):
     def __init__(self,save):
         Walker.__init__(self, save)
         self.type = "Citizen"
 
-    def work(self, save, Buildings):
-        r = self.rayonDAction
+    def work(self,Buildings):
         assert(type(Buildings)==Buildings)
+        r = self.rayonDAction
         for i in range(self.pos[0]-r, self.pos[0]+r):
             for j in range(self.pos[1]-r, self.pos[1]+r):
-                for b in Buildings.listBuilding["Tent"]:
-                    if ((i, j) == b.pos) and (b.currentNB < b.capacity):
-                        b.currentNb += 1
-                        break   
+                for b in Buildings.listBuilding:
+                    if(b.type=='Tent'):
+                        if ((i, j) == b.pos) and (b.currentNB < b.capacity):
+                            b.updateNB()
+                            break   
         
 
 class Walkers():
