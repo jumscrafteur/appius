@@ -11,4 +11,3 @@ if __name__ == '__main__':
     g.addScene(Scene_load.SCENE)
 
     g.run()
-    

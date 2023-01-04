@@ -17,5 +17,10 @@
 # while run:
 #     eventhandling()
 lista = []
-lista.append([1, 24, 5, 5, 6, 7])
-print(lista, lista[1])
+for x in range(5):
+    lista.append([])
+    for y in range(5):
+        lista[x].append(y)
+lista[2].remove(2)
+lista[2].insert(2, 9)
+print(lista)

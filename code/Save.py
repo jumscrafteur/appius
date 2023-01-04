@@ -10,9 +10,10 @@ class Save():
     def __init__(self, name):
         # NOTE : Carte temporaire
         self.map = Buildings()
-        for y in range(MAP_SIZE[0]):
-            for x in range(MAP_SIZE[1]):
-                self.map.ajouter(Grass((x, y)))
+        for x in range(MAP_SIZE[0]):
+            self.map.Building.append([])
+            for y in range(MAP_SIZE[1]):
+                self.map.Building[x].append(Grass((x, y)))
         self.walkers = []
         self.pop = 0
         self.PO = 0
