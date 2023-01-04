@@ -1,4 +1,5 @@
 from Scene import Scene
+from const import *
 from .Scene_ids import SCENE_GAME_ID
 from map_init.game.map import MapGame
 import pygame
@@ -10,6 +11,8 @@ def SceneGameCreate(self):
     # TODO : modifier les valeurs de width and height
     self.camera = Camera(self.game.screen_width, self.game.screen_height)
 
+    self.zoom = .5
+
 
 def SceneGameRun(self):
     self.game.screen.fill((0, 0, 0))
@@ -17,7 +20,7 @@ def SceneGameRun(self):
     self.camera.movement_mouse()
 
     mapRender = pygame.Surface(
-        (self.game.screen_width, self.game.screen_height))
+        (self.game.screen_width/self.zoom, self.game.screen_height/self.zoom))
 
     test = pygame.image.load("newland/Land2a_00034.png").convert_alpha()
 
@@ -31,8 +34,8 @@ def SceneGameRun(self):
         # Transfer to Isometric space
         mapIsoPosX, mapIsoPosY = cartCoToIsoCo(mapCartPosX, mapCartPosY)
 
-        renderPosX = mapIsoPosX + self.camera.scroll.x
-        renderPosY = mapIsoPosY + self.camera.scroll.y
+        renderPosX = mapIsoPosX + self.camera.scroll.x/self.zoom
+        renderPosY = mapIsoPosY + self.camera.scroll.y/self.zoom
 
         if building.risk_collapse > .5:
             mapRender.blit(test,
@@ -40,6 +43,10 @@ def SceneGameRun(self):
         else:
             mapRender.blit(building.tileImage.convert_alpha(),
                            (renderPosX, renderPosY))
+
+    # print("okokok")
+    mapRender = pygame.transform.scale(
+        mapRender,  (self.game.screen_width, self.game.screen_height))
 
     self.game.screen.blit(mapRender, (0, 0))
 
@@ -52,8 +59,13 @@ def SceneGameRun(self):
 
 
 def SceneGameHandleEvents(self, event):
-    if event.type in [pygame.KEYUP, pygame.KEYDOWN] and event.key in [pygame.K_LEFT, pygame.K_RIGHT, pygame.K_DOWN, pygame.K_UP]:
-        self.camera.keys[event.key] = not self.camera.keys[event.key]
+    if event.type in [pygame.KEYUP, pygame.KEYDOWN]:
+        if event.key in [pygame.K_LEFT, pygame.K_RIGHT, pygame.K_DOWN, pygame.K_UP]:
+            self.camera.keys[event.key] = not self.camera.keys[event.key]
+        elif event.unicode == '+':
+            self.zoom += scaleDelta
+        elif event.unicode == '-':
+            self.zoom = self.zoom - scaleDelta if self.zoom - scaleDelta > 0 else self.zoom
     elif event.type == pygame.MOUSEMOTION:
         self.camera.mousePos = event.pos
         pass
