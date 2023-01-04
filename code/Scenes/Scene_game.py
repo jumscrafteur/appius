@@ -19,6 +19,8 @@ def SceneGameRun(self):
     mapRender = pygame.Surface(
         (self.game.screen_width, self.game.screen_height))
 
+    test = pygame.image.load("newland/Land2a_00034.png").convert_alpha()
+
     for building in self.game.save.map:
         # Get de position from de building
         gridCartPosX, gridCartPosY = building.pos
@@ -29,8 +31,15 @@ def SceneGameRun(self):
         # Transfer to Isometric space
         mapIsoPosX, mapIsoPosY = cartCoToIsoCo(mapCartPosX, mapCartPosY)
 
-        mapRender.blit(building.tileImage.convert_alpha(),
-                       (mapIsoPosX + self.camera.scroll.x, mapIsoPosY + self.camera.scroll.y))
+        renderPosX = mapIsoPosX + self.camera.scroll.x
+        renderPosY = mapIsoPosY + self.camera.scroll.y
+
+        if building.risk_collapse > .5:
+            mapRender.blit(test,
+                           (renderPosX, renderPosY))
+        else:
+            mapRender.blit(building.tileImage.convert_alpha(),
+                           (renderPosX, renderPosY))
 
     self.game.screen.blit(mapRender, (0, 0))
 
