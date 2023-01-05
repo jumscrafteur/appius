@@ -34,6 +34,9 @@ def SceneGameCreate(self):
 def SceneGameRun(self):
 
     # update
+
+    self.camera.movement_arrow()
+    self.camera.movement_mouse()
     mouse_pos = pygame.mouse.get_pos()
     mouse_action = pygame.mouse.get_pressed()
     mapRender = pygame.Surface(
@@ -87,7 +90,17 @@ class Camera:
         self.keyboardMouvSpeed = 20
 
     def movement_arrow(self):
-        # if self.scroll.x > seg
+        print(f"bound{self.boundary}")
+        print(self.scroll.x, self.scroll.y)
+
+        if self.scroll.x > self.boundary[0]*0.6:
+            self.scroll.x = self.boundary[0]*0.6
+        elif self.scroll.x < -self.boundary[0]*0.3:
+            self.scroll.x = -self.boundary[0]*0.3
+        elif self.scroll.y > self.boundary[1]*0.08:
+            self.scroll.y = self.boundary[1]*0.08
+        elif self.scroll.y < -self.boundary[1]*0.75:
+            self.scroll.y = -self.boundary[1]*0.75
         self.scroll.x += (self.keys[pygame.K_LEFT] -
                           self.keys[pygame.K_RIGHT])*self.keyboardMouvSpeed
         self.scroll.y += (self.keys[pygame.K_UP] -
@@ -95,7 +108,13 @@ class Camera:
 
     def movement_mouse(self):
 
-        # x movement
+        # x movement# map boundary
+        if self.scroll.x > self.boundary[0]*0.6:
+            self.scroll.x = self.boundary[0]*0.6
+        elif self.scroll.x < -self.boundary[0]*0.3:
+            self.scroll.x = -self.boundary[0]*0.3
+        elif self.scroll.y < -self.boundary[1]*0.75:
+            self.scroll.y = -self.boundary[1]*0.75
         if self.mousePos[0] > self.width * 0.97:
             self.scroll.x += -self.mousseMouvSpeed
         elif self.mousePos[0] < self.width * 0.03:
@@ -119,7 +138,8 @@ class World:
         self.world = world
         self.screen = screen
         # self.land_tile = pg.Surface((self.width, self.height)).co2nvert_alpha()
-        self.boundary = [self.grid_lx * TILE_SIZE, self.grid_ly * TILE_SIZE]
+        self.boundary = [self.grid_lx *
+                         TILE_SIZE * 2, self.grid_ly * TILE_SIZE]
         self.temp_tile = None
 
     def update(self, mouse_pos, mouse_action, camera):
