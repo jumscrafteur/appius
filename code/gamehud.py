@@ -72,7 +72,7 @@ class Hudbigleft:
             self.width-23, 199+21, None,  "ingamehud/paneling_00094.png")
         # gap width 50 gap height 36 /big button
         self.button_123 = Button_img(
-            self.width-130, 294+21, None,  "ingamehud/paneling_00123.png")
+            self.width-130, 294+21, None,  "ingamehud/paneling_00123.png", "Palette_droite_Principale/Boutons/Construire des maison/Maisons_Click.png")
 
         self.button_131 = Button_img(
             self.width-80, 294+21, None, "ingamehud/paneling_00131.png")

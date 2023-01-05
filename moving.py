@@ -3,7 +3,6 @@ import pygame
 pygame.init()
 window = pygame.display.set_mode((300, 300))
 clock = pygame.time.Clock()
-
 rect = pygame.Rect(0, 0, 20, 20)
 rect.center = window.get_rect().center
 vel = 5
@@ -11,8 +10,9 @@ bound = [window.get_width(), window.get_height()]
 possible_x = True
 run = True
 while run:
-    print(f"screen{bound[0]},{bound[1]}\n")
-    print(f"{rect.centerx},{rect.centery}")
+    print(clock.get_fps())
+    # print(f"screen{bound[0]},{bound[1]}\n")
+    # print(f"{rect.centerx},{rect.centery}")
 
     clock.tick(60)
     for event in pygame.event.get():

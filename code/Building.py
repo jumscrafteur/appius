@@ -1,6 +1,6 @@
-import pygame
-# from const import *
-from Utils import cartCoToIsoCo, get_iso_polygon
+
+from const import *
+from Utils import cartCoToIsoCo
 TILE_SIZE = 60
 
 
@@ -18,7 +18,6 @@ class Building:
         min_x = min([x for x, y in self.iso_poly])
         min_y = min([y for x, y in self.iso_poly])
         self.map = [min_x, min_y]
-        self.map_x, self.map_y = self.map
         self.type = None  # {Tent,Temples,Prefecture,Well-water..}
         self.risk_collapse = 0  # 0:pas de risk
         self.capacity = 0
@@ -197,19 +196,9 @@ class Grass(Building):
         super().__init__(pos)
         self.imageoffset = 0
         self.collision = False
-        # self.tileImage = LAND1A_285
-        self.tileImage = pygame.image.load("newland/Land1a_00285.png")
-        # self.tileImage = pygame.image.load("newland/Land1a_00035.png")
 
-
-class Build_Sign(Building):
-    def __init__(self, pos):
-        super().__init__(pos)
-        self.name = "sign"
-        self.imageoffset = 0
-        self.collision = True
         self.tileImage = pygame.image.load(
-            "fonction_render/house/Housng1a_00045.png")
+            "newland/Land1a_00285.png").convert_alpha()
 
 
 class Housing(Building):
@@ -218,8 +207,9 @@ class Housing(Building):
         self.name = "house"
         self.imageoffset = 0
         self.collision = True
+
         self.tileImage = pygame.image.load(
-            "fonction_render/house/Housng1a_00045.png")
+            "fonction_render/house/Housng1a_00045.png").convert_alpha()
 
 
 class Buildings:
