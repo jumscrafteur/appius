@@ -22,7 +22,7 @@ def isoCoToCartCo(isoX, isoY):
     return cartX, cartY
 
 
-def can_place_tile(world, grid_pos, mouse_pos):
+def mouse_is_on_map(world, grid_pos, mouse_pos):
     mouse_on_panel = False
     for rect in [world.hud["up"].rect, world.hud["main"].rect, world.hud["fps"].rect, world.hud["pop"].rect]:
         if rect.collidepoint(mouse_pos):

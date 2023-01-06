@@ -59,7 +59,6 @@ LAND3A_082 = pygame.image.load("newland/land3a_00082.png")
 # fonction
 HOUSE_01 = pygame.image.load("fonction_render/house/Housng1a_00045.png")
 
-
 TEMP_TILE = {
-    "house": HOUSE_01
+    "house": HOUSE_01, "shovel": LAND1A_285
 }

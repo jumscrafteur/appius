@@ -55,7 +55,7 @@ class Hudbigleft:
             "ingamehud/panelwindows_00013.png").convert_alpha()
         #hud in out
         self.button_098 = Button_img(
-            self.width-20, 20+21, None, "ingamehud/paneling_00098.png")
+            self.width-20, 20+21, None, "ingamehud/paneling_00098.png",)
         # gap 77/ 2 long af button
         self.button_080 = Button_img(
             self.width-120, 170+21, None, "ingamehud/paneling_00080.png")
@@ -72,39 +72,39 @@ class Hudbigleft:
             self.width-23, 199+21, None,  "ingamehud/paneling_00094.png")
         # gap width 50 gap height 36 /big button
         self.button_123 = Button_img(
-            self.width-130, 294+21, None,  "ingamehud/paneling_00123.png", "Palette_droite_Principale/Boutons/Construire des maison/Maisons_Click.png")
+            self.width-130, 294+21, None,  "ingamehud/paneling_00123.png", "Palette_droite_Principale/Boutons/CLICK/Maisons_Click.png")
 
         self.button_131 = Button_img(
-            self.width-80, 294+21, None, "ingamehud/paneling_00131.png")
+            self.width-80, 294+21, None, "ingamehud/paneling_00131.png", "Palette_droite_Principale/Boutons/CLICK/Clear_Land_Click.png")
         self.button_135 = Button_img(
-            self.width-30, 294+21, None,  "ingamehud/paneling_00135.png")
+            self.width-30, 294+21, None,  "ingamehud/paneling_00135.png", "Palette_droite_Principale/Boutons/CLICK/Route_Click.png")
         #
         self.button_127 = Button_img(
-            self.width-130, 330+21, None,  "ingamehud/paneling_00127.png")
+            self.width-130, 330+21, None,  "ingamehud/paneling_00127.png", "Palette_droite_Principale/Boutons/CLICK/Water_Click.png")
         self.button_163 = Button_img(
-            self.width-80, 330+21, None,  "ingamehud/paneling_00163.png")
+            self.width-80, 330+21, None,  "ingamehud/paneling_00163.png", "Palette_droite_Principale/Boutons/CLICK/Health_Click.png")
         self.button_151 = Button_img(
-            self.width-30, 330+21, None,  "ingamehud/paneling_00151.png")
+            self.width-30, 330+21, None,  "ingamehud/paneling_00151.png", "Palette_droite_Principale/Boutons/CLICK/religion_Click.png")
         #
 
         self.button_147 = Button_img(
-            self.width-130, 366+21, None,  "ingamehud/paneling_00147.png")
+            self.width-130, 366+21, None,  "ingamehud/paneling_00147.png", "Palette_droite_Principale/Boutons/CLICK/Education_Click.png")
         self.button_143 = Button_img(
-            self.width-80, 366+21, None,  "ingamehud/paneling_00143.png")
+            self.width-80, 366+21, None,  "ingamehud/paneling_00143.png", "Palette_droite_Principale/Boutons/CLICK/Divertisment_Click.png")
         self.button_139 = Button_img(
-            self.width-30, 366+21, None,  "ingamehud/paneling_00139.png")
+            self.width-30, 366+21, None,  "ingamehud/paneling_00139.png", "Palette_droite_Principale/Boutons/CLICK/Admin_Gouv_Click.png")
         #
         self.button_167 = Button_img(
-            self.width-130, 402+21, None,  "ingamehud/paneling_00167.png")
+            self.width-130, 402+21, None,  "ingamehud/paneling_00167.png", "Palette_droite_Principale/Boutons/CLICK/ingineer_Click.png")
         self.button_159 = Button_img(
-            self.width-80, 402+21, None,  "ingamehud/paneling_00159.png")
+            self.width-80, 402+21, None,  "ingamehud/paneling_00159.png", "Palette_droite_Principale/Boutons/CLICK/Security_struct_Click.png")
         self.button_155 = Button_img(
-            self.width-30, 402+21, None,  "ingamehud/paneling_00155.png")
+            self.width-30, 402+21, None,  "ingamehud/paneling_00155.png", "Palette_droite_Principale/Boutons/CLICK/Trade_Click.png")
         #
         self.button_246 = Button_img(
             self.width-130, 438+21, None,  "ingamehud/paneling_00246.png")
         self.button_115 = Button_img(
-            self.width-80, 436+21, None,  "ingamehud/paneling_00115.png")
+            self.width-80, 436+21, None,  "ingamehud/paneling_00115.png", "Palette_droite_Principale/Boutons/CLICK/PopUp_Click.png")
         self.button_122 = Button_img(
             self.width-30, 436+21, None,  "ingamehud/paneling_00122.png")
         #
@@ -115,8 +115,14 @@ class Hudbigleft:
                             "scroll": self.button_147, "mask": self.button_143, "bighouse": self.button_139, "hammer": self.button_167, "sword": self.button_159, "wagon": self.button_155,
                             "X": self.button_246, "notice": self.button_115, "bell": self.button_122}
 
-        self.cursor = {"house": pg.cursors.Cursor((30, 30), pg.image.load(
-            "cursor/hammer.png").convert_alpha())}
+        self.cursor_default = pg.cursors.Cursor(pg.SYSTEM_CURSOR_ARROW)
+        hammer_cursor = pg.cursors.Cursor((30, 30), pg.image.load(
+            "cursor/hammer.png").convert_alpha())
+        shovel_cursos = pg.cursors.Cursor((30, 30), pg.image.load(
+            "cursor/shovel.png").convert_alpha())
+        self.cursor = {"house": hammer_cursor, "shovel": shovel_cursos, "road": self.cursor_default, "water": self.cursor_default, "medic": self.cursor_default, "thunder": self.cursor_default,
+                       "scroll": self.cursor_default, "mask": self.cursor_default, "bighouse": self.cursor_default, "hammer": self.cursor_default, "sword": self.cursor_default,
+                       "wagon": self.cursor_default, "X": self.cursor_default, "notice": self.cursor_default, "bell": self.cursor_default}
 
     def draw(self, screen):
         screen.blit(self.paneling_017, (self.width - 162, 4+21))
@@ -138,5 +144,5 @@ class Hudbigleft:
 
         if mouse_action[2] or self.interaction == None:
             pg.mouse.set_cursor(
-                pg.cursors.Cursor(pg.SYSTEM_CURSOR_ARROW))
+                self.cursor_default)
             self.interaction = None
