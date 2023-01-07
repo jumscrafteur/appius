@@ -1,3 +1,4 @@
+import pygame
 TILE_SIZE = 60
 
 
@@ -35,9 +36,9 @@ def mouse_is_on_map(world, grid_pos, mouse_pos):
         return False
 
 
-def mouse_to_grid(x, y, scroll):
+def mouse_to_grid(x, y, scroll, offset):
     # remove camera scrolling & offset
-    world_x = x - scroll.x
+    world_x = x - scroll.x - offset
     world_y = y - scroll.y
     # transform iso to cartesian
     cart_x, cart_y = isoCoToCartCo(world_x, world_y)
@@ -45,6 +46,29 @@ def mouse_to_grid(x, y, scroll):
     grid_x = int(cart_x // TILE_SIZE)
     grid_y = int(cart_y // TILE_SIZE)
     return grid_x, grid_y
+
+
+def zone_grid(drag_process, drag_start, drag_end, scroll, offset):
+    if drag_process and drag_end != None and drag_start != None:
+        x_start, y_start = drag_start
+        x_end, y_end = drag_end
+        grid_start_x, grid_start_y = mouse_to_grid(
+            x_start, y_start, scroll, offset)
+        grid_end_x, grid_end_y = mouse_to_grid(x_end, y_end, scroll, offset)
+        print([grid_start_x, grid_start_y], [grid_end_x, grid_end_y])
+        return [grid_start_x, grid_start_y], [grid_end_x, grid_end_y]
+
+
+def get_points_in_rectangle(x1, y1, x2, y2):
+    points = []
+    if x1 > x2:
+        x1, x2 = x2, x1
+    if y1 > y2:
+        y1, y2 = y2, y1
+    for x in range(x1, x2+1):
+        for y in range(y1, y2+1):
+            points.append((x, y))
+    return points
 
 
 def get_iso_polygon(iso_x, iso_y):

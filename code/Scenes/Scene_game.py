@@ -2,10 +2,9 @@ from Scene import Scene
 from const import *
 from .Scene_ids import SCENE_GAME_ID
 from gamehud import *
-from const import TILE_SIZE, TEMP_TILE
 import pygame
-from Utils import mouse_to_grid, mouse_is_on_map
-from Building import Housing
+from World import World
+from Camera import Camera
 
 
 def SceneGameCreate(self):
@@ -30,6 +29,8 @@ def SceneGameCreate(self):
                          self.game.screen_height, self.world.boundary)
     self.zoom = 1
     # tracking mouse action
+    self.drag_start = None
+    self.drag_end = None
     self.dragging = False
 
 
@@ -46,7 +47,8 @@ def SceneGameRun(self):
 
     self.camera.movement_arrow()
     self.hud_manager["main"].update(mouse_pos, mouse_action)
-    self.world.update(mouse_pos, mouse_action, self.camera)
+    self.world.update(self.drag_start, self.drag_end,
+                      mouse_pos, mouse_action, self.camera)
     # draw
     self.world.draw(self.camera, self.game.screen)
     self.world.draw_grid(self.camera, self.game.screen)
@@ -68,218 +70,16 @@ def SceneGameHandleEvents(self, event):
         #         scaleDelta > 0 else self.world.zoom
     elif event.type == pygame.MOUSEBUTTONDOWN:
         if event.button == 1:
-            self.dragging = True
+            self.drag_start = event.pos
+
     elif event.type == pygame.MOUSEBUTTONUP:
         if event.button == 1:
-            self.dragging = False
+            self.drag_start = None
+            self.drag_end = None
     elif event.type == pygame.MOUSEMOTION:
         self.camera.mousePos = event.pos
-        pass
+        self.drag_end = event.pos
 
 
 SCENE = Scene(SCENE_GAME_ID, 'Scene_Menu', createFunc=SceneGameCreate,
               runFunc=SceneGameRun, handleEventsFunc=SceneGameHandleEvents)
-
-
-class Camera:
-
-    def __init__(self, width, height, boundary):
-
-        self.width = width
-        self.height = height
-
-        self.keys = {
-            pygame.K_UP: False,
-            pygame.K_LEFT: False,
-            pygame.K_DOWN: False,
-            pygame.K_RIGHT: False,
-        }
-        self.boundary = boundary
-        self.mousePos = (0, 0)
-        self.scroll = pygame.Vector2(0, 0)
-        self.scroll.x = -self.boundary[0]*0.4
-        self.scroll.y = -self.boundary[1]*0.004
-        self.mousseMouvSpeed = 20
-        self.keyboardMouvSpeed = 20
-
-    def movement_arrow(self):
-        # print(f"scroll:{self.scroll.x,self.scroll.y}")
-
-        if self.scroll.x > self.boundary[0]*0.05:
-            self.scroll.x = self.boundary[0]*0.05
-        elif self.scroll.x < -self.boundary[0]*0.775:
-            self.scroll.x = -self.boundary[0]*0.775
-        elif self.scroll.y > self.boundary[1]*0.08:
-            self.scroll.y = self.boundary[1]*0.08
-        elif self.scroll.y < -self.boundary[1]*0.75:
-            self.scroll.y = -self.boundary[1]*0.75
-        self.scroll.x += (self.keys[pygame.K_LEFT] -
-                          self.keys[pygame.K_RIGHT])*self.keyboardMouvSpeed
-        self.scroll.y += (self.keys[pygame.K_UP] -
-                          self.keys[pygame.K_DOWN])*self.keyboardMouvSpeed
-
-    def movement_mouse(self):
-
-        # x movement# map boundary
-        if self.scroll.x > self.boundary[0]*0.05:
-            self.scroll.x = self.boundary[0]*0.05
-        elif self.scroll.x < -self.boundary[0]*0.775:
-            self.scroll.x = -self.boundary[0]*0.775
-        elif self.scroll.y > self.boundary[1]*0.08:
-            self.scroll.y = self.boundary[1]*0.08
-        elif self.scroll.y < -self.boundary[1]*0.75:
-            self.scroll.y = -self.boundary[1]*0.75
-
-        # x movement
-        if self.mousePos[0] > self.width * 0.97:
-            self.scroll.x += -self.mousseMouvSpeed
-        elif self.mousePos[0] < self.width * 0.03:
-            self.scroll.x += self.mousseMouvSpeed
-        # y movement
-        if self.mousePos[1] > self.height * 0.97:
-            self.scroll.y += -self.mousseMouvSpeed
-        elif self.mousePos[1] < self.height * 0.03:
-            self.scroll.y += self.mousseMouvSpeed
-
-
-class World:
-
-    def __init__(self, grid_l_x, grid_l_y, width, height, hud, world):
-        # props
-        self.grid_lx = grid_l_x
-        self.grid_ly = grid_l_y
-        self.width = width
-        self.height = height
-        self.hud = hud
-        self.world = world
-        self.boundary = [self.grid_lx *
-                         TILE_SIZE * 2, self.grid_ly * TILE_SIZE]
-
-        # rendering
-        self.render = self.creation_surface()
-        # etc
-        self.temp_tile = None
-        # self.zoom = 1
-
-    def creation_surface(self):
-        mapRender = pygame.Surface(
-            (self.boundary[0], self.boundary[1]))
-        for x in self.world:
-            for building in x:
-                building.map[0] += self.boundary[0]/2
-                mapRender.blit(building.tileImage,
-                               (building.map[0], building.map[1]))
-
-        render = {"map": mapRender}
-        return render
-
-    def update(self, mouse_pos, mouse_action, camera):
-        self.temp_tile = None
-        if self.hud["main"].interaction != None:
-            grid_pos = mouse_to_grid(
-                mouse_pos[0]-self.boundary[0]*0.5, mouse_pos[1], camera.scroll)
-            if mouse_is_on_map(self, grid_pos, mouse_pos):
-                if self.hud["main"].interaction == "house":
-                    self.contruction(mouse_action, grid_pos)
-                elif self.hud["main"].interaction == "shovel":
-                    self.destruction(mouse_action, grid_pos)
-
-    def contruction(self, mouse_action, grid_pos):
-        img = TEMP_TILE[self.hud["main"].interaction]
-        img.set_alpha(100)
-
-        render_pos = self.world.Building[grid_pos[0]][grid_pos[1]
-                                                      ].map
-        iso_poly = self.world.Building[grid_pos[0]][grid_pos[1]
-                                                    ].iso_poly
-        collision = self.world.Building[grid_pos[0]
-                                        ][grid_pos[1]].collision
-        # print(
-        #     f"pos{iso_poly},collision{collision},name{self.world.Building[grid_pos[0]][grid_pos[1]]}")
-        self.temp_tile = {
-            "image": img,
-            "render_pos": render_pos,
-            "iso_poly": iso_poly,
-            "collision": collision,
-            "type": "add"
-        }
-        if mouse_action[0] and not collision:
-            self.world.Building[grid_pos[0]].remove(
-                self.world.Building[grid_pos[0]][grid_pos[1]])
-            self.world.Building[grid_pos[0]].insert(grid_pos[1],
-                                                    Housing((grid_pos[0], grid_pos[1])))
-
-            temp = self.world.Building[grid_pos[0]][grid_pos[1]]
-            temp.map[0] += self.boundary[0]/2
-            self.render["map"].blit(
-                temp.tileImage, (temp.map[0], temp.map[1]))
-            self.hud["main"].interaction = None
-
-    def destruction(self, mouse_action, grid_pos):
-        img = TEMP_TILE[self.hud["main"].interaction]
-        img.set_alpha(100)
-
-        render_pos = self.world.Building[grid_pos[0]][grid_pos[1]
-                                                      ].map
-        iso_poly = self.world.Building[grid_pos[0]][grid_pos[1]
-                                                    ].iso_poly
-        collision = self.world.Building[grid_pos[0]
-                                        ][grid_pos[1]].collision
-        # print(
-        #     f"pos{iso_poly},collision{collision},name{self.world.Building[grid_pos[0]][grid_pos[1]]}")
-        self.temp_tile = {
-            "image": img,
-            "render_pos": render_pos,
-            "iso_poly": iso_poly,
-            "collision": collision,
-            "type": "remove"
-        }
-        if mouse_action[0] and collision:
-            self.world.Building[grid_pos[0]].remove(
-                self.world.Building[grid_pos[0]][grid_pos[1]])
-            self.world.Building[grid_pos[0]].insert(grid_pos[1],
-                                                    Grass((grid_pos[0], grid_pos[1])))
-
-            temp = self.world.Building[grid_pos[0]][grid_pos[1]]
-            temp.map[0] += self.boundary[0]/2
-            self.render["map"].blit(
-                temp.tileImage, (temp.map[0], temp.map[1]))
-            self.hud["main"].interaction = None
-
-    def draw_grid(self, camera, screen):
-        for x in self.world:
-            for building in x:
-                grid = building.iso_poly
-                grid = [(x + self.boundary[0]/2 + camera.scroll.x, y+camera.scroll.y)
-                        for x, y in grid]
-                pygame.draw.polygon(screen, (0, 0, 0), grid, 1)
-
-    def draw_temptile(self, camera, screen):
-        iso_poly = self.temp_tile["iso_poly"]
-        iso_poly = [(x + self.boundary[0]/2 +
-                     camera.scroll.x, y + camera.scroll.y) for x, y in iso_poly]
-        if self.temp_tile["type"] == "add":
-            if self.temp_tile["collision"]:
-                pygame.draw.polygon(screen, (255, 0, 0), iso_poly, 6)
-            else:
-                pygame.draw.polygon(screen, (255, 255, 255), iso_poly, 6)
-        elif self.temp_tile["type"] == "remove":
-            if self.temp_tile["collision"]:
-                pygame.draw.polygon(screen, (255, 255, 0), iso_poly, 6)
-        render_pos = self.temp_tile["render_pos"]
-        screen.blit(
-            self.temp_tile["image"],
-            (
-                render_pos[0] + camera.scroll.x,
-                render_pos[1] + camera.scroll.y
-            )
-        )
-
-    def draw(self, camera, screen):
-        screen.fill((0, 0, 0))
-        # self.render["map"] = pygame.transform.scale(
-        #     self.render["map"],  (self.render["map"].get_width(), self.render["map"].get_width()))
-        screen.blit(self.render["map"],
-                    (camera.scroll.x, camera.scroll.y))
-        if self.temp_tile != None:
-            self.draw_temptile(camera, screen)
