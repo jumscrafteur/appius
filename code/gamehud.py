@@ -118,9 +118,11 @@ class Hudbigleft:
         self.cursor_default = pg.cursors.Cursor(pg.SYSTEM_CURSOR_ARROW)
         hammer_cursor = pg.cursors.Cursor((30, 30), pg.image.load(
             "cursor/hammer.png").convert_alpha())
-        shovel_cursos = pg.cursors.Cursor((30, 30), pg.image.load(
+        shovel_cursor = pg.cursors.Cursor((30, 30), pg.image.load(
             "cursor/shovel.png").convert_alpha())
-        self.cursor = {"house": hammer_cursor, "shovel": shovel_cursos, "road": self.cursor_default, "water": self.cursor_default, "medic": self.cursor_default, "thunder": self.cursor_default,
+        road_cursor = pg.cursors.Cursor((30, 30), pg.image.load(
+            "cursor/road.png").convert_alpha())
+        self.cursor = {"house": hammer_cursor, "shovel": shovel_cursor, "road": road_cursor, "water": self.cursor_default, "medic": self.cursor_default, "thunder": self.cursor_default,
                        "scroll": self.cursor_default, "mask": self.cursor_default, "bighouse": self.cursor_default, "hammer": self.cursor_default, "sword": self.cursor_default,
                        "wagon": self.cursor_default, "X": self.cursor_default, "notice": self.cursor_default, "bell": self.cursor_default}
 

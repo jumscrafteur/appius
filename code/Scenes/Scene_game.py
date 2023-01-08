@@ -41,7 +41,7 @@ def SceneGameRun(self):
     self.hud_manager["fps"].text = 'fps={}'.format(round(self.clock.get_fps()))
     # update
     self.camera.movement_arrow()
-    self.camera.movement_mouse()
+    # self.camera.movement_mouse()
     mouse_pos = pygame.mouse.get_pos()
     mouse_action = pygame.mouse.get_pressed()
 

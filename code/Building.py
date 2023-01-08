@@ -4,6 +4,13 @@ from Utils import cartCoToIsoCo
 TILE_SIZE = 60
 
 
+def type_of_tile(grid, name):
+    x, y = grid
+    match name:
+        case "house":
+            return Housing((x, y))
+
+
 class Building:
     def __init__(self, pos):
         self.grid = pos
@@ -194,11 +201,31 @@ class Buildings:
 class Grass(Building):
     def __init__(self, pos):
         super().__init__(pos)
+        self.name = "grass"
         self.imageoffset = 0
         self.collision = False
 
         self.tileImage = pygame.image.load(
             "newland/Land1a_00285.png").convert_alpha()
+
+
+class Chemins(Building):
+    def __init__(self, pos):
+        super().__init__(pos)
+        self.name = "road"
+        self.imageoffset = 0
+        self.collision = True
+        self.north = False
+        self.south = False
+        self.west = False
+        self.east = False
+
+        self.tileImage = {"N": pygame.image.load("Chemins/N.png").convert_alpha(), "S": pygame.image.load("Chemins/S.png").convert_alpha(), "E": pygame.image.load("Chemins/E.png").convert_alpha(), "W": pygame.image.load("Chemins/W.png").convert_alpha(),
+                          "N&E": pygame.image.load("Chemins/N&E.png").convert_alpha(), "S&E": pygame.image.load("Chemins/S&E.png").convert_alpha(), "W&N": pygame.image.load("Chemins/W&N.png").convert_alpha(), "W&S": pygame.image.load("Chemins/W&S.png").convert_alpha(),
+                          "N_S_E": pygame.image.load("Chemins/N_S_E.png").convert_alpha(), "N_W_S": pygame.image.load("Chemins/N_W_S.png").convert_alpha(), "W_N_E": pygame.image.load("Chemins/W_N_E.png").convert_alpha(), "W_S_E": pygame.image.load("Chemins/W_S_E.png").convert_alpha(),
+                          "S-N": pygame.image.load("Chemins/S-N.png").convert_alpha(), "W-E": pygame.image.load("Chemins/W-E.png").convert_alpha(),
+                          "ALL": pygame.image.load("Chemins/ALL.png").convert_alpha()
+                          }
 
 
 class Housing(Building):
