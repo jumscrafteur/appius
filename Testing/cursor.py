@@ -1,11 +1,22 @@
 # pygame setup
+import pygame
 import pygame as pg
 
 pg.init()
 screen = pg.display.set_mode([600, 400])
 pg.display.set_caption("Example code for the cursors module")
 
-# create a system cursor
+surface1 = pygame.Surface((100, 100))
+surface1.fill((0, 0, 255))
+
+# Create a surface with a green background, and set its transparency to 50%
+surface2 = pygame.Surface((100, 100))
+surface2.fill((0, 255, 0))
+surface2.set_alpha(128)
+
+# Draw the surfaces to the screen
+screen.blit(surface1, (0, 0))
+screen.blit(surface2, (0, 0))
 system = pg.cursors.Cursor(pg.SYSTEM_CURSOR_NO)
 
 # create bitmap cursors
@@ -30,7 +41,6 @@ clock = pg.time.Clock()
 going = True
 while going:
     clock.tick(60)
-    screen.fill((0, 75, 30))
     pg.display.flip()
 
     for event in pg.event.get():

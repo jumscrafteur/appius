@@ -1,5 +1,5 @@
 from Utils import mouse_is_on_map, zone_grid, get_points_in_rectangle, set_neighborhood_likeliness, road_shifting_util, get_nearby_tile
-from const import TILE_SIZE, TEMP_TILE
+from const import TILE_SIZE, TEMP_TILE, GRASS_IMAGE
 from Building import *
 import pygame
 import copy
@@ -17,6 +17,10 @@ class World:
         self.world = world
         self.boundary = [self.grid_lx *
                          TILE_SIZE * 2, self.grid_ly * TILE_SIZE]
+        # fonctionality
+        self.buildable = ["house", "hammer", "water", "sword"]
+        self.available = ["shovel", "house",
+                          "hammer", "water", "sword", "road"]
         # rendering
         self.render = self.creation_surface()
         # etc
@@ -28,18 +32,27 @@ class World:
     def creation_surface(self):
         mapRender = pygame.Surface(
             (self.boundary[0], self.boundary[1]))
-        for x in self.world:
+        gridRender = pygame.Surface(
+            (self.boundary[0], self.boundary[1])).convert_alpha()
+        gridRender.set_alpha(0)
+        # gridRender.convert_alpha(250)
+
+        for x in self.world.Building:
             for building in x:
+                grid = building.iso_poly
+                grid = [(x + self.boundary[0]/2, y)
+                        for x, y in grid]
+                pygame.draw.polygon(gridRender, (255, 0, 0), grid, 1)
                 if building.name == "road":
                     building.map[0] += self.boundary[0]/2
                     mapRender.blit(building.tileImage[building.current_state],
                                    (building.map[0], building.map[1]))
                 else:
                     building.map[0] += self.boundary[0]/2
-                    mapRender.blit(building.tileImage,
-                                   (building.map[0], building.map[1]))
+                    mapRender.blit(GRASS_IMAGE.convert_alpha(),
+                                   (building.map[0], building.map[1]-building.imageOffset))
 
-        render = {"map": mapRender}
+        render = {"map": mapRender, "grid": gridRender}
         return render
 
     def update(self, drag_start, drag_end, mouse_pos, mouse_action, camera):
@@ -47,7 +60,7 @@ class World:
         if not mouse_action[0] and self.temp_tile != []:
             for temp in self.temp_tile:
                 if temp is not None:
-                    if temp["type"] in ["house"]:
+                    if temp["type"] in self.buildable:
                         self.construction(temp)
                     elif temp["type"] == "shovel":
                         self.destruction(temp)
@@ -82,9 +95,9 @@ class World:
             #     f"before change n{road_entity.north},s{road_entity.south},w{road_entity.west},e{road_entity.east}")
             self.world.Building[grid_pos[0]].insert(grid_pos[1],
                                                     road_entity)
+            self.road_system[grid_pos[0]][grid_pos[1]] = True
             set_neighborhood_likeliness(
                 self.world.Building[grid_pos[0]][grid_pos[1]], self.world.Building)
-
             road_entity.map[0] += self.boundary[0]/2
             self.render["map"].blit(
                 road_entity.tileImage[road_shifting_util(road_entity)], (road_entity.map[0], road_entity.map[1]))
@@ -127,25 +140,32 @@ class World:
             tile_type = type_of_tile(grid_pos, temp["type"])
             self.world.Building[grid_pos[0]].insert(grid_pos[1],
                                                     tile_type)
-
+            self.world.listBuilding.append(tile_type)
             temp = self.world.Building[grid_pos[0]][grid_pos[1]]
             temp.map[0] += self.boundary[0]/2
-            self.render["map"].blit(
-                temp.tileImage, (temp.map[0], temp.map[1]))
+            # self.render["map"].blit(
+            #     temp.tileImage, (temp.map[0], temp.map[1] - temp.imageOffset))
 
     def destruction(self, temp):
         grid_pos = temp["grid"]
         collision = temp["collision"]
-        temp["type"] = "add"
+        # temp["type"] = "add"
         if collision:
-            self.world.Building[grid_pos[0]].remove(
-                self.world.Building[grid_pos[0]][grid_pos[1]])
-            self.world.Building[grid_pos[0]].insert(grid_pos[1],
-                                                    Grass((grid_pos[0], grid_pos[1])))
             temp = self.world.Building[grid_pos[0]][grid_pos[1]]
             temp.map[0] += self.boundary[0]/2
-            self.render["map"].blit(
-                temp.tileImage, (temp.map[0], temp.map[1]))
+            if type(temp) == Chemins:
+                self.road_system[grid_pos[0]][grid_pos[0]] = None
+                self.render["map"].blit(
+                    temp.tileImage, (temp.map[0], temp.map[1]))
+            else:
+                self.world.listBuilding.remove(temp)
+
+            self.world.Building[grid_pos[0]].remove(temp)
+            self.world.Building[grid_pos[0]].insert(grid_pos[1],
+                                                    Grass((grid_pos[0], grid_pos[1])))
+            # temp.map[0] += self.boundary[0]/2
+            # self.render["map"].blit(
+            #     temp.tileImage, (temp.map[0], temp.map[1]))
             north = get_nearby_tile(temp.grid, "north")
             south = get_nearby_tile(temp.grid, "south")
             west = get_nearby_tile(temp.grid, "west")
@@ -174,8 +194,7 @@ class World:
                     tile_east)], (tile_east.map[0], tile_east.map[1]))
 
     def temp_changement(self, grid_pos, type_change):
-        available = ["house", "shovel", "road"]
-        if self.hud["main"].interaction in available:
+        if self.hud["main"].interaction in self.available:
             img = TEMP_TILE[self.hud["main"].interaction]
             img.set_alpha(100)
 
@@ -185,6 +204,7 @@ class World:
                                                         ].iso_poly
             collision = self.world.Building[grid_pos[0]
                                             ][grid_pos[1]].collision
+            offset = img.get_height() - TILE_SIZE
             # print(
             #     f"pos{iso_poly},collision{collision},name{self.world.Building[grid_pos[0]][grid_pos[1]]}")
 
@@ -194,23 +214,20 @@ class World:
                 "iso_poly": iso_poly,
                 "collision": collision,
                 "type": type_change,
-                "grid": (grid_pos[0], grid_pos[1])
+                "grid": (grid_pos[0], grid_pos[1]),
+                "offset": offset
             }
             return temp_tile
 
     def draw_grid(self, camera, screen):
-        for x in self.world:
-            for building in x:
-                grid = building.iso_poly
-                grid = [(x + self.boundary[0]/2 + camera.scroll.x, y+camera.scroll.y)
-                        for x, y in grid]
-                pygame.draw.polygon(screen, (0, 0, 0), grid, 1)
+        screen.blit(self.render["grid"],
+                    (camera.scroll.x, camera.scroll.y))
 
     def draw_temptile(self, temp_tile, camera, screen):
         iso_poly = temp_tile["iso_poly"]
         iso_poly = [(x + self.boundary[0]/2 +
                      camera.scroll.x, y + camera.scroll.y) for x, y in iso_poly]
-        if temp_tile["type"] in ["house", "road"]:
+        if temp_tile["type"] in self.buildable or temp_tile["type"] == "road":
             if temp_tile["collision"]:
                 pygame.draw.polygon(screen, (255, 0, 0), iso_poly, 6)
             else:
@@ -219,18 +236,28 @@ class World:
             if temp_tile["collision"]:
                 pygame.draw.polygon(screen, (255, 255, 0), iso_poly, 6)
         render_pos = temp_tile["render_pos"]
+        offset = temp_tile["offset"]
         screen.blit(
             temp_tile["image"],
             (
                 render_pos[0] + camera.scroll.x,
-                render_pos[1] + camera.scroll.y
+                render_pos[1] + camera.scroll.y - offset
             )
         )
+
+    def draw_building(self, camera, screen):
+        temp = self.world.listBuilding
+        self.world.listBuilding = sorted(
+            temp, key=lambda temp: temp.imageOffset)
+        for building in self.world.listBuilding:
+            screen.blit(building.tileImage, (
+                building.map[0]+camera.scroll.x, building.map[1]+camera.scroll.y-building.imageOffset))
 
     def draw(self, camera, screen):
         screen.fill((0, 0, 0))
         screen.blit(self.render["map"],
                     (camera.scroll.x, camera.scroll.y))
+        self.draw_building(camera, screen)
         for temp_tile in self.temp_tile:
             if temp_tile != None:
                 self.draw_temptile(temp_tile, camera, screen)

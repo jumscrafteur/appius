@@ -1,6 +1,5 @@
 # Fichier pour nos constantes
 import pygame
-from Building import *
 pygame.init()
 
 # font scene Pre_Menu
@@ -48,7 +47,6 @@ LAND1A_172 = pygame.image.load("newland/Land1a_00172.png")
 LAND1A_173 = pygame.image.load("newland/Land1a_00120.png")
 LAND1A_234 = pygame.image.load("newland/Land1a_00234.png")
 LAND1A_235 = pygame.image.load("newland/Land1a_00235.png")
-LAND1A_285 = pygame.image.load("newland/Land1a_00285.png")
 LAND2A_095 = pygame.image.load("newland/Land2a_00095.png")
 LAND3A_071 = pygame.image.load("newland/land3a_00071.png")
 LAND3A_072 = pygame.image.load("newland/land3a_00072.png")
@@ -56,9 +54,20 @@ LAND3A_074 = pygame.image.load("newland/land3a_00074.png")
 LAND3A_081 = pygame.image.load("newland/land3a_00081.png")
 LAND3A_082 = pygame.image.load("newland/land3a_00082.png")
 
+
+GRASS_IMAGE = pygame.image.load("newland/Land1a_00285.png")
+
 # fonction
-HOUSE_01 = pygame.image.load("fonction_render/house/Housng1a_00045.png")
-ROAD = pygame.image.load("fonction_render/road/Land2a_00044.png")
+HOUSE_01 = pygame.image.load(
+    "fonction_render/house/Housng1a_00045.png")
+ROAD = pygame.image.load(
+    "fonction_render/road/Land2a_00044.png")
+PERFECTURE = pygame.image.load(
+    "fonction_render/house/Security_00001.png")
+ENGINEER = pygame.image.load(
+    "fonction_render/house/transport_00056.png")
+WELL = pygame.image.load(
+    "fonction_render/house/Utilitya_00001.png")
 TEMP_TILE = {
-    "house": HOUSE_01, "shovel": LAND1A_285, "road": ROAD
+    "house": HOUSE_01, "shovel": GRASS_IMAGE, "road": ROAD, "sword": PERFECTURE, "hammer": ENGINEER, "water": WELL
 }

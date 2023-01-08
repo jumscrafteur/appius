@@ -9,6 +9,12 @@ def type_of_tile(grid, name):
     match name:
         case "house":
             return Housing((x, y))
+        case "hammer":
+            return B_Engineering((x, y))
+        case "sword":
+            return Prefecture((x, y))
+        case "water":
+            return Water_well((x, y))
 
 
 class Building:
@@ -36,6 +42,7 @@ class Building:
         self.collision = True
 
         self.tileImage = None
+        self.imageOffset = 0
         self.type = None
 
     # def position(self):
@@ -74,20 +81,26 @@ class Tent (Building):
         return None
 
 
-class prefecture(Building):
+class Prefecture(Building):
     def __init__(self, pos):
-        super.__init__(self, pos)
-        self.type = 'Prefecture'
+        super().__init__(pos)
+        self.tileImage = pygame.image.load(
+            "fonction_render/house/Security_00001.png").convert_alpha()
+        self.imageOffset = 16
+        self.name = 'Prefecture'
         self.statut = {"Prefecture": 1, "P_feu": 0, "P_collapse": 0}
 
     def up_date_statut():
         return None
 
 
-class water_well(Building):  # puit
+class Water_well(Building):  # puit
     def __inti__(self, pos):
-        super.__init__(self, pos)
-        self.type = 'water_well'
+        super().__init__(pos)
+        self.tileImage = pygame.image.load(
+            "fonction_render/house/Utilitya_00001.png").convert_alpha()
+        self.imageOffset = 46
+        self.name = 'water_well'
 
 
 class Senat(Building):
@@ -117,10 +130,13 @@ class Senat(Building):
         return None
 
 
-class B_engineering(Building):
+class B_Engineering(Building):
     def __init__(self, pos):
-        super.__init__(self, pos)
-        self.type = 'B_Engineering'
+        super().__init__(pos)
+        self.tileImage = pygame.image.load(
+            "fonction_render/house/transport_00056.png").convert_alpha()
+        self.imageOffset = 40
+        self.name = 'B_Engineering'
         self.statut = {"B": 1, "B_feu": 0, "B_collapse": 0}
 
 
@@ -243,7 +259,7 @@ class Buildings:
     def __init__(self):
         ''' Une simple liste vide '''
         self.Building = []
-        self.list = []
+        self.listBuilding = []
 
     def __iter__(self):
         return iter(self.Building)

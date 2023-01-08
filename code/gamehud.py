@@ -51,8 +51,13 @@ class Hudbigleft:
 
         self.map_panels_00003 = pg.image.load(
             "ingamehud/map_panels_00003.png").convert_alpha()
-        self.panelwindow_013 = pg.image.load(
-            "ingamehud/panelwindows_00013.png").convert_alpha()
+        self.panelwindow_list = {None: pg.image.load(
+            "ingamehud/panelwindows_00013.png").convert_alpha(), "house": pg.image.load("ingamehud/window_interactive/house.png").convert_alpha(), "shovel": pg.image.load("ingamehud/window_interactive/shovel.png").convert_alpha(),
+            "road": pg.image.load("ingamehud/window_interactive/road.png").convert_alpha(), "water": pg.image.load("ingamehud/window_interactive/water.png").convert_alpha(), "medic": pg.image.load("ingamehud/window_interactive/medic.png").convert_alpha(),
+            "thunder": pg.image.load("ingamehud/window_interactive/thunder.png").convert_alpha(), "scroll": pg.image.load("ingamehud/window_interactive/scroll.png").convert_alpha(), "mask": pg.image.load("ingamehud/window_interactive/mask.png").convert_alpha(),
+            "bighouse": pg.image.load("ingamehud/window_interactive/bighouse.png").convert_alpha(), "hammer": pg.image.load("ingamehud/window_interactive/hammer.png").convert_alpha(), "sword": pg.image.load("ingamehud/window_interactive/sword.png").convert_alpha(),
+            "wagon": pg.image.load("ingamehud/window_interactive/wagon.png").convert_alpha(), "X": pg.image.load("ingamehud/panelwindows_00013.png").convert_alpha(), "notice": pg.image.load("ingamehud/panelwindows_00013.png").convert_alpha(), "bell": pg.image.load("ingamehud/panelwindows_00013.png").convert_alpha()
+        }
         #hud in out
         self.button_098 = Button_img(
             self.width-20, 20+21, None, "ingamehud/paneling_00098.png",)
@@ -122,15 +127,16 @@ class Hudbigleft:
             "cursor/shovel.png").convert_alpha())
         road_cursor = pg.cursors.Cursor((30, 30), pg.image.load(
             "cursor/road.png").convert_alpha())
-        self.cursor = {"house": hammer_cursor, "shovel": shovel_cursor, "road": road_cursor, "water": self.cursor_default, "medic": self.cursor_default, "thunder": self.cursor_default,
-                       "scroll": self.cursor_default, "mask": self.cursor_default, "bighouse": self.cursor_default, "hammer": self.cursor_default, "sword": self.cursor_default,
+        self.cursor = {"house": hammer_cursor, "shovel": shovel_cursor, "road": road_cursor, "water": hammer_cursor, "medic": self.cursor_default, "thunder": self.cursor_default,
+                       "scroll": self.cursor_default, "mask": self.cursor_default, "bighouse": self.cursor_default, "hammer": hammer_cursor, "sword": hammer_cursor,
                        "wagon": self.cursor_default, "X": self.cursor_default, "notice": self.cursor_default, "bell": self.cursor_default}
 
     def draw(self, screen):
         screen.blit(self.paneling_017, (self.width - 162, 4+21))
         screen.blit(self.map_panels_00003, (self.width - 162, 450+4+21))
         screen.blit(self.map_panels_00003, (self.width - 162, 1000))
-        screen.blit(self.panelwindow_013, (self.width-162+6, 216+4+21))
+        screen.blit(
+            self.panelwindow_list[self.interaction], (self.width-162+6, 216+4+21))
 
         for mini in self.mini_button.values():
             mini.show(screen)

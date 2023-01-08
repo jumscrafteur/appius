@@ -12,7 +12,7 @@ def SceneGameCreate(self):
     self.clock = pygame.time.Clock()
     self.hudup = Hudupper(0, 0, self.game.screen_width)
     self.hudleft = Hudbigleft(
-        self.game.screen_width-24, self.game.screen_height+25)
+        self.game.screen_width, self.game.screen_height)
     self.infofps = InfoShow(
         self.game.screen_width*0.5, 2, f"", 18, (255, 255, 255))
     self.infopop = InfoShow(
