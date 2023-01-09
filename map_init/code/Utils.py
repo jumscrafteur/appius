@@ -114,32 +114,24 @@ def set_neighborhood_likeliness(tile, world_grid):
             tile.north = True
         elif type(tile) != type(world_grid[cord_north[0]][cord_north[1]]):
             tile.north = False
-    elif cord_north[1] < 0:
-        tile.north = True
-        # south
+    # south
     if 0 <= cord_south[0] <= 39 and 0 <= cord_south[1] <= 39:
         if type(tile) == type(world_grid[cord_south[0]][cord_south[1]]):
             tile.south = True
         elif type(tile) != type(world_grid[cord_south[0]][cord_south[1]]):
             tile.south = False
-    elif cord_south[1] > 39:
-        tile.south = True
     # west
     if 0 <= cord_west[0] <= 39 and 0 <= cord_west[1] <= 39:
         if type(tile) == type(world_grid[cord_west[0]][cord_west[1]]):
             tile.west = True
         elif type(tile) != type(world_grid[cord_west[0]][cord_west[1]]):
             tile.west = False
-    elif cord_west[0] < 0:
-        tile.west = True
     # east
     if 0 <= cord_east[0] <= 39 and 0 <= cord_east[1] <= 39:
         if type(tile) == type(world_grid[cord_east[0]][cord_east[1]]):
             tile.east = True
         elif type(tile) != type(world_grid[cord_east[0]][cord_east[1]]):
             tile.east = False
-    elif cord_east[0] > 39:
-        tile.east = True
 
     # print(
     #     f"after change n{tile.north},s{tile.south},w{tile.west},e{tile.east}")

@@ -100,36 +100,32 @@ class World:
             # print("---------------")
             if road_entity.north:
                 x, y = get_nearby_tile(road_entity.grid, "north")
-                if 0 <= x <= 39 and 0 <= y <= 39:
-                    temporary = self.world.Building[x][y]
-                    set_neighborhood_likeliness(
-                        temporary, self.world.Building)
-                    self.render["map"].blit(temporary.tileImage[road_shifting_util(
-                        temporary)], (temporary.map[0], temporary.map[1]))
+                temporary = self.world.Building[x][y]
+                set_neighborhood_likeliness(
+                    temporary, self.world.Building)
+                self.render["map"].blit(temporary.tileImage[road_shifting_util(
+                    temporary)], (temporary.map[0], temporary.map[1]))
             if road_entity.south:
                 x, y = get_nearby_tile(road_entity.grid, "south")
-                if 0 <= x <= 39 and 0 <= y <= 39:
-                    temporary = self.world.Building[x][y]
-                    set_neighborhood_likeliness(
-                        temporary, self.world.Building)
-                    self.render["map"].blit(temporary.tileImage[road_shifting_util(
-                        temporary)], (temporary.map[0], temporary.map[1]))
+                temporary = self.world.Building[x][y]
+                set_neighborhood_likeliness(
+                    temporary, self.world.Building)
+                self.render["map"].blit(temporary.tileImage[road_shifting_util(
+                    temporary)], (temporary.map[0], temporary.map[1]))
             if road_entity.west:
                 x, y = get_nearby_tile(road_entity.grid, "west")
-                if 0 <= x <= 39 and 0 <= y <= 39:
-                    temporary = self.world.Building[x][y]
-                    set_neighborhood_likeliness(
-                        temporary, self.world.Building)
-                    self.render["map"].blit(temporary.tileImage[road_shifting_util(
-                        temporary)], (temporary.map[0], temporary.map[1]))
+                temporary = self.world.Building[x][y]
+                set_neighborhood_likeliness(
+                    temporary, self.world.Building)
+                self.render["map"].blit(temporary.tileImage[road_shifting_util(
+                    temporary)], (temporary.map[0], temporary.map[1]))
             if road_entity.east:
                 x, y = get_nearby_tile(road_entity.grid, "east")
-                if 0 <= x <= 39 and 0 <= y <= 39:
-                    temporary = self.world.Building[x][y]
-                    set_neighborhood_likeliness(
-                        temporary, self.world.Building)
-                    self.render["map"].blit(temporary.tileImage[road_shifting_util(
-                        temporary)], (temporary.map[0], temporary.map[1]))
+                temporary = self.world.Building[x][y]
+                set_neighborhood_likeliness(
+                    temporary, self.world.Building)
+                self.render["map"].blit(temporary.tileImage[road_shifting_util(
+                    temporary)], (temporary.map[0], temporary.map[1]))
 
               # mini_map
             grid = road_entity.iso_poly
@@ -144,7 +140,6 @@ class World:
             tile_type = type_of_tile(grid_pos, temp["type"])
             self.world.Building[grid_pos[0]].insert(grid_pos[1],
                                                     tile_type)
-
             self.world.listBuilding.append(tile_type)
             temp = self.world.Building[grid_pos[0]][grid_pos[1]]
             temp.map[0] += self.boundary[0]/2
@@ -247,7 +242,7 @@ class World:
                 pygame.draw.polygon(screen, (255, 255, 255), iso_poly, 6)
         elif temp_tile["type"] == "shovel":
             if temp_tile["collision"]:
-                pygame.draw.polygon(screen, (150, 0, 0, 100), iso_poly)
+                pygame.draw.polygon(screen, (255, 255, 0), iso_poly, 6)
         render_pos = temp_tile["render_pos"]
         offset = temp_tile["offset"]
         screen.blit(
@@ -261,9 +256,7 @@ class World:
     def draw_building(self, camera, screen):
         temp = self.world.listBuilding
         self.world.listBuilding = sorted(
-            sorted(
-                temp, key=lambda temp: temp.grid_x), key=lambda temp: temp.grid_y)
-
+            temp, key=lambda temp: temp.imageOffset)
         for building in self.world.listBuilding:
             screen.blit(building.tileImage, (
                 building.map[0]+camera.scroll.x, building.map[1]+camera.scroll.y-building.imageOffset))
