@@ -63,9 +63,9 @@ class Minimap:
         pygame.draw.polygon(self.mini_map, color, grid)
 
     def update_mode_interactive(self, mousePos, mouseAction, camera):
-        print(mousePos)
+        # print(mousePos)
         if self.mini_rect.collidepoint(mousePos):
-            print("isonminin")
+            # print("isonminin")
             relative_x = (mousePos[0]-self.pos[0])
             relative_y = (mousePos[1]-self.pos[1])
             if mouseAction[0]:

@@ -16,7 +16,7 @@ class Save():
                 self.map.Building[x].append(Grass((x, y)))
         self.walkers = []
         self.pop = 0
-        self.PO = 0
+        self.PO = 3000
         self.date = 0
         self.desirability = 0
         self.religions = {}

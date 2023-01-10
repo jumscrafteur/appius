@@ -70,6 +70,7 @@ class Tent (Building):
         self.type = 'Tent'
         self.capacity = 5  # par défaut
         self.currentNB = 0
+        self.price_building = 0
         self.statut = {"Panneau": 1, "Construction": 0, "Tent": 0,
                        "T_feu": 0, "T_collapse": 0}  # statut du batiment
 
@@ -88,6 +89,7 @@ class Prefecture(Building):
             "fonction_render/house/Security_00001.png").convert_alpha()
         self.imageOffset = 16
         self.name = 'Prefecture'
+        self.price_building = 30
         self.statut = {"Prefecture": 1, "P_feu": 0, "P_collapse": 0}
 
     def up_date_statut():
@@ -100,6 +102,7 @@ class Water_well(Building):  # puit
         self.tileImage = pygame.image.load(
             "fonction_render/house/Utilitya_00001.png").convert_alpha()
         self.imageOffset = 46
+        self.price_building = 5
         self.name = 'water_well'
 
 
@@ -113,6 +116,7 @@ class Senat(Building):
         self.Peace_level = 0
         self.attractivity = 0
         self.population = 0
+        self.price_building = 400
 
     def calcul_culture_level(self):
         return
@@ -138,6 +142,7 @@ class B_Engineering(Building):
         self.imageOffset = 40
         self.name = 'B_Engineering'
         self.statut = {"B": 1, "B_feu": 0, "B_collapse": 0}
+        self.price_building = 30
 
 
 ''''sousclasse pour les temples'''
@@ -148,6 +153,7 @@ class Temples(Building):
         super.__init__(self, pos)
         self.type = 'Temples'
         self.nb_temples = 0
+        self.price_building = 50
 
     def rate_satisfaction():        # a faire seulement le nombre des temples et le taille de la mapp
 
@@ -219,6 +225,7 @@ class Grass(Building):
         super().__init__(pos)
         self.name = "grass"
         self.imageoffset = 0
+        self.price_building = 2
         self.collision = False
 
         self.tileImage = pygame.image.load(
@@ -230,6 +237,7 @@ class Chemins(Building):
         super().__init__(pos)
         self.name = "road"
         self.imageoffset = 0
+        self.price_building = 4
         self.collision = True
         self.north = False
         self.south = False
@@ -249,6 +257,7 @@ class Housing(Building):
         super().__init__(pos)
         self.name = "house"
         self.imageoffset = 0
+        self.price_building = 10
         self.collision = True
 
         self.tileImage = pygame.image.load(
