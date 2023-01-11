@@ -1,7 +1,6 @@
 
 from const import *
 from Utils import cartCoToIsoCo
-TILE_SIZE = 60
 
 
 def type_of_tile(grid, name):
@@ -86,7 +85,9 @@ class Prefecture(Building):
         super().__init__(pos)
         self.tileImage = pygame.image.load(
             "fonction_render/house/Security_00001.png").convert_alpha()
-        self.imageOffset = 16
+        self.tileImage = pygame.transform.rotozoom(
+            self.tileImage, 0, scaleDelta)
+        self.imageOffset = self.tileImage.get_height()-TILE_SIZE
         self.name = 'Prefecture'
         self.statut = {"Prefecture": 1, "P_feu": 0, "P_collapse": 0}
 
@@ -95,11 +96,14 @@ class Prefecture(Building):
 
 
 class Water_well(Building):  # puit
-    def __inti__(self, pos):
+    def __init__(self, pos):
         super().__init__(pos)
+
         self.tileImage = pygame.image.load(
-            "fonction_render/house/Utilitya_00001.png").convert_alpha()
-        self.imageOffset = 46
+            "fonction_render/house/Utilitya_00001.png")
+        self.tileImage = pygame.transform.rotozoom(
+            self.tileImage, 0, scaleDelta)
+        self.imageOffset = self.tileImage.get_height()-TILE_SIZE
         self.name = 'water_well'
 
 
@@ -135,7 +139,9 @@ class B_Engineering(Building):
         super().__init__(pos)
         self.tileImage = pygame.image.load(
             "fonction_render/house/transport_00056.png").convert_alpha()
-        self.imageOffset = 40
+        self.tileImage = pygame.transform.rotozoom(
+            self.tileImage, 0, scaleDelta)
+        self.imageOffset = self.tileImage.get_height()-TILE_SIZE
         self.name = 'B_Engineering'
         self.statut = {"B": 1, "B_feu": 0, "B_collapse": 0}
 
@@ -199,19 +205,19 @@ class Venus(Temples):
         return
 
 
-class Buildings:
-    def __init__(self):
-        ''' Une simple liste vide '''
-        self.listBuilding = []
+# class Buildings:
+#     def __init__(self):
+#         ''' Une simple liste vide '''
+#         self.listBuilding = []
 
-    def ajouter(self, B):
-        self.Building.append(B)
+#     def ajouter(self, B):
+#         self.Building.append(B)
 
-    def retirer(self, B):
-        self.Building.remove(B)
+#     def retirer(self, B):
+#         self.Building.remove(B)
 
-    def __iter__(self):                        #
-        return iter(self.Building)
+#     def __iter__(self):                        #
+#         return iter(self.Building)
 
 
 class Grass(Building):
@@ -223,6 +229,9 @@ class Grass(Building):
 
         self.tileImage = pygame.image.load(
             "newland/Land1a_00285.png").convert_alpha()
+
+        self.tileImage = pygame.transform.rotozoom(
+            self.tileImage, 0, scaleDelta)
 
 
 class Chemins(Building):
@@ -236,11 +245,11 @@ class Chemins(Building):
         self.west = False
         self.east = False
 
-        self.tileImage = {"N": pygame.image.load("Chemins/N.png").convert_alpha(), "S": pygame.image.load("Chemins/S.png").convert_alpha(), "E": pygame.image.load("Chemins/E.png").convert_alpha(), "W": pygame.image.load("Chemins/W.png").convert_alpha(),
-                          "N&E": pygame.image.load("Chemins/N&E.png").convert_alpha(), "S&E": pygame.image.load("Chemins/S&E.png").convert_alpha(), "W&N": pygame.image.load("Chemins/W&N.png").convert_alpha(), "W&S": pygame.image.load("Chemins/W&S.png").convert_alpha(),
-                          "N_S_E": pygame.image.load("Chemins/N_S_E.png").convert_alpha(), "N_W_S": pygame.image.load("Chemins/N_W_S.png").convert_alpha(), "W_N_E": pygame.image.load("Chemins/W_N_E.png").convert_alpha(), "W_S_E": pygame.image.load("Chemins/W_S_E.png").convert_alpha(),
-                          "S-N": pygame.image.load("Chemins/S-N.png").convert_alpha(), "W-E": pygame.image.load("Chemins/W-E.png").convert_alpha(),
-                          "ALL": pygame.image.load("Chemins/ALL.png").convert_alpha()
+        self.tileImage = {"N": pygame.transform.rotozoom(pygame.image.load("Chemins/N.png").convert_alpha(), 0, scaleDelta), "S": pygame.transform.rotozoom(pygame.image.load("Chemins/S.png").convert_alpha(), 0, scaleDelta), "E": pygame.transform.rotozoom(pygame.image.load("Chemins/E.png").convert_alpha(), 0, scaleDelta), "W": pygame.transform.rotozoom(pygame.image.load("Chemins/W.png").convert_alpha(), 0, scaleDelta),
+                          "N&E": pygame.transform.rotozoom(pygame.image.load("Chemins/N&E.png").convert_alpha(), 0, scaleDelta), "S&E": pygame.transform.rotozoom(pygame.image.load("Chemins/S&E.png").convert_alpha(), 0, scaleDelta), "W&N": pygame.transform.rotozoom(pygame.image.load("Chemins/W&N.png").convert_alpha(), 0, scaleDelta), "W&S": pygame.transform.rotozoom(pygame.image.load("Chemins/W&S.png").convert_alpha(), 0, scaleDelta),
+                          "N_S_E": pygame.transform.rotozoom(pygame.image.load("Chemins/N_S_E.png").convert_alpha(), 0, scaleDelta), "N_W_S": pygame.transform.rotozoom(pygame.image.load("Chemins/N_W_S.png").convert_alpha(), 0, scaleDelta), "W_N_E": pygame.transform.rotozoom(pygame.image.load("Chemins/W_N_E.png").convert_alpha(), 0, scaleDelta), "W_S_E": pygame.transform.rotozoom(pygame.image.load("Chemins/W_S_E.png").convert_alpha(), 0, scaleDelta),
+                          "S-N": pygame.transform.rotozoom(pygame.image.load("Chemins/S-N.png").convert_alpha(), 0, scaleDelta), "W-E": pygame.transform.rotozoom(pygame.image.load("Chemins/W-E.png").convert_alpha(), 0, scaleDelta),
+                          "ALL": pygame.transform.rotozoom(pygame.image.load("Chemins/ALL.png").convert_alpha(), 0, scaleDelta)
                           }
 
 
@@ -253,6 +262,8 @@ class Housing(Building):
 
         self.tileImage = pygame.image.load(
             "fonction_render/house/Housng1a_00045.png").convert_alpha()
+        self.tileImage = pygame.transform.rotozoom(
+            self.tileImage, 0, scaleDelta)
 
 
 class Buildings:

@@ -19,10 +19,10 @@ screen_height = 1024
 screen_width = 768
 
 MAP_SIZE = (40, 40)
-TILE_SIZE = 60
+TILE_SIZE = 40
 event_types = {"LaunchGame": 100, "LoadName": 200}
 
-scaleDelta = .5
+scaleDelta = TILE_SIZE/60
 
 LAND1A_078 = pygame.image.load("newland/Land1a_00078.png")
 LAND1A_035 = pygame.image.load("newland/Land1a_00035.png")
@@ -70,6 +70,16 @@ ENGINEER = pygame.image.load(
     "fonction_render/house/transport_00056.png")
 WELL = pygame.image.load(
     "fonction_render/house/Utilitya_00001.png")
+
+HOUSE_01 = pygame.transform.rotozoom(HOUSE_01, 0, scaleDelta)
+ROAD = pygame.transform.rotozoom(ROAD, 0, scaleDelta)
+PERFECTURE = pygame.transform.rotozoom(PERFECTURE, 0, scaleDelta)
+GRASS_IMAGE = pygame.transform.rotozoom(GRASS_IMAGE, 0, scaleDelta)
+WELL = pygame.transform.rotozoom(WELL, 0, scaleDelta)
+ENGINEER = pygame.transform.rotozoom(ENGINEER, 0, scaleDelta)
+TEMP_BUILD = pygame.transform.rotozoom(TEMP_BUILD, 0, scaleDelta)
+
+
 TEMP_TILE = {
     "house": HOUSE_01, "shovel": GRASS_IMAGE, "road": ROAD, "sword": PERFECTURE,
     "hammer": ENGINEER, "water": WELL, "blank": TEMP_BUILD

@@ -36,12 +36,14 @@ def SceneGameCreate(self):
     # mini map
     self.mini_map = Minimap(
         self.world.boundary[0], self.world.boundary[1], 144, 111, self.world.world, ((self.game.screen_width - 154, 60)))
+    self.counter = 0
 
 
 def SceneGameRun(self):
 
     #
     self.clock.tick(60)
+    self.counter = int(self.game.tick/60)
     self.hud_manager["fps"].text = 'fps={}'.format(round(self.clock.get_fps()))
     # update
     self.camera.movement_arrow()
@@ -63,7 +65,7 @@ def SceneGameRun(self):
         hud[1].draw(self.game.screen)
     # mini_map
     self.mini_map.draw(self.game.screen, self.camera)
-
+    # print(f"game tick{self.counter}")
     pg.display.flip()
 
 

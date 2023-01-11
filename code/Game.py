@@ -16,6 +16,7 @@ class Game():
         self.running = True
         self.sceneMap = {}
         self.map = None
+        self.tick = 0
 
     def addScene(self, scene) -> None:
         if scene.id in self.sceneMap.keys():
@@ -50,12 +51,13 @@ class Game():
 
             # Run the scene
             while self.running and self.actualScene == scene.id:
+
                 scene.handleEvents()
                 scene.run()
-
+                self.tick += 1
             # End the scene
             scene.destroy()
-
+            #
         pygame.display.quit()
         pygame.quit()
         exit()

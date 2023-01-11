@@ -1,6 +1,6 @@
 import pygame
 
-TILE_SIZE = 60
+from const import TILE_SIZE, MAP_SIZE
 
 
 def GenerateGridLayout(x, y, columnNumber, rowNumber, gapX, gapY, sizeX, sizeY):
@@ -61,15 +61,28 @@ def zone_grid(drag_process, drag_start, drag_end, scroll, offset):
 
 
 def get_points_in_rectangle(x1, y1, x2, y2):
-    points = []
-    if x1 > x2:
-        x1, x2 = x2, x1
-    if y1 > y2:
-        y1, y2 = y2, y1
-    for x in range(x1, x2+1):
-        for y in range(y1, y2+1):
-            points.append((x, y))
-    return points
+    if x1 == x2 and y1 == y2:
+        return [(x1, y1)]
+    else:
+        points = []
+        coef_x = 1
+        coef_y = 1
+        if x1 > x2:
+            coef_x = -1
+        if y1 > y2:
+            coef_y = -1
+        for x in range(x1, x2+coef_x, coef_x):
+            for y in range(y1, y2+coef_y, coef_y):
+                points.append((x, y))
+        return points
+
+
+def get_road_pathway(x1, y1, x2, y2, pathway):
+    # pathway = list(dict.fromkeys(pathway))
+    if x1 == x2 and y1 == y2:
+        pathway.append((x1, y1))
+    elif (x2, y2) not in pathway:
+        pathway.append((x2, y2))
 
 # 1 North #2 South #3 West #4 East
 
@@ -114,24 +127,32 @@ def set_neighborhood_likeliness(tile, world_grid):
             tile.north = True
         elif type(tile) != type(world_grid[cord_north[0]][cord_north[1]]):
             tile.north = False
-    # south
+    # elif cord_north[1] < 0:
+    #     tile.north = True
+        # south
     if 0 <= cord_south[0] <= 39 and 0 <= cord_south[1] <= 39:
         if type(tile) == type(world_grid[cord_south[0]][cord_south[1]]):
             tile.south = True
         elif type(tile) != type(world_grid[cord_south[0]][cord_south[1]]):
             tile.south = False
+    # elif cord_south[1] > 39:
+    #     tile.south = True
     # west
     if 0 <= cord_west[0] <= 39 and 0 <= cord_west[1] <= 39:
         if type(tile) == type(world_grid[cord_west[0]][cord_west[1]]):
             tile.west = True
         elif type(tile) != type(world_grid[cord_west[0]][cord_west[1]]):
             tile.west = False
+    # elif cord_west[0] < 0:
+    #     tile.west = True
     # east
     if 0 <= cord_east[0] <= 39 and 0 <= cord_east[1] <= 39:
         if type(tile) == type(world_grid[cord_east[0]][cord_east[1]]):
             tile.east = True
         elif type(tile) != type(world_grid[cord_east[0]][cord_east[1]]):
             tile.east = False
+    # elif cord_east[0] > 39:
+    #     tile.east = True
 
     # print(
     #     f"after change n{tile.north},s{tile.south},w{tile.west},e{tile.east}")
@@ -191,3 +212,80 @@ def get_iso_polygon(iso_x, iso_y):
 
 def get_ratio(big, small):
     return small/big
+
+# A* pathrfinding algo
+# 1er edition
+
+
+def A_star(start, goal):
+    # Set of nodes already evaluated
+    closed_set = set()
+    # The set of currently discovered nodes that are not evaluated yet.
+    open_set = {start}
+    # For each node, which node it can most efficiently be reached from.
+    # If a node can be reached from many nodes, came_from will eventually contain the
+    # most efficient previous step.
+    came_from = dict()
+    # For each node, the cost of getting from the start node to that node.
+    g_score = {start: 0}
+    # For each node, the total cost of getting from the start node to the goal
+    # by passing by that node. That value is partly known, partly heuristic.
+    h_score = {start: manhattan_distance(start, goal)}
+    f_score = {start: manhattan_distance(start, goal)}
+
+    while open_set:
+        # current = min(open_set, key=lambda x: f_score[x])
+        current = min({k: v for k, v in f_score.items() if v <=
+                       min(f_score.values())}, key=lambda x: h_score[x])
+        if current == goal:
+            return reconstruct_path(came_from, current)
+
+        open_set.remove(current)
+        closed_set.add(current)
+
+        for neighbor in neighbors(current):
+            if neighbor in closed_set:
+                continue
+            tentative_g_score = g_score[current] + \
+                movement_cost(current, neighbor)
+
+            if neighbor not in open_set:
+                open_set.add(neighbor)
+            elif tentative_g_score >= g_score[neighbor]:
+                continue
+
+            came_from[neighbor] = current
+            g_score[neighbor] = tentative_g_score
+            h_score[neighbor] = manhattan_distance(neighbor, goal)
+            f_score[neighbor] = g_score[neighbor] + h_score[neighbor]
+
+    return None
+
+
+def reconstruct_path(came_from, current):
+    total_path = [current]
+    while current in came_from:
+        current = came_from[current]
+        total_path.append(current)
+    return list(reversed(total_path))
+#
+# 1er edition
+
+
+def neighbors(current):
+    x, y = current
+    width, height = MAP_SIZE[0], MAP_SIZE[1]
+    results = [(x+1, y), (x, y-1), (x-1, y), (x, y+1)]
+    results = filter(lambda x: 0 <= x[0] < width and 0 <=
+                     x[1] < height, results)
+    return results
+
+
+def movement_cost(current, neighbor):
+    return 1
+# Test only: effacer cette manhanttan pour remplacer avec propre code distance
+
+
+def manhattan_distance(current, goal):
+    # Compute the Manhattan distance between two points
+    return abs(current[0] - goal[0]) + abs(current[1] - goal[1])
