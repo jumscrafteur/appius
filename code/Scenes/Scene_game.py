@@ -18,13 +18,15 @@ def SceneGameCreate(self):
         self.game.screen_width*0.5, 2, f"", 18, (255, 255, 255))
     self.infopop = InfoShow(
         self.game.screen_width*0.6, 2, f"Pop    xxxx", 18, (255, 255, 255))
+    self.infoPO = InfoShow(
+        self.game.screen_width*0.7, 2, f"PO    xxxx", 18, (255, 255, 255))
 
     self.hud_manager = {"up": self.hudup, "main": self.hudleft,
-                        "fps": self.infofps, "pop": self.infopop}
+                        "fps": self.infofps, "pop": self.infopop, "Po": self.infoPO}
 
     # world
     self.world = World(40, 40, self.game.screen_width, self.game.screen_height,
-                       self.hud_manager, self.game.save.map)
+                       self.hud_manager, self.game.save.map, self.game.save)
     # camera
     self.camera = Camera(self.game.screen_width,
                          self.game.screen_height, self.world.boundary)
@@ -45,6 +47,7 @@ def SceneGameRun(self):
     self.clock.tick(60)
     self.counter = int(self.game.tick/60)
     self.hud_manager["fps"].text = 'fps={}'.format(round(self.clock.get_fps()))
+    self.hud_manager["Po"].text = 'Po={}'.format(round(self.game.save.PO))
     # update
     self.camera.movement_arrow()
     # self.camera.movement_mouse()

@@ -86,7 +86,6 @@ class World:
 
                 if self.hud["main"].interaction == "road":
                     self.zone_region = A_star((x1, y1), (x2, y2))
-                    print(self.zone_region)
                     for grid_pos in self.zone_region:
                         if mouse_is_on_map(self, grid_pos, mouse_pos):
                             print(grid_pos)
@@ -245,8 +244,8 @@ class World:
             collision = self.world.Building[grid_pos[0]
                                             ][grid_pos[1]].collision
             offset = img.get_height() - TILE_SIZE
-            # print(
-            #     f"pos{iso_poly},collision{collision},name{self.world.Building[grid_pos[0]][grid_pos[1]]}")
+            print(
+                f"pos{iso_poly},collision{collision},name{self.world.Building[grid_pos[0]][grid_pos[1]]}")
 
             temp_tile = {
                 "image": img,

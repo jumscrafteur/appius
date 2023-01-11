@@ -10,7 +10,7 @@ import copy
 
 class World:
 
-    def __init__(self, grid_l_x, grid_l_y, width, height, hud, world):
+    def __init__(self, grid_l_x, grid_l_y, width, height, hud, world, save):
         # props
         self.grid_lx = grid_l_x
         self.grid_ly = grid_l_y
@@ -18,6 +18,7 @@ class World:
         self.height = height
         self.hud = hud
         self.world = world
+        self.save = save
         self.boundary = [self.grid_lx *
                          TILE_SIZE * 2, self.grid_ly * TILE_SIZE]
         # fonctionality
@@ -86,10 +87,10 @@ class World:
 
                 if self.hud["main"].interaction == "road":
                     self.zone_region = A_star((x1, y1), (x2, y2))
-                    print(self.zone_region)
+
                     for grid_pos in self.zone_region:
                         if mouse_is_on_map(self, grid_pos, mouse_pos):
-                            print(grid_pos)
+
                             self.temp_tile.append(
                                 self.temp_changement(grid_pos, self.hud["main"].interaction, "drag_drop_road"))
 
@@ -98,7 +99,7 @@ class World:
                     self.zone_region = get_points_in_rectangle(x1, y1, x2, y2)
                     for grid_pos in self.zone_region:
                         if mouse_is_on_map(self, grid_pos, mouse_pos):
-                            print(grid_pos)
+
                             self.temp_tile.append(
                                 self.temp_changement(grid_pos, self.hud["main"].interaction, "drag_drop_house"))
 
@@ -106,128 +107,141 @@ class World:
         grid_pos = temp["grid"]
         collision = temp["collision"]
         if not collision:
-            self.world.Building[grid_pos[0]].remove(
-                self.world.Building[grid_pos[0]][grid_pos[1]])
-            road_entity = Chemins((grid_pos[0], grid_pos[1]))
+            if self.save.PO >= 4:
+                self.world.Building[grid_pos[0]].remove(
+                    self.world.Building[grid_pos[0]][grid_pos[1]])
+                road_entity = Chemins((grid_pos[0], grid_pos[1]))
+                # print("---------------")
+                # print(
+                #     f"before change n{road_entity.north},s{road_entity.south},w{road_entity.west},e{road_entity.east}")
+                road_entity.map[0] += self.boundary[0]/2
+                self.world.Building[grid_pos[0]].insert(grid_pos[1],
+                                                        road_entity)
+                self.road_system[grid_pos[0]][grid_pos[1]] = True
+                set_neighborhood_likeliness(
+                    self.world.Building[grid_pos[0]][grid_pos[1]], self.world.Building)
+                # road_entity.map[0] += self.boundary[0]/2
+                self.render["map"].blit(
+                    road_entity.tileImage[road_shifting_util(road_entity)], (road_entity.map[0], road_entity.map[1]))
 
-            road_entity.map[0] += self.boundary[0]/2
-            self.world.Building[grid_pos[0]].insert(grid_pos[1],
-                                                    road_entity)
-            self.road_system[grid_pos[0]][grid_pos[1]] = True
-            set_neighborhood_likeliness(
-                self.world.Building[grid_pos[0]][grid_pos[1]], self.world.Building)
-            self.render["map"].blit(
-                road_entity.tileImage[road_shifting_util(road_entity)], (road_entity.map[0], road_entity.map[1]))
+                # print("---------------")
+                if road_entity.north:
+                    x, y = get_nearby_tile(road_entity.grid, "north")
+                    if 0 <= x <= 39 and 0 <= y <= 39:
+                        temporary = self.world.Building[x][y]
+                        set_neighborhood_likeliness(
+                            temporary, self.world.Building)
+                        self.render["map"].blit(temporary.tileImage[road_shifting_util(
+                            temporary)], (temporary.map[0], temporary.map[1]))
+                if road_entity.south:
+                    x, y = get_nearby_tile(road_entity.grid, "south")
+                    if 0 <= x <= 39 and 0 <= y <= 39:
+                        temporary = self.world.Building[x][y]
+                        set_neighborhood_likeliness(
+                            temporary, self.world.Building)
+                        self.render["map"].blit(temporary.tileImage[road_shifting_util(
+                            temporary)], (temporary.map[0], temporary.map[1]))
+                if road_entity.west:
+                    x, y = get_nearby_tile(road_entity.grid, "west")
+                    if 0 <= x <= 39 and 0 <= y <= 39:
+                        temporary = self.world.Building[x][y]
+                        set_neighborhood_likeliness(
+                            temporary, self.world.Building)
+                        self.render["map"].blit(temporary.tileImage[road_shifting_util(
+                            temporary)], (temporary.map[0], temporary.map[1]))
+                if road_entity.east:
+                    x, y = get_nearby_tile(road_entity.grid, "east")
+                    if 0 <= x <= 39 and 0 <= y <= 39:
+                        temporary = self.world.Building[x][y]
+                        set_neighborhood_likeliness(
+                            temporary, self.world.Building)
+                        self.render["map"].blit(temporary.tileImage[road_shifting_util(
+                            temporary)], (temporary.map[0], temporary.map[1]))
 
-            # print("---------------")
-            if road_entity.north:
-                x, y = get_nearby_tile(road_entity.grid, "north")
-                if 0 <= x <= 39 and 0 <= y <= 39:
-                    temporary = self.world.Building[x][y]
-                    set_neighborhood_likeliness(
-                        temporary, self.world.Building)
-                    self.render["map"].blit(temporary.tileImage[road_shifting_util(
-                        temporary)], (temporary.map[0], temporary.map[1]))
-            if road_entity.south:
-                x, y = get_nearby_tile(road_entity.grid, "south")
-                if 0 <= x <= 39 and 0 <= y <= 39:
-                    temporary = self.world.Building[x][y]
-                    set_neighborhood_likeliness(
-                        temporary, self.world.Building)
-                    self.render["map"].blit(temporary.tileImage[road_shifting_util(
-                        temporary)], (temporary.map[0], temporary.map[1]))
-            if road_entity.west:
-                x, y = get_nearby_tile(road_entity.grid, "west")
-                if 0 <= x <= 39 and 0 <= y <= 39:
-                    temporary = self.world.Building[x][y]
-                    set_neighborhood_likeliness(
-                        temporary, self.world.Building)
-                    self.render["map"].blit(temporary.tileImage[road_shifting_util(
-                        temporary)], (temporary.map[0], temporary.map[1]))
-            if road_entity.east:
-                x, y = get_nearby_tile(road_entity.grid, "east")
-                if 0 <= x <= 39 and 0 <= y <= 39:
-                    temporary = self.world.Building[x][y]
-                    set_neighborhood_likeliness(
-                        temporary, self.world.Building)
-                    self.render["map"].blit(temporary.tileImage[road_shifting_util(
-                        temporary)], (temporary.map[0], temporary.map[1]))
+                # mini_map
+                grid = road_entity.iso_poly
+                mini_map.update_surface(grid, "road")
 
-              # mini_map
-            grid = road_entity.iso_poly
-            mini_map.update_surface(grid, "road")
+                # réduction de l'argent
+                self.save.PO -= 4
 
     def construction(self, temp, mini_map):
         grid_pos = temp["grid"]
         collision = temp["collision"]
         if not collision:
-            self.world.Building[grid_pos[0]].remove(
-                self.world.Building[grid_pos[0]][grid_pos[1]])
             tile_type = type_of_tile(grid_pos, temp["type"])
-            self.world.Building[grid_pos[0]].insert(grid_pos[1],
-                                                    tile_type)
+            if self.save.PO >= tile_type.price_building:
+                self.world.Building[grid_pos[0]].remove(
+                    self.world.Building[grid_pos[0]][grid_pos[1]])
 
-            self.world.listBuilding.append(tile_type)
-            temp = self.world.Building[grid_pos[0]][grid_pos[1]]
-            temp.map[0] += self.boundary[0]/2
-            grid = temp.iso_poly
+                self.world.Building[grid_pos[0]].insert(grid_pos[1],
+                                                        tile_type)
 
-            # mini_map
-            mini_map.update_surface(grid, "building")
+                self.world.listBuilding.append(tile_type)
+                temp = self.world.Building[grid_pos[0]][grid_pos[1]]
+                temp.map[0] += self.boundary[0]/2
+                # self.render["map"].blit(
+                #     temp.tileImage, (temp.map[0], temp.map[1] - temp.imageOffset))
+                grid = temp.iso_poly
+                mini_map.update_surface(grid, "building")
+                # réduction de l'argent
+                self.save.PO -= tile_type.price_building
 
     def destruction(self, temp, mini_map):
         grid_pos = temp["grid"]
         collision = temp["collision"]
         if collision:
-            type_check = self.world.Building[grid_pos[0]][grid_pos[1]]
-            self.world.Building[grid_pos[0]].remove(
-                self.world.Building[grid_pos[0]][grid_pos[1]])
-            self.world.Building[grid_pos[0]].insert(grid_pos[1],
-                                                    Grass((grid_pos[0], grid_pos[1])))
-
-            temp = self.world.Building[grid_pos[0]][grid_pos[1]]
-            temp.map[0] += self.boundary[0]/2
-            self.render["map"].blit(
-                temp.tileImage, (temp.map[0], temp.map[1]))
-            if type(type_check) == Chemins:
-                self.road_system[grid_pos[0]][grid_pos[1]] = None
-                north = get_nearby_tile(temp.grid, "north")
-                south = get_nearby_tile(temp.grid, "south")
-                west = get_nearby_tile(temp.grid, "west")
-                east = get_nearby_tile(temp.grid, "east")
-                if 0 <= north[0] <= 39 and 0 <= north[1] <= 39:
-                    tile_north = self.world.Building[north[0]][north[1]]
-                    if type(tile_north) == Chemins:
-                        set_neighborhood_likeliness(
-                            tile_north, self.world.Building)
-                        self.render["map"].blit(tile_north.tileImage[road_shifting_util(
-                            tile_north)], (tile_north.map[0], tile_north.map[1]))
-                if 0 <= south[0] <= 39 and 0 <= south[1] <= 39:
-                    tile_south = self.world.Building[south[0]][south[1]]
-                    if type(tile_south) == Chemins:
-                        set_neighborhood_likeliness(
-                            tile_south, self.world.Building)
-                        self.render["map"].blit(tile_south.tileImage[road_shifting_util(
-                            tile_south)], (tile_south.map[0], tile_south.map[1]))
-                if 0 <= west[0] <= 39 and 0 <= west[1] <= 39:
-                    tile_west = self.world.Building[west[0]][west[1]]
-                    if type(tile_west) == Chemins:
-                        set_neighborhood_likeliness(
-                            tile_west, self.world.Building)
-                        self.render["map"].blit(tile_west.tileImage[road_shifting_util(
-                            tile_west)], (tile_west.map[0], tile_west.map[1]))
-                if 0 <= east[0] <= 39 and 0 <= east[1] <= 39:
-                    tile_east = self.world.Building[east[0]][east[1]]
-                    if type(tile_east) == Chemins:
-                        set_neighborhood_likeliness(
-                            tile_east, self.world.Building)
-                        self.render["map"].blit(tile_east.tileImage[road_shifting_util(
-                            tile_east)], (tile_east.map[0], tile_east.map[1]))
-            else:
-                self.world.listBuilding.remove(type_check)
-            # mini_map
-            grid = temp.iso_poly
-            mini_map.update_surface(grid, "grass")
+            if self.save.PO >= 2:
+                type_check = self.world.Building[grid_pos[0]][grid_pos[1]]
+                self.world.Building[grid_pos[0]].remove(
+                    self.world.Building[grid_pos[0]][grid_pos[1]])
+                self.world.Building[grid_pos[0]].insert(grid_pos[1],
+                                                        Grass((grid_pos[0], grid_pos[1])))
+                temp = self.world.Building[grid_pos[0]][grid_pos[1]]
+                temp.map[0] += self.boundary[0]/2
+                self.render["map"].blit(
+                    temp.tileImage, (temp.map[0], temp.map[1]))
+                if type(type_check) == Chemins:
+                    self.road_system[grid_pos[0]][grid_pos[1]] = None
+                    north = get_nearby_tile(temp.grid, "north")
+                    south = get_nearby_tile(temp.grid, "south")
+                    west = get_nearby_tile(temp.grid, "west")
+                    east = get_nearby_tile(temp.grid, "east")
+                    if 0 <= north[0] <= 39 and 0 <= north[1] <= 39:
+                        tile_north = self.world.Building[north[0]][north[1]]
+                        if type(tile_north) == Chemins:
+                            set_neighborhood_likeliness(
+                                tile_north, self.world.Building)
+                            self.render["map"].blit(tile_north.tileImage[road_shifting_util(
+                                tile_north)], (tile_north.map[0], tile_north.map[1]))
+                    if 0 <= south[0] <= 39 and 0 <= south[1] <= 39:
+                        tile_south = self.world.Building[south[0]][south[1]]
+                        if type(tile_south) == Chemins:
+                            set_neighborhood_likeliness(
+                                tile_south, self.world.Building)
+                            self.render["map"].blit(tile_south.tileImage[road_shifting_util(
+                                tile_south)], (tile_south.map[0], tile_south.map[1]))
+                    if 0 <= west[0] <= 39 and 0 <= west[1] <= 39:
+                        tile_west = self.world.Building[west[0]][west[1]]
+                        if type(tile_west) == Chemins:
+                            set_neighborhood_likeliness(
+                                tile_west, self.world.Building)
+                            self.render["map"].blit(tile_west.tileImage[road_shifting_util(
+                                tile_west)], (tile_west.map[0], tile_west.map[1]))
+                    if 0 <= east[0] <= 39 and 0 <= east[1] <= 39:
+                        tile_east = self.world.Building[east[0]][east[1]]
+                        if type(tile_east) == Chemins:
+                            set_neighborhood_likeliness(
+                                tile_east, self.world.Building)
+                            self.render["map"].blit(tile_east.tileImage[road_shifting_util(
+                                tile_east)], (tile_east.map[0], tile_east.map[1]))
+                else:
+                    self.world.listBuilding.remove(type_check)
+                # mini_map
+                grid = temp.iso_poly
+                mini_map.update_surface(grid, "grass")
+                # réduction de l'argent
+                self.save.PO -= 2
 
     def temp_changement(self, grid_pos, type_change, mode):
         if type_change in self.available:
@@ -245,8 +259,8 @@ class World:
             collision = self.world.Building[grid_pos[0]
                                             ][grid_pos[1]].collision
             offset = img.get_height() - TILE_SIZE
-            # print(
-            #     f"pos{iso_poly},collision{collision},name{self.world.Building[grid_pos[0]][grid_pos[1]]}")
+            print(
+                f"pos{iso_poly},collision{collision},name{self.world.Building[grid_pos[0]][grid_pos[1]]}")
 
             temp_tile = {
                 "image": img,

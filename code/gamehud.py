@@ -1,5 +1,6 @@
 import pygame as pg
 from Button import *
+from const import shovel_strings, rail_strings, hammer_strings, arrow_strings
 
 
 class InfoShow:
@@ -120,13 +121,14 @@ class Hudbigleft:
                             "scroll": self.button_147, "mask": self.button_143, "bighouse": self.button_139, "hammer": self.button_167, "sword": self.button_159, "wagon": self.button_155,
                             "X": self.button_246, "notice": self.button_115, "bell": self.button_122}
 
-        self.cursor_default = pg.cursors.Cursor(pg.SYSTEM_CURSOR_ARROW)
-        hammer_cursor = pg.cursors.Cursor((30, 30), pg.image.load(
-            "cursor/hammer.png").convert_alpha())
-        shovel_cursor = pg.cursors.Cursor((30, 30), pg.image.load(
-            "cursor/shovel.png").convert_alpha())
-        road_cursor = pg.cursors.Cursor((30, 30), pg.image.load(
-            "cursor/road.png").convert_alpha())
+        self.cursor_default = pg.cursors.Cursor(
+            (32, 32), (0, 0), *pg.cursors.compile(arrow_strings))
+        hammer_cursor = pg.cursors.Cursor(
+            (32, 32), (0, 0), *pg.cursors.compile(hammer_strings))
+        shovel_cursor = pg.cursors.Cursor(
+            (32, 32), (0, 0), *pg.cursors.compile(shovel_strings))
+        road_cursor = pg.cursors.Cursor(
+            (24, 24), (0, 0), *pg.cursors.compile(rail_strings))
         self.cursor = {"house": hammer_cursor, "shovel": shovel_cursor, "road": road_cursor, "water": hammer_cursor, "medic": self.cursor_default, "thunder": self.cursor_default,
                        "scroll": self.cursor_default, "mask": self.cursor_default, "bighouse": self.cursor_default, "hammer": hammer_cursor, "sword": hammer_cursor,
                        "wagon": self.cursor_default, "X": self.cursor_default, "notice": self.cursor_default, "bell": self.cursor_default}
