@@ -335,6 +335,21 @@ class World:
                 screen.blit(building.tileImage, (
                     building.map[0]+camera.scroll.x, building.map[1]+camera.scroll.y-building.imageOffset))
 
+    def layer_1_draw(self, camera, screen):
+        screen.fill((0, 0, 0))
+        screen.blit(self.render["map"],
+                    (camera.scroll.x, camera.scroll.y))
+
+    def layer_3_draw(self, camera, screen):
+        self.draw_building(camera, screen)
+
+    def layer_4_draw(self, camera, screen):
+        for temp_tile in self.temp_tile:
+            if temp_tile != None:
+                self.draw_temptile(temp_tile, camera, screen)
+        if self.on_mouse_temp != None:
+            self.draw_on_mouse_temptile(self.on_mouse_temp, camera, screen)
+
     def draw(self, camera, screen):
         screen.fill((0, 0, 0))
         # 1er layer: draw only grass and roads

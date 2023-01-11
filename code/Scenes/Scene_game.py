@@ -61,7 +61,18 @@ def SceneGameRun(self):
     # draw
 
     self.mini_map.update_mode_interactive(mouse_pos, mouse_action, self.camera)
-    self.world.draw(self.camera, self.game.screen)
+
+    # 1er layer: draw only grass and roads
+    self.world.layer_1_draw(self.camera, self.game.screen)
+    # ----------------------------------------------
+    # 2nd layer: draw walker
+
+    # --------------------------------------------------
+    # 3rd layer: draw tree,mountain,rock,  and building
+    self.world.layer_3_draw(self.camera, self.game.screen)
+    # --------------------------------
+    # 4th layer : draw temporary changement (when we build in drag & drop)
+    self.world.layer_4_draw(self.camera, self.game.screen)
     # self.world.draw_grid(self.camera, self.game.screen)
 
     for hud in self.hud_manager.items():
