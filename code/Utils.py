@@ -1,6 +1,6 @@
 import pygame
 
-from const import TILE_SIZE, MAP_SIZE
+from const import TILE_SIZE, MAP_SIZE, FIRE_THRESHOLD, COLLAPSE_THESHOLD
 
 
 def GenerateGridLayout(x, y, columnNumber, rowNumber, gapX, gapY, sizeX, sizeY):
@@ -289,3 +289,22 @@ def movement_cost(current, neighbor):
 def manhattan_distance(current, goal):
     # Compute the Manhattan distance between two points
     return abs(current[0] - goal[0]) + abs(current[1] - goal[1])
+
+
+def overlay_util(number):
+    # en pourcentage
+    stat = (number / FIRE_THRESHOLD)*100
+    if 5 < stat < 15:
+        return "15<"
+    elif 15 < stat < 30:
+        return "15-30"
+    elif 30 < stat < 45:
+        return "30-45"
+    elif 45 < stat < 60:
+        return "45-60"
+    elif 60 < stat < 75:
+        return "60-75"
+    elif 75 < stat < 90:
+        return "75-90"
+    elif stat > 90:
+        return ">90"

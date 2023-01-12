@@ -22,6 +22,10 @@ MAP_SIZE = (40, 40)
 TILE_SIZE = 40
 event_types = {"LaunchGame": 100, "LoadName": 200}
 
+FIRE_THRESHOLD = 20
+COLLAPSE_THESHOLD = 20
+BURNING_TIME = 20
+
 scaleDelta = TILE_SIZE/60
 
 LAND1A_078 = pygame.image.load("newland/Land1a_00078.png")
@@ -84,6 +88,123 @@ TEMP_TILE = {
     "house": HOUSE_01, "shovel": GRASS_IMAGE, "road": ROAD, "sword": PERFECTURE,
     "hammer": ENGINEER, "water": WELL, "blank": TEMP_BUILD
 }
+
+RUMBLE_OF_BUILDING = pygame.transform.rotozoom(pygame.image.load(
+    "fonction_render/burning/useless_tile.png"), 0, scaleDelta)
+
+# modulo 8
+JUST_A_BURNING_MEMORY = {0: pygame.transform.rotozoom(pygame.image.load("fonction_render/burning/burn_1.png"), 0, scaleDelta),
+                         1: pygame.transform.rotozoom(pygame.image.load("fonction_render/burning/burn_2.png"), 0, scaleDelta),
+                         2: pygame.transform.rotozoom(pygame.image.load("fonction_render/burning/burn_3.png"), 0, scaleDelta),
+                         3: pygame.transform.rotozoom(pygame.image.load("fonction_render/burning/burn_4.png"), 0, scaleDelta),
+                         4: pygame.transform.rotozoom(pygame.image.load("fonction_render/burning/burn_5.png"), 0, scaleDelta),
+                         5: pygame.transform.rotozoom(pygame.image.load("fonction_render/burning/burn_6.png"), 0, scaleDelta),
+                         6: pygame.transform.rotozoom(pygame.image.load("fonction_render/burning/burn_7.png"), 0, scaleDelta),
+                         7: pygame.transform.rotozoom(pygame.image.load("fonction_render/burning/burn_8.png"), 0, scaleDelta)
+                         }
+
+
+OVERLAY_COMPONENT = {"white_top": pygame.transform.rotozoom(pygame.image.load("fonction_render/Overlay/white_top.png"), 0, scaleDelta),
+                     "white_bot": pygame.transform.rotozoom(pygame.image.load("fonction_render/Overlay/white_bot.png"), 0, scaleDelta),
+                     "yellow_top": pygame.transform.rotozoom(pygame.image.load("fonction_render/Overlay/yellow_top.png"), 0, scaleDelta),
+                     "yellow_mid": pygame.transform.rotozoom(pygame.image.load("fonction_render/Overlay/yellow_mid.png"), 0, scaleDelta),
+                     "yellow_bot": pygame.transform.rotozoom(pygame.image.load("fonction_render/Overlay/yellow_bot.png"), 0, scaleDelta),
+                     "orange_top":  pygame.transform.rotozoom(pygame.image.load("fonction_render/Overlay/orange_top.png"), 0, scaleDelta),
+                     "orange_mid": pygame.transform.rotozoom(pygame.image.load("fonction_render/Overlay/orange_mid.png"), 0, scaleDelta),
+                     "orange_bot":  pygame.transform.rotozoom(pygame.image.load("fonction_render/Overlay/orange_bot.png"), 0, scaleDelta),
+                     "red_top": pygame.transform.rotozoom(pygame.image.load("fonction_render/Overlay/red_top.png"), 0, scaleDelta),
+                     "red_mid": pygame.transform.rotozoom(pygame.image.load("fonction_render/Overlay/red_mid.png"), 0, scaleDelta),
+                     "red_bot": pygame.transform.rotozoom(pygame.image.load("fonction_render/Overlay/red_bot.png"), 0, scaleDelta)
+                     }
+top_w, top_h = OVERLAY_COMPONENT["white_top"].get_size()  # 96x66
+bot_w, bot_h = OVERLAY_COMPONENT["white_bot"].get_size()  # 80x68
+mid_w, mid_h = OVERLAY_COMPONENT["yellow_mid"].get_size()  # 48x20
+
+# 15-30  piller
+stat_15_30 = pygame.Surface((top_w, top_h+bot_h-mid_h), pygame.SRCALPHA)
+stat_15_30.blit(OVERLAY_COMPONENT["white_bot"], (stat_15_30.get_width(
+)-bot_w-top_w/2+bot_w/2, stat_15_30.get_height()-bot_h))
+stat_15_30.blit(OVERLAY_COMPONENT["white_top"], (0, 0))
+
+# 30-45 piller
+stat_30_45 = pygame.Surface((top_w, top_h+bot_h-mid_h), pygame.SRCALPHA)
+stat_30_45.blit(OVERLAY_COMPONENT["yellow_bot"], (stat_15_30.get_width(
+)-bot_w-top_w/2+bot_w/2, stat_15_30.get_height()-bot_h))
+stat_30_45.blit(OVERLAY_COMPONENT["yellow_top"], (0, 0))
+
+# 45-60 piller
+stat_45_60 = pygame.Surface(
+    (top_w, top_h+bot_h-mid_h+2*mid_h), pygame.SRCALPHA)
+stat_45_60.blit(OVERLAY_COMPONENT["yellow_bot"], (stat_15_30.get_width(
+)-bot_w-top_w/2+bot_w/2, stat_15_30.get_height()-bot_h+2*mid_h))
+# mid_length
+stat_45_60.blit(OVERLAY_COMPONENT["yellow_mid"], ((stat_15_30.get_width(
+)-mid_w-top_w/2+mid_w/2, stat_15_30.get_height()-bot_h+mid_h)))
+stat_45_60.blit(OVERLAY_COMPONENT["yellow_mid"], ((stat_15_30.get_width(
+)-mid_w-top_w/2+mid_w/2, stat_15_30.get_height()-bot_h+2*mid_h)))
+#
+stat_45_60.blit(OVERLAY_COMPONENT["yellow_top"], (0, 0))
+
+# 60-75 piller
+stat_60_75 = pygame.Surface(
+    (top_w, top_h+bot_h-mid_h+2*mid_h), pygame.SRCALPHA)
+stat_60_75.blit(OVERLAY_COMPONENT["orange_bot"], (stat_15_30.get_width(
+)-bot_w-top_w/2+bot_w/2, stat_15_30.get_height()-bot_h+2*mid_h))
+# mid_length
+stat_60_75.blit(OVERLAY_COMPONENT["orange_mid"], ((stat_15_30.get_width(
+)-mid_w-top_w/2+mid_w/2, stat_15_30.get_height()-bot_h+mid_h)))
+stat_60_75.blit(OVERLAY_COMPONENT["orange_mid"], ((stat_15_30.get_width(
+)-mid_w-top_w/2+mid_w/2, stat_15_30.get_height()-bot_h+2*mid_h)))
+#
+stat_60_75.blit(OVERLAY_COMPONENT["orange_top"], (0, 0))
+
+# 75-90 piller
+stat_75_90 = pygame.Surface(
+    (top_w, top_h+bot_h-mid_h+4*mid_h), pygame.SRCALPHA)
+stat_75_90.blit(OVERLAY_COMPONENT["orange_bot"], (stat_15_30.get_width(
+)-bot_w-top_w/2+bot_w/2, stat_15_30.get_height()-bot_h+4*mid_h))
+# mid_length
+stat_75_90.blit(OVERLAY_COMPONENT["orange_mid"], ((stat_15_30.get_width(
+)-mid_w-top_w/2+mid_w/2, stat_15_30.get_height()-bot_h+mid_h)))
+stat_75_90.blit(OVERLAY_COMPONENT["orange_mid"], ((stat_15_30.get_width(
+)-mid_w-top_w/2+mid_w/2, stat_15_30.get_height()-bot_h+2*mid_h)))
+stat_75_90.blit(OVERLAY_COMPONENT["orange_mid"], ((stat_15_30.get_width(
+)-mid_w-top_w/2+mid_w/2, stat_15_30.get_height()-bot_h+3*mid_h)))
+stat_75_90.blit(OVERLAY_COMPONENT["orange_mid"], ((stat_15_30.get_width(
+)-mid_w-top_w/2+mid_w/2, stat_15_30.get_height()-bot_h+4*mid_h)))
+#
+stat_75_90.blit(OVERLAY_COMPONENT["orange_top"], (0, 0))
+
+# 90> piller
+stat_90 = pygame.Surface(
+    (top_w, top_h+bot_h-mid_h+6*mid_h), pygame.SRCALPHA)
+stat_90.blit(OVERLAY_COMPONENT["red_bot"], (stat_15_30.get_width(
+)-bot_w-top_w/2+bot_w/2, stat_15_30.get_height()-bot_h+6*mid_h))
+# mid_length
+stat_90.blit(OVERLAY_COMPONENT["red_mid"], ((stat_15_30.get_width(
+)-mid_w-top_w/2+mid_w/2, stat_15_30.get_height()-bot_h+mid_h)))
+stat_90.blit(OVERLAY_COMPONENT["red_mid"], ((stat_15_30.get_width(
+)-mid_w-top_w/2+mid_w/2, stat_15_30.get_height()-bot_h+2*mid_h)))
+stat_90.blit(OVERLAY_COMPONENT["red_mid"], ((stat_15_30.get_width(
+)-mid_w-top_w/2+mid_w/2, stat_15_30.get_height()-bot_h+3*mid_h)))
+stat_90.blit(OVERLAY_COMPONENT["red_mid"], ((stat_15_30.get_width(
+)-mid_w-top_w/2+mid_w/2, stat_15_30.get_height()-bot_h+4*mid_h)))
+stat_90.blit(OVERLAY_COMPONENT["red_mid"], ((stat_15_30.get_width(
+)-mid_w-top_w/2+mid_w/2, stat_15_30.get_height()-bot_h+5*mid_h)))
+stat_90.blit(OVERLAY_COMPONENT["red_mid"], ((stat_15_30.get_width(
+)-mid_w-top_w/2+mid_w/2, stat_15_30.get_height()-bot_h+6*mid_h)))
+#
+stat_90.blit(OVERLAY_COMPONENT["red_top"], (0, 0))
+
+OVERLAY = {"fond": pygame.transform.rotozoom(pygame.image.load("fonction_render/Overlay/fond.png"), 0, scaleDelta),
+           "15<": OVERLAY_COMPONENT["white_bot"],
+           "15-30": stat_15_30,
+           "30-45": stat_30_45,
+           "45-60": stat_45_60,
+           "60-75": stat_60_75,
+           "75-90": stat_75_90,
+           ">90": stat_90
+           }
 
 
 thickarrow_strings = (  # sized 24x24

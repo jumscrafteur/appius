@@ -14,6 +14,8 @@ def type_of_tile(grid, name):
             return Prefecture((x, y))
         case "water":
             return Water_well((x, y))
+        case "rumble":
+            return Rumble((x, y))
 
 
 class Building:
@@ -30,19 +32,29 @@ class Building:
         min_x = min([x for x, y in self.iso_poly])
         min_y = min([y for x, y in self.iso_poly])
         self.map = [min_x, min_y]
-        self.type = None  # {Tent,Temples,Prefecture,Well-water..}
+        self.name = None  # {Tent,Temples,Prefecture,Well-water..}
+
         self.risk_collapse = 0  # 0:pas de risk
+        self.risk_fire = 0
+        self.canRemove = True
+        self.canFire = False
+        self.canCollapse = False
+        self.onFire = False
+        self.time_under_effect = 0
+        # cant do nothing now, remove asap
+        self.useless = False
+
         self.capacity = 0
         self.number_workers = 0
         self.price_building = 0
         self.currentNB = 0
         self.service = False
         self.needs = []
+
         self.collision = True
 
         self.tileImage = None
         self.imageOffset = 0
-        self.type = None
 
     # def position(self):
     #     return
@@ -66,7 +78,7 @@ class Building:
 class Tent (Building):
     def __init__(self, pos):
         super.__init__(self, pos)
-        self.type = 'Tent'
+        self.name = 'Tent'
         self.capacity = 5  # par défaut
         self.currentNB = 0
         self.price_building = 0
@@ -113,7 +125,7 @@ class Water_well(Building):  # puit
 class Senat(Building):
     def __init__(self, pos):
         super.__init__(self, pos)
-        self.type = 'Senat'
+        self.name = 'Senat'
         self.statut = {"Senat": 1, "S_feu": 0, "S_collapse": 0}
         self.umployment = 0
         self.culture_level = 0
@@ -141,6 +153,7 @@ class Senat(Building):
 class B_Engineering(Building):
     def __init__(self, pos):
         super().__init__(pos)
+
         self.tileImage = pygame.image.load(
             "fonction_render/house/transport_00056.png").convert_alpha()
         self.tileImage = pygame.transform.rotozoom(
@@ -149,6 +162,7 @@ class B_Engineering(Building):
         self.name = 'B_Engineering'
         self.statut = {"B": 1, "B_feu": 0, "B_collapse": 0}
         self.price_building = 30
+        self.canFire = True
 
 
 ''''sousclasse pour les temples'''
@@ -157,7 +171,7 @@ class B_Engineering(Building):
 class Temples(Building):
     def __init__(self, pos):
         super.__init__(self, pos)
-        self.type = 'Temples'
+        self.name = 'Temples'
         self.nb_temples = 0
         self.price_building = 50
 
@@ -275,11 +289,32 @@ class Housing(Building):
             self.tileImage, 0, scaleDelta)
 
 
+class Rumble(Building):
+    def __init__(self, pos):
+        super().__init__(pos)
+        self.name = "trash"
+        self.imageoffset = 0
+        self.price_building = 0
+        self.collision = True
+        self.canCollapse = False
+        self.canFire = False
+        self.canRemove = True
+        self.risk_fire = 0
+        self.risk_collapse = 0
+        self.useless = True
+
+        self.tileImage = RUMBLE_OF_BUILDING
+
+        # self.tileImage = pygame.transform.rotozoom(
+        #     self.tileImage, 0, scaleDelta)
+
+
 class Buildings:
     def __init__(self):
         ''' Une simple liste vide '''
         self.Building = []
         self.listBuilding = []
+        self.listonFire = []
 
     def __iter__(self):
         return iter(self.Building)

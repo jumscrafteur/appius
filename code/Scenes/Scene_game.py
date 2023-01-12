@@ -6,6 +6,7 @@ import pygame
 from World import World
 from Camera import Camera
 from Minimap import Minimap
+from Evenement import Evenement
 
 
 def SceneGameCreate(self):
@@ -40,12 +41,14 @@ def SceneGameCreate(self):
         self.world.boundary[0], self.world.boundary[1], 144, 111, self.world.world, ((self.game.screen_width - 154, 60)))
     self.counter = 0
 
+    self.evenement = Evenement()
+
 
 def SceneGameRun(self):
 
     #
     self.clock.tick(60)
-    self.counter = int(self.game.tick/60)
+    self.counter = int(self.game.tick/10)
     self.hud_manager["fps"].text = 'fps={}'.format(round(self.clock.get_fps()))
     self.hud_manager["Po"].text = 'Po={}'.format(round(self.game.save.PO))
     # update
@@ -58,10 +61,11 @@ def SceneGameRun(self):
     self.hud_manager["main"].update(mouse_pos, mouse_action)
     self.world.update(self.drag_start, self.drag_end,
                       mouse_pos, mouse_action, self.camera, self.mini_map)
-    # draw
 
     self.mini_map.update_mode_interactive(mouse_pos, mouse_action, self.camera)
+    self.world.update_live_event()
 
+    # DRAW TO MAP
     # 1er layer: draw only grass and roads
     self.world.layer_1_draw(self.camera, self.game.screen)
     # ----------------------------------------------
@@ -69,7 +73,7 @@ def SceneGameRun(self):
 
     # --------------------------------------------------
     # 3rd layer: draw tree,mountain,rock,  and building
-    self.world.layer_3_draw(self.camera, self.game.screen)
+    self.world.layer_3_draw(self.camera, self.game.screen, self.counter)
     # --------------------------------
     # 4th layer : draw temporary changement (when we build in drag & drop)
     self.world.layer_4_draw(self.camera, self.game.screen)
@@ -80,10 +84,21 @@ def SceneGameRun(self):
     # mini_map
     self.mini_map.draw(self.game.screen, self.camera)
     # print(f"game tick{self.counter}")
+    self.evenement.update(self.world.world)
     pg.display.flip()
 
 
 def SceneGameHandleEvents(self, event):
+    if event.type in [pygame.KEYDOWN]:
+        if event.unicode == 'g':
+            if self.world.grid:
+                self.world.grid = False
+            else:
+                self.world.grid = True
+        elif event.unicode == 'n':
+            self.world.overlay_mode = "normal"
+        elif event.unicode == 'f':
+            self.world.overlay_mode = "fire"
     if event.type in [pygame.KEYUP, pygame.KEYDOWN]:
         if event.key in [pygame.K_LEFT, pygame.K_RIGHT, pygame.K_DOWN, pygame.K_UP]:
             self.camera.keys[event.key] = not self.camera.keys[event.key]
