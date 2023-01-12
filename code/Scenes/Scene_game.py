@@ -10,7 +10,8 @@ from Evenement import Evenement
 
 
 def SceneGameCreate(self):
-
+    self.mouse_action = [False, False, False]
+    self.mouse_pos = (0, 0)
     self.clock = pygame.time.Clock()
     self.hudup = Hudupper(0, 0, self.game.screen_width)
     self.hudleft = Hudbigleft(
@@ -21,8 +22,9 @@ def SceneGameCreate(self):
         self.game.screen_width*0.6, 2, f"Pop    xxxx", 18, (255, 255, 255))
     self.infoPO = InfoShow(
         self.game.screen_width*0.7, 2, f"PO    xxxx", 18, (255, 255, 255))
-
-    self.hud_manager = {"up": self.hudup, "main": self.hudleft,
+    self.time_wizard = Time_Wizard(
+        self.game.screen_width - 162, 475, 162, 100)
+    self.hud_manager = {"up": self.hudup, "main": self.hudleft, "time": self.time_wizard,
                         "fps": self.infofps, "pop": self.infopop, "Po": self.infoPO}
 
     # world
@@ -54,15 +56,17 @@ def SceneGameRun(self):
     # update
     self.camera.movement_arrow()
     # self.camera.movement_mouse()
-    mouse_pos = pygame.mouse.get_pos()
-    mouse_action = pygame.mouse.get_pressed()
+    # mouse_pos = pygame.mouse.get_pos()
+    # mouse_action = pygame.mouse.get_pressed()
 
     self.camera.movement_arrow()
-    self.hud_manager["main"].update(mouse_pos, mouse_action)
+    self.hud_manager["main"].update(self.mouse_pos, self.mouse_action)
     self.world.update(self.drag_start, self.drag_end,
-                      mouse_pos, mouse_action, self.camera, self.mini_map)
-
-    self.mini_map.update_mode_interactive(mouse_pos, mouse_action, self.camera)
+                      self.mouse_pos, self.mouse_action, self.camera, self.mini_map)
+    self.evenement.game_speed = self.hud_manager["time"].update(
+        self.evenement.game_speed, self.mouse_pos, self.mouse_action)
+    self.mini_map.update_mode_interactive(
+        self.mouse_pos, self.mouse_action, self.camera)
     self.world.update_live_event()
 
     # DRAW TO MAP
@@ -109,15 +113,25 @@ def SceneGameHandleEvents(self, event):
         #         scaleDelta > 0 else self.world.zoom
     elif event.type == pygame.MOUSEBUTTONDOWN:
         if event.button == 1:
+            self.mouse_action[0] = True
             self.drag_start = event.pos
-
+        elif event.button == 2:
+            self.mouse_action[1] = True
+        elif event.button == 3:
+            self.mouse_action[2] = True
     elif event.type == pygame.MOUSEBUTTONUP:
         if event.button == 1:
+            self.mouse_action[0] = False
             self.drag_start = None
             self.drag_end = None
+        elif event.button == 2:
+            self.mouse_action[1] = False
+        elif event.button == 3:
+            self.mouse_action[2] = False
     elif event.type == pygame.MOUSEMOTION:
         self.camera.mousePos = event.pos
         self.drag_end = event.pos
+        self.mouse_pos = event.pos
 
 
 SCENE = Scene(SCENE_GAME_ID, 'Scene_Menu', createFunc=SceneGameCreate,

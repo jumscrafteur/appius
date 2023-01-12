@@ -13,7 +13,7 @@ class Evenement:
     def change_building_timer(self, listonFire):
         for building in listonFire:
             if building.onFire:
-                building.time_under_effect += 0.05*self.game_speed
+                building.time_under_effect += 0.03*self.game_speed
 
     def change_risk_fire(self, listBuilding):
         for building in listBuilding:

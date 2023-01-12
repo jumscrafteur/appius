@@ -3,9 +3,7 @@ from Utils import mouse_is_on_map, mouse_to_grid, get_road_pathway, \
     A_star, overlay_util
 from const import TILE_SIZE, TEMP_TILE, GRASS_IMAGE, JUST_A_BURNING_MEMORY, RUMBLE_OF_BUILDING, OVERLAY
 from Building import *
-from Minimap import Minimap
 import pygame
-import copy
 
 
 class World:
