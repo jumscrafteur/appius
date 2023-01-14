@@ -10,17 +10,13 @@ class Stat:
         if (Distance_>1):
             return 0
        
-    def criminality_Risks(homeLocation,prefetOfficeLocation):
-        Distance_=distance(homeLocation,prefetOfficeLocation)
-        if (Distance_>1:
-            return 0
          
     def collapse_Risks(homeLocation,ingineerLocation):
         Distance_=distance(homeLocation,ingineerLocation)
         if (Distance_>1):
             return 0
-    def attractivity(fire,collapse,criminality):
-        return (300-((fire+collapse+criminality)/300))*100
+    def attractivity(fire,collapse):
+        return (200-((fire+collapse)/200))*100
     
     
     
