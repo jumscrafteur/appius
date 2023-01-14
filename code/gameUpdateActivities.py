@@ -17,7 +17,7 @@ class gameUpdate:
             i.fireRisk=fire_Risks(i.pos,getMinDistanceBetweenWolkersHome(i.pos,"Prefect"))
             i.collapseRisks=collapse_Risks(i.pos,getMinDistanceBetweenWolkersHome(i.pos,"Engineer"))
             i.criminalityRisks=criminality_Risks(i.pos,getMinDistanceBetweenHomes(i.pos,"Prefecture"))
-            Attractivity=gameUpdate.attractivity(i.fireRisk, i.collapseRisks, i.criminalityRisks)     
+            Attractivity=gameUpdate.attractivity(i.fireRisk, i.collapseRisks)     
         Prosperity=gameUpdate.prosperity(Buildings.building)
         
     def attractivity(fireRisk,collapseRisks,criminalityRisks):
