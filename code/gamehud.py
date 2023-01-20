@@ -23,6 +23,64 @@ class InfoShow:
         screen.blit(text_surface, text_rect)
 
 
+class Time_Wizard:
+    def __init__(self, x, y, width, height):
+        self.x = x
+        self.y = y
+
+        self.image = pg.image.load(
+            "ingamehud/paneling_00235.png").convert_alpha()
+        self.rect = pg.Rect(x, y, width, height)
+        self.speed_show = InfoShow(
+            self.x+20, self.y+20, "", 20, (255, 255, 255))
+        self.increase = Button_img(
+            self.x+30, self.y+80, None, "Palette_droite_Principale/Boutons/Time_Wizard/system_00015.png", "Palette_droite_Principale/Boutons/Time_Wizard/system_00016.png")
+        # gap 77/ 2 long af button
+        self.decrease = Button_img(
+            self.x+60, self.y+80, None, "Palette_droite_Principale/Boutons/Time_Wizard/system_00017.png", "Palette_droite_Principale/Boutons/Time_Wizard/system_00018.png")
+        self.pause_button = Button_text(
+            self.x+120, self.y+80, 40, 40, None, "II")
+        self.ispause = False
+        self.history = 0
+
+    def update(self, time, mouse_pos, mouse_action):
+        print(f"speed:{time}")
+        if self.decrease.IsHoverOn(mouse_pos):
+            if self.decrease.Clicked(mouse_action):
+                if time <= 0.25:
+                    time = 0.25
+                else:
+                    time -= 0.25
+        elif self.increase.IsHoverOn(mouse_pos):
+            if self.increase.Clicked(mouse_action):
+                if time >= 2:
+                    time = 2
+                else:
+                    time += 0.25
+        elif self.pause_button.IsHoverOn(mouse_pos):
+            if self.pause_button.Clicked(mouse_action):
+                if self.ispause:
+                    time = self.history
+                    self.ispause = False
+                else:
+                    self.history = time
+                    time = 0
+                    self.ispause = True
+        if time == 0:
+            self.speed_show.text = "Pause"
+        else:
+            self.speed_show.text = 'Speed={}%'.format(time*100)
+        return time
+
+    def draw(self, screen):
+        screen.blit(pygame.transform.scale(
+            self.image, (self.rect.width, self.rect.height)), self.rect)
+        self.speed_show.draw(screen)
+        self.decrease.show(screen)
+        self.increase.show(screen)
+        self.pause_button.show(screen)
+
+
 class Hudupper:
     def __init__(self, x, y, width):
         self.x = x
@@ -135,8 +193,8 @@ class Hudbigleft:
 
     def draw(self, screen):
         screen.blit(self.paneling_017, (self.width - 162, 4+21))
-        screen.blit(self.map_panels_00003, (self.width - 162, 450+4+21))
-        screen.blit(self.map_panels_00003, (self.width - 162, 1000))
+        screen.blit(self.map_panels_00003, (self.width - 162, 575))
+        # screen.blit(self.map_panels_00003, (self.width - 162, 1000))
         screen.blit(
             self.panelwindow_list[self.interaction], (self.width-162+6, 216+4+21))
 

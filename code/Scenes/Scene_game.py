@@ -6,12 +6,14 @@ import pygame
 from World import World
 from Camera import Camera
 from Minimap import Minimap
+from Evenement import Evenement
 from Walker import Walker
 from Utils import cartCoToIsoCo
 
 
 def SceneGameCreate(self):
-
+    self.mouse_action = [False, False, False]
+    self.mouse_pos = (0, 0)
     self.clock = pygame.time.Clock()
     self.hudup = Hudupper(0, 0, self.game.screen_width)
     self.hudleft = Hudbigleft(
@@ -22,8 +24,9 @@ def SceneGameCreate(self):
         self.game.screen_width*0.6, 2, f"Pop    xxxx", 18, (255, 255, 255))
     self.infoPO = InfoShow(
         self.game.screen_width*0.7, 2, f"PO    xxxx", 18, (255, 255, 255))
-
-    self.hud_manager = {"up": self.hudup, "main": self.hudleft,
+    self.time_wizard = Time_Wizard(
+        self.game.screen_width - 162, 475, 162, 100)
+    self.hud_manager = {"up": self.hudup, "main": self.hudleft, "time": self.time_wizard,
                         "fps": self.infofps, "pop": self.infopop, "Po": self.infoPO}
 
     # world
@@ -42,30 +45,31 @@ def SceneGameCreate(self):
         self.world.boundary[0], self.world.boundary[1], 144, 111, self.world.world, ((self.game.screen_width - 154, 60)))
     self.counter = 0
 
-    self.game.save.walkers.append(Walker(self.game.save))
-
 
 def SceneGameRun(self):
 
     #
     self.clock.tick(60)
-    self.counter = int(self.game.tick/60)
+    self.counter = int(self.game.tick/10)
     self.hud_manager["fps"].text = 'fps={}'.format(round(self.clock.get_fps()))
     self.hud_manager["Po"].text = 'Po={}'.format(round(self.game.save.PO))
     # update
     self.camera.movement_arrow()
     # self.camera.movement_mouse()
-    mouse_pos = pygame.mouse.get_pos()
-    mouse_action = pygame.mouse.get_pressed()
+    # mouse_pos = pygame.mouse.get_pos()
+    # mouse_action = pygame.mouse.get_pressed()
 
     self.camera.movement_arrow()
-    self.hud_manager["main"].update(mouse_pos, mouse_action)
+    self.hud_manager["main"].update(self.mouse_pos, self.mouse_action)
     self.world.update(self.drag_start, self.drag_end,
-                      mouse_pos, mouse_action, self.camera, self.mini_map)
-    # draw
+                      self.mouse_pos, self.mouse_action, self.camera, self.mini_map)
+    self.evenement.game_speed = self.hud_manager["time"].update(
+        self.evenement.game_speed, self.mouse_pos, self.mouse_action)
+    self.mini_map.update_mode_interactive(
+        self.mouse_pos, self.mouse_action, self.camera)
+    self.world.update_live_event()
 
-    self.mini_map.update_mode_interactive(mouse_pos, mouse_action, self.camera)
-
+    # DRAW TO MAP
     # 1er layer: draw only grass and roads
     self.world.layer_1_draw(self.camera, self.game.screen)
     # ----------------------------------------------
@@ -80,7 +84,7 @@ def SceneGameRun(self):
             walker.sprite.convert_alpha(), (posX, posY))
     # --------------------------------------------------
     # 3rd layer: draw tree,mountain,rock,  and building
-    self.world.layer_3_draw(self.camera, self.game.screen)
+    self.world.layer_3_draw(self.camera, self.game.screen, self.counter)
     # --------------------------------
     # 4th layer : draw temporary changement (when we build in drag & drop)
     self.world.layer_4_draw(self.camera, self.game.screen)
@@ -91,10 +95,21 @@ def SceneGameRun(self):
     # mini_map
     self.mini_map.draw(self.game.screen, self.camera)
     # print(f"game tick{self.counter}")
+    self.evenement.update(self.world.world)
     pg.display.flip()
 
 
 def SceneGameHandleEvents(self, event):
+    if event.type in [pygame.KEYDOWN]:
+        if event.unicode == 'g':
+            if self.world.grid:
+                self.world.grid = False
+            else:
+                self.world.grid = True
+        elif event.unicode == 'n':
+            self.world.overlay_mode = "normal"
+        elif event.unicode == 'f':
+            self.world.overlay_mode = "fire"
     if event.type in [pygame.KEYUP, pygame.KEYDOWN]:
         if event.key in [pygame.K_LEFT, pygame.K_RIGHT, pygame.K_DOWN, pygame.K_UP]:
             self.camera.keys[event.key] = not self.camera.keys[event.key]
@@ -109,15 +124,25 @@ def SceneGameHandleEvents(self, event):
         #         scaleDelta > 0 else self.world.zoom
     elif event.type == pygame.MOUSEBUTTONDOWN:
         if event.button == 1:
+            self.mouse_action[0] = True
             self.drag_start = event.pos
-
+        elif event.button == 2:
+            self.mouse_action[1] = True
+        elif event.button == 3:
+            self.mouse_action[2] = True
     elif event.type == pygame.MOUSEBUTTONUP:
         if event.button == 1:
+            self.mouse_action[0] = False
             self.drag_start = None
             self.drag_end = None
+        elif event.button == 2:
+            self.mouse_action[1] = False
+        elif event.button == 3:
+            self.mouse_action[2] = False
     elif event.type == pygame.MOUSEMOTION:
         self.camera.mousePos = event.pos
         self.drag_end = event.pos
+        self.mouse_pos = event.pos
 
 
 SCENE = Scene(SCENE_GAME_ID, 'Scene_Menu', createFunc=SceneGameCreate,
