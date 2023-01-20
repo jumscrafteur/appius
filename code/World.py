@@ -44,7 +44,7 @@ class World:
             for building in x:
                 if building.name == "road":
                     building.map[0] += self.boundary[0]/2
-                    mapRender.blit(building.tileImage[building.current_state],
+                    mapRender.blit(building.tileImage[road_shifting_util(building)],
                                    (building.map[0], building.map[1]))
                 else:
                     building.map[0] += self.boundary[0]/2

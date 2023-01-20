@@ -14,6 +14,8 @@ class Save():
             self.map.Building.append([])
             for y in range(MAP_SIZE[1]):
                 self.map.Building[x].append(Grass((x, y)))
+
+        self.map.Building[20] = [Chemins((20, x))for x in range(40)]
         self.walkers = []
         self.pop = 0
         self.PO = 3000

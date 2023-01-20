@@ -1,19 +1,25 @@
 from Building import Chemins
 import random
+import pygame
+from const import *
+from Utils import cartCoToIsoCo
 
 
 class Walker():
     def __init__(self, save):
+        self.pos = (0, 0)
+
         self.range = 0
         # self.building = None
         # self.type = None
-        # TODO : change to a map class
         self.map = None
         self.path = []
         self.dir = (0, 0)
         self.pos = (0, 0)
         self.rayonDAction = 0
         self.unemployed = True  # unemployed pour définir la statut d'un walker
+        self.sprite = pygame.image.load(
+            "Walkers/Citizen01/Citizen01_00001.png").convert_alpha()
 
     def mouv(self, grid):
         self.dir = self.getRandomValideDir(grid)
