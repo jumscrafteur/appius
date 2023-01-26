@@ -75,23 +75,28 @@ class Building:
     def _set_risk_collapse(self, n):
         self.risk_collapse = n
 
-    def _construct_me(self, world, offset):
+    def _construct_me(self, world, offset, road_system):
 
         world.Building[self.grid_x].remove(
             world.Building[self.grid_x][self.grid_y])
         self.map[0] += offset
         world.Building[self.grid_x].insert(self.grid_y,
                                            self)
+        if type(self) == Housing:
+            road_system[self.grid_x][self.grid_y] = True
+        else:
+            road_system[self.grid_x][self.grid_y] = 'X'
         if type(self) != Chemins:
             world.listBuilding.append(self)
 
-    def _destroy_me(self, world, offset):
+    def _destroy_me(self, world, offset, road_system):
         if self in world.listBuilding:
             world.listBuilding.remove(self)
         world.Building[self.grid_x].remove(
             self)
         world.Building[self.grid_x].insert(self.grid_y,
                                            Grass((self.grid_x, self.grid_y)))
+        road_system[self.grid_x][self.grid_y] = False
         world.Building[self.grid_x][self.grid_y].map[0] += offset
 
 
@@ -127,6 +132,7 @@ class Prefecture(Building):
         self.imageOffset = self.tileImage.get_height()-TILE_SIZE
         self.name = 'Prefecture'
         self.price_building = 30
+        self.personnage = None
         self.statut = {"Prefecture": 1, "P_feu": 0, "P_collapse": 0}
 
     def up_date_statut():

@@ -7,7 +7,7 @@ from World import World
 from Camera import Camera
 from Minimap import Minimap
 from Evenement import Evenement
-from Walker import Walker
+from Walker import Walkers
 
 
 def SceneGameCreate(self):
@@ -45,7 +45,7 @@ def SceneGameCreate(self):
     self.counter = 0
     # evenement
     self.evenement = Evenement()
-    self.listhuman = []
+    self.H_R = Walkers()
 
 
 def SceneGameRun(self):
@@ -77,17 +77,11 @@ def SceneGameRun(self):
     self.world.layer_road_draw(self.camera, self.game.screen)
     # ----------------------------------------------
     # 2nd layer: draw walker
-    if self.listhuman != None:
-        for walker in self.listhuman:
-            # posX, posY = cartCoToIsoCo(*walker.pos)
-            # posX *= 60
-            # posY *= 60
-            # posX += self.world.boundary[0]/2 - 20
-            # posY += 0
-            # self.game.screen.blit(
-            #     walker.sprite.convert_alpha(), (posX, posY))
-            print(walker.pos)
-            walker.draw(self.camera, self.game.screen, self.world.world)
+    if self.H_R.listWalker != None:
+        for imi in self.H_R.listWalker["Immigrant"]:
+            imi.draw(self.camera, self.game.screen, self.world.world)
+        for prefet in self.H_R.listWalker["Prefect"]:
+            prefet.draw(self.camera, self.game.screen, self.world.world)
     # --------------------------------------------------
     # 3rd layer: draw tree,mountain,rock,  and building
     self.world.layer_3_draw(self.camera, self.game.screen, self.counter)
@@ -100,7 +94,7 @@ def SceneGameRun(self):
     # mini_map
     self.mini_map.draw(self.game.screen, self.camera)
     # print(f"game tick{self.counter}")
-    self.evenement.update(self.world.world, self.listhuman,
+    self.evenement.update(self.world.world, self.H_R,
                           self.world.road_system, self.world.boundary[0]/2)
     pg.display.flip()
 

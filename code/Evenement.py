@@ -1,7 +1,7 @@
 import pygame
 from const import FIRE_THRESHOLD, COLLAPSE_THESHOLD, BURNING_TIME
-from Building import Housing, Tent
-from Walker import Walker
+from Building import Housing, Tent, Prefecture
+from Walker import Walker, Prefect
 
 
 class Evenement:
@@ -15,6 +15,7 @@ class Evenement:
         self.month = self.day_pass / 5
         self.year = self.month / 12
         self.path_index = 0
+        self.pop = 0
 
     def calendar_update(self):
         self.day_pass += self.day*self.game_speed
@@ -53,20 +54,30 @@ class Evenement:
                 building.canRemove = True
                 building.onFire = False
 
-    def vacane_slot(self, world, listWalker, road_system, offset):
+    def vacane_slot(self, world, H_R, road_system, offset):
 
         for building in world.listBuilding:
             if type(building) == Housing:
                 if building.available:
-                    spawning = Walker((20, 39))
-                    spawning.goal = building.grid
-                    spawning.path_finding(road_system)
-                    spawning.my_house = building
-                    listWalker.append(spawning)
-                    building.available = False
+                    if H_R.listWalker["Immigrant"] != None:
+                        for walker in H_R.listWalker["Immigrant"]:
+                            if not walker.my_house:
+                                walker.goal = building.grid
+                                walker.my_house = building
+                                walker.path_finding(road_system)
+                                walker.path_index = 0
+                                building.available = False
+                                break
+                            else:
+                                continue
+                        spawning = Walker((20, 39))
+                        spawning.goal = building.grid
+                        spawning.path_finding(road_system)
+                        spawning.my_house = building
+                        H_R.listWalker["Immigrant"].append(spawning)
+                        building.available = False
 
-        for walker in listWalker:
-            print(walker.my_house, world.listBuilding)
+        for walker in H_R.listWalker["Immigrant"]:
             if walker.my_house not in world.listBuilding:
                 walker.goal = (20, 0)
                 if walker.my_house != None:
@@ -78,7 +89,9 @@ class Evenement:
                 if walker.my_house != None:
                     self.building_sign_to_house(
                         walker.pos, world.Building, world.listBuilding, offset)
-                listWalker.remove(walker)
+                    H_R.pop += 1
+                    H_R.listWalker["Citizen"].append(walker)
+                H_R.listWalker["Immigrant"].remove(walker)
 
     def building_sign_to_house(self, pos, Building, listBuilding, offset):
         x, y = pos
@@ -90,20 +103,44 @@ class Evenement:
         listBuilding.append(Building[x][y])
 
     def walker_move(self, walker):
-        # print(walker.path_index)
-        # sprint(walker.path)
-        if walker.path_index >= len(walker.path):
-            return True
-        new_pos = walker.path[int(walker.path_index)]
-        walker.pos = new_pos
-        walker.path_index += self.day*self.game_speed
+        if walker.path != None:
+            if walker.path_index >= len(walker.path):
+                return True
+            new_pos = walker.path[int(walker.path_index)]
+            walker.pos = new_pos
+            walker.path_index += self.day*self.game_speed
 
         return False
 
-    def update(self, world, listWalker, road_system, offset):
+    def employing_prefect(self, world, H_R):
+        # # print(H_R.pop)
+        # print(H_R.listWalker["Prefect"])
+        place_vacant = H_R.pop // 2 - len(H_R.listWalker["Prefect"])
+        # print(world.listBuilding)
+        for building in world.listBuilding:
+            if type(building) == Prefecture:
+                if building.personnage == None:
+                    if place_vacant > 0:
+                        prefect = Prefect((20, 0))
+                        prefect.headquarter = building
+                        building.personnage = prefect
+                        H_R.listWalker["Prefect"].append(prefect)
+
+        for prefect in H_R.listWalker["Prefect"]:
+            if prefect.headquarter not in world.listBuilding:
+                H_R.listWalker["Prefect"].remove(prefect)
+
+    def Patrol(self, H_R, road_system):
+        for prefect in H_R.listWalker["Prefect"]:
+            print("bouger")
+            prefect.mouv(road_system)
+
+    def update(self, world, H_R, road_system, offset):
         self.calendar_update()
         self.change_risk_fire(world.listBuilding)
         self.set_on_fire(world.listBuilding)
         self.change_building_timer(world.listonFire)
         self.done_burning(world.listonFire)
-        self.vacane_slot(world, listWalker, road_system, offset)
+        self.vacane_slot(world, H_R, road_system, offset)
+        self.employing_prefect(world, H_R)
+        self.Patrol(H_R, road_system)

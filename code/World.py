@@ -181,7 +181,7 @@ class World:
             if self.save.PO >= tile_type.price_building:
                 if tile_type.size == 1:
                     tile_type._construct_me(
-                        self.world, self.boundary[0]/2)
+                        self.world, self.boundary[0]/2, self.road_system)
                 elif tile_type.size == 2:
                     tile_type._contruct_big_house(
                         self.world, self.boundary[0]/2)
@@ -201,15 +201,15 @@ class World:
                 if type_check.canRemove:
                     if type_check.size == 1:
                         type_check._destroy_me(
-                            self.world, self.boundary[0]/2)
+                            self.world, self.boundary[0]/2, self.road_system)
                     elif type_check.size == 2:
                         type_check._destroy_big_house(
-                            self.world, self.boundary[0]/2)
+                            self.world, self.boundary[0]/2, self.road_system)
                     if type(type_check) == Chemins:
                         if type_check in self.road_list:
                             self.road_list.remove(type_check)
 
-                            self.road_system[grid_pos[0]][grid_pos[1]] = False
+                            # self.road_system[grid_pos[0]][grid_pos[1]] = False
                             north = get_nearby_tile(type_check.grid, "north")
                             south = get_nearby_tile(type_check.grid, "south")
                             west = get_nearby_tile(type_check.grid, "west")
@@ -261,8 +261,8 @@ class World:
             collision = self.world.Building[grid_pos[0]
                                             ][grid_pos[1]].collision
             offset = img.get_height() - TILE_SIZE
-            print(
-                f"pos{iso_poly},collision{collision},name{self.world.Building[grid_pos[0]][grid_pos[1]]}")
+            # print(
+            #     f"pos{iso_poly},collision{collision},name{self.world.Building[grid_pos[0]][grid_pos[1]]}")
 
             temp_tile = {
                 "image": img,

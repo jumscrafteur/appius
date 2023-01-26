@@ -39,12 +39,13 @@ class Walker():
         nextPos = (self.pos[0] + dir[0],
                    self.pos[1] + dir[1])
 
-        isNextPosInRange = len(grid[0]) > nextPos[0] >= 0 and\
-            len(grid) > nextPos[1] >= 0
+        isNextPosInRange = MAP_SIZE[0] > nextPos[0] >= 0 and\
+            MAP_SIZE[1] > nextPos[1] >= 0
 
         isNextPosAPath = False
         if isNextPosInRange:
-            isNextPosAPath = type(grid[nextPos[1]][nextPos[0]]) == Chemins
+            isNextPosAPath = grid[nextPos[1]][nextPos[0]] == True
+            # isNextPosAPath = type(grid[nextPos[1]][nextPos[0]]) == Chemins
 
         isNextPosBackward = dir == (self.dir[0]*-1, self.dir[1]*-1)
 
@@ -85,10 +86,13 @@ class Engineer(Walker):
 
 
 class Prefect(Walker):
-    def __init__(self, save):
-        Walker.__init__(self, save)
+    def __init__(self, spawnpoint=(0, 0), goal=None):
+        super().__init__(spawnpoint, goal)
         self.type = "Prefect"
         self.unemployed = False
+        self.headquarter = None
+        self.sprite = pygame.image.load(
+            "Walkers/Prefec/citizen02_00615.png").convert_alpha()
 
     def work(self, Buildings):
         r = self.rayonDAction
@@ -122,7 +126,8 @@ class Walkers():
     # sauvegarde des Walkers dans un dict selon leurs types
     # sauvegarde des citizen dans une liste
     def __init__(self):
-        self.listWalker = {"Citizen": [], "Prefect": [], "Engineer": []}
+        self.listWalker = {"Citizen": [], "Prefect": [],
+                           "Engineer": [], "Immigrant": []}
         self.pop = 0
 
     def _get_pop(self):
@@ -148,26 +153,26 @@ class Walkers():
     # Gestion des citizens
     def ajout_Citizen(self, C):
         assert (type(C) == Citizen)
-        self.ListWalker["Citizen"].append(C)
+        self.listWalker["Citizen"].append(C)
 
     def supp_Citizen(self, C):
         assert (type(C) == Citizen)
-        self.ListWalker["Citizen"].remove(C)
+        self.listWalker["Citizen"].remove(C)
 
     # Gestion de Prefet
     def ajout_Prefet(self, P):
         assert (type(P) == Prefect)
-        self.ListWalker["Prefect"].append(P)
+        self.listWalker["Prefect"].append(P)
 
     def supp_Prefet(self, P):
         assert (type(P) == Prefect)
-        self.ListWalker["Prefect"].remove(P)
+        self.listWalker["Prefect"].remove(P)
 
     # Gestion de Engineer
     def ajout_Engineer(self, E):
         assert (type(E) == Engineer)
-        self.ListWalker["Engineer"].append(E)
+        self.listWalker["Engineer"].append(E)
 
     def supp_Engineer(self, E):
         assert (type(E) == Engineer)
-        self.ListWalker["Engineer"].remove(E)
+        self.listWalker["Engineer"].remove(E)

@@ -197,7 +197,7 @@ def road_shifting_util(road):
     elif not n and s and w and e:
         return "W_S_E"
     elif not n and not s and not w and not e:
-        print("S default")
+        # print("S default")
         return "S"
 
 
@@ -234,16 +234,16 @@ def A_star(start, goal, grid=None):
     f_score = {start: manhattan_distance(start, goal)}
 
     while open_set:
-        # current = min(open_set, key=lambda x: f_score[x])
-        current = min({k: v for k, v in f_score.items() if v <=
-                       min(f_score.values())}, key=lambda x: h_score[x])
+        current = min(open_set, key=lambda x: f_score[x])
+        # current = min({k: v for k, v in f_score.items() if v <=
+        #                min(f_score.values())}, key=lambda x: h_score[x])
         if current == goal:
             return reconstruct_path(came_from, current)
-
         open_set.remove(current)
         closed_set.add(current)
 
-        for neighbor in neighbors(current):
+        for neighbor in neighbors(current, grid):
+            # print(neighbor)
             if neighbor in closed_set:
                 continue
             tentative_g_score = g_score[current] + \
@@ -272,31 +272,40 @@ def reconstruct_path(came_from, current):
 # 1er edition
 
 
-def neighbors(current):
-    x, y = current
+def neighbors(current, grid):
+
     width, height = MAP_SIZE[0], MAP_SIZE[1]
+
+    x, y = current
     results = [(x+1, y), (x, y-1), (x-1, y), (x, y+1)]
-    results = filter(lambda x: 0 <= x[0] < width and 0 <=
-                     x[1] < height, results)
+
+    # results = filter(lambda x: 0 <= x[0] < width and 0 <=
+    #                  x[1] < height, results)
+    results = [(x, y) for (x, y) in results if 0 <=
+               x < width and 0 <= y < height]
+    if grid != None:
+        results = [(x, y) for (x, y) in results if grid[x]
+                   [y] != 'X']
+
     return results
 
 
 def movement_cost(current, neighbor, grid):
-    # if grid == None:
-    #     return 1
-    # else:
-    #     cur_x, cur_y = current
-    #     nei_x, nei_y = neighbor
-    #     if grid[cur_x][cur_y] == True:
-    #         if grid[nei_x][nei_y] == False:
-    #             return 3
-    #         elif grid[nei_x][nei_y] == True:
-    #             return 1
-    #     elif grid[cur_x][cur_y] == False:
-    #         if grid[nei_x][nei_y] == False:
-    #             return 5
-    #         elif grid[nei_x][nei_y] == True:
-    #             return 1
+    if grid == None:
+        return 1
+    else:
+        cur_x, cur_y = current
+        nei_x, nei_y = neighbor
+        if grid[cur_x][cur_y] == True:
+            if grid[nei_x][nei_y] == False:
+                return 5
+            elif grid[nei_x][nei_y] == True:
+                return 1
+        elif grid[cur_x][cur_y] == False:
+            if grid[nei_x][nei_y] == False:
+                return 5
+            elif grid[nei_x][nei_y] == True:
+                return 1
     return 1
 # Test only: effacer cette manhanttan pour remplacer avec propre code distance
 

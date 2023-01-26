@@ -18,7 +18,7 @@ class Save():
 
         self.map.Building[20] = [Chemins((20, x))for x in range(40)]
         self.spawnpoint = (20, 0)
-        self.walkers = [Walker()]
+        self.walkers = Walkers()
         self.pop = 0
         self.PO = 3000
         self.date = 0
