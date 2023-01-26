@@ -4,6 +4,7 @@ import pickle
 
 from const import MAP_SIZE
 from Building import *
+from Walker import *
 
 
 class Save():
@@ -16,7 +17,8 @@ class Save():
                 self.map.Building[x].append(Grass((x, y)))
 
         self.map.Building[20] = [Chemins((20, x))for x in range(40)]
-        self.walkers = []
+        self.spawnpoint = (20, 0)
+        self.walkers = [Walker()]
         self.pop = 0
         self.PO = 3000
         self.date = 0

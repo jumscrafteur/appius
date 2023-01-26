@@ -54,7 +54,7 @@ class Time_Wizard:
         elif self.increase.IsHoverOn(mouse_pos):
             if mouse_action[0]:
                 if time >= 2:
-                    time = 2
+                    time = 2.0
                 else:
                     time += 0.25
         elif self.pause_button.IsHoverOn(mouse_pos):

@@ -86,21 +86,25 @@ class Building:
             world.listBuilding.append(self)
 
     def _destroy_me(self, world, offset):
-        world.Building[self.grid_x].remove(
-            world.Building[self.grid_x][self.grid_y])
-        self.map[0] += offset
-        world.Building[self.grid_x].insert(self.grid_y,
-                                           Grass((self.grid_x, self.grid_y)))
         if self in world.listBuilding:
             world.listBuilding.remove(self)
+        world.Building[self.grid_x].remove(
+            self)
+        world.Building[self.grid_x].insert(self.grid_y,
+                                           Grass((self.grid_x, self.grid_y)))
+        world.Building[self.grid_x][self.grid_y].map[0] += offset
 
 
 class Tent (Building):
     def __init__(self, pos):
-        super.__init__(self, pos)
-        self.name = 'Tent'
-        self.capacity = 5  # par défaut
-        self.currentNB = 0
+        super().__init__(pos)
+        self.canFire = True
+        self.tileImage = pygame.image.load(
+            "fonction_render/house/Housng1a_00002.png").convert_alpha()
+        self.tileImage = pygame.transform.rotozoom(
+            self.tileImage, 0, scaleDelta)
+        self.imageOffset = self.tileImage.get_height()-TILE_SIZE
+        self.name = 'Prefecture'
         self.price_building = 0
         self.statut = {"Panneau": 1, "Construction": 0, "Tent": 0,
                        "T_feu": 0, "T_collapse": 0}  # statut du batiment
@@ -364,6 +368,7 @@ class Housing(Building):
         self.imageoffset = 0
         self.price_building = 10
         self.collision = True
+        self.available = True
 
         self.tileImage = pygame.image.load(
             "fonction_render/house/Housng1a_00045.png").convert_alpha()

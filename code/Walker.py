@@ -2,12 +2,11 @@ from Building import Chemins
 import random
 import pygame
 from const import *
-from Utils import cartCoToIsoCo
+from Utils import cartCoToIsoCo, A_star
 
 
 class Walker():
-    def __init__(self, save):
-        self.pos = (0, 0)
+    def __init__(self, spawnpoint=(0, 0), goal=None):
 
         self.range = 0
         # self.building = None
@@ -15,11 +14,15 @@ class Walker():
         self.map = None
         self.path = []
         self.dir = (0, 0)
-        self.pos = (0, 0)
+        self.pos = spawnpoint
         self.rayonDAction = 0
         self.unemployed = True  # unemployed pour définir la statut d'un walker
         self.sprite = pygame.image.load(
             "Walkers/Citizen01/Citizen01_00001.png").convert_alpha()
+        self.path = [self.pos]
+        self.goal = goal
+        self.path_index = 0
+        self.my_house = None
 
     def mouv(self, grid):
         self.dir = self.getRandomValideDir(grid)
@@ -51,6 +54,18 @@ class Walker():
         # NE PAS MODIFIER
         return
 
+    def draw(self, camera, screen, world):
+        cell_relative = world.Building[self.pos[0]][self.pos[1]]
+        pos_x = cell_relative.map[0]
+        pox_y = cell_relative.map[1]
+        screen.blit(self.sprite.convert_alpha(),
+                    (pos_x+camera.scroll.x, pox_y+camera.scroll.y))
+
+    def path_finding(self, grid):
+        if self.goal != None:
+            self.path = A_star(
+                (self.pos[0], self.pos[1]), (self.goal[0], self.goal[1]), grid)
+
 
 class Engineer(Walker):
     def __init__(self, save):
@@ -59,7 +74,7 @@ class Engineer(Walker):
         self.unemployed = False
 
     def work(self, Buildings):
-        assert(type(Buildings) == Buildings)
+        assert (type(Buildings) == Buildings)
         r = self.rayonDAction
         for i in range(self.pos[0]-r, self.pos[0]+r):
             for j in range(self.pos[1]-r, self.pos[1]+r):
@@ -77,7 +92,7 @@ class Prefect(Walker):
 
     def work(self, Buildings):
         r = self.rayonDAction
-        assert(type(Buildings) == Buildings)
+        assert (type(Buildings) == Buildings)
         for i in range(self.pos[0]-r, self.pos[0]+r):  # a refaire
             for j in range(self.pos[1]-r, self.pos[1]+r):
                 for b in Buildings.listBuilding:
@@ -91,12 +106,12 @@ class Citizen(Walker):
         self.type = "Citizen"
 
     def work(self, Buildings):
-        assert(type(Buildings) == Buildings)
+        assert (type(Buildings) == Buildings)
         r = self.rayonDAction
         for i in range(self.pos[0]-r, self.pos[0]+r):
             for j in range(self.pos[1]-r, self.pos[1]+r):
                 for b in Buildings.listBuilding:
-                    if(b.type == 'Tent'):
+                    if (b.type == 'Tent'):
                         if ((i, j) == b.pos) and (b.currentNB < b.capacity):
                             b.updateNB()
                             break
@@ -126,33 +141,33 @@ class Walkers():
         assert self.pop > 0, "la population est nulle"
         nb = 0
         for i in l:
-            if(i.unemployed):
+            if (i.unemployed):
                 nb += 1
         return nb/self._get_pop(self)
 
     # Gestion des citizens
     def ajout_Citizen(self, C):
-        assert(type(C) == Citizen)
+        assert (type(C) == Citizen)
         self.ListWalker["Citizen"].append(C)
 
     def supp_Citizen(self, C):
-        assert(type(C) == Citizen)
+        assert (type(C) == Citizen)
         self.ListWalker["Citizen"].remove(C)
 
     # Gestion de Prefet
     def ajout_Prefet(self, P):
-        assert(type(P) == Prefect)
+        assert (type(P) == Prefect)
         self.ListWalker["Prefect"].append(P)
 
     def supp_Prefet(self, P):
-        assert(type(P) == Prefect)
+        assert (type(P) == Prefect)
         self.ListWalker["Prefect"].remove(P)
 
     # Gestion de Engineer
     def ajout_Engineer(self, E):
-        assert(type(E) == Engineer)
+        assert (type(E) == Engineer)
         self.ListWalker["Engineer"].append(E)
 
     def supp_Engineer(self, E):
-        assert(type(E) == Engineer)
+        assert (type(E) == Engineer)
         self.ListWalker["Engineer"].remove(E)

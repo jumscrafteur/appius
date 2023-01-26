@@ -110,8 +110,8 @@ def get_surrounding_coordinate(grid):
 
 
 def set_neighborhood_likeliness(tile, world_grid):
-    print("changement being called")
-    print(f"this.grid{tile.grid}")
+    # print("changement being called")
+    # print(f"this.grid{tile.grid}")
     nearby = get_surrounding_coordinate(tile.grid)
     # print(
     #     f"neaby :: N :{nearby['north']}, S:{nearby['south']}, W:{nearby['west']}, E:{nearby['east']}")
@@ -217,7 +217,7 @@ def get_ratio(big, small):
 # 1er edition
 
 
-def A_star(start, goal):
+def A_star(start, goal, grid=None):
     # Set of nodes already evaluated
     closed_set = set()
     # The set of currently discovered nodes that are not evaluated yet.
@@ -247,7 +247,7 @@ def A_star(start, goal):
             if neighbor in closed_set:
                 continue
             tentative_g_score = g_score[current] + \
-                movement_cost(current, neighbor)
+                movement_cost(current, neighbor, grid)
 
             if neighbor not in open_set:
                 open_set.add(neighbor)
@@ -281,7 +281,22 @@ def neighbors(current):
     return results
 
 
-def movement_cost(current, neighbor):
+def movement_cost(current, neighbor, grid):
+    # if grid == None:
+    #     return 1
+    # else:
+    #     cur_x, cur_y = current
+    #     nei_x, nei_y = neighbor
+    #     if grid[cur_x][cur_y] == True:
+    #         if grid[nei_x][nei_y] == False:
+    #             return 3
+    #         elif grid[nei_x][nei_y] == True:
+    #             return 1
+    #     elif grid[cur_x][cur_y] == False:
+    #         if grid[nei_x][nei_y] == False:
+    #             return 5
+    #         elif grid[nei_x][nei_y] == True:
+    #             return 1
     return 1
 # Test only: effacer cette manhanttan pour remplacer avec propre code distance
 
