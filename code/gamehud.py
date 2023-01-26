@@ -29,17 +29,17 @@ class Time_Wizard:
         self.y = y
 
         self.image = pg.image.load(
-            "ingamehud/paneling_00235.png").convert_alpha()
+            "ingamehud/paneling_00510.png").convert_alpha()
         self.rect = pg.Rect(x, y, width, height)
         self.speed_show = InfoShow(
-            self.x+20, self.y+20, "", 20, (255, 255, 255))
+            self.x+20, self.y+20, "Speed=100%", 20, (255, 255, 255))
         self.increase = Button_img(
             self.x+30, self.y+80, None, "Palette_droite_Principale/Boutons/Time_Wizard/system_00015.png", "Palette_droite_Principale/Boutons/Time_Wizard/system_00016.png")
         # gap 77/ 2 long af button
         self.decrease = Button_img(
             self.x+60, self.y+80, None, "Palette_droite_Principale/Boutons/Time_Wizard/system_00017.png", "Palette_droite_Principale/Boutons/Time_Wizard/system_00018.png")
-        self.pause_button = Button_text(
-            self.x+120, self.y+80, 40, 40, None, "II")
+        self.pause_button = Button_img(
+            self.x+120, self.y+80, None, "ingamehud/paneling_00098.png")
         self.ispause = False
         self.history = 0
 
@@ -207,10 +207,10 @@ class Hudbigleft:
         for main in self.main_button.items():
             if main[1].IsHoverOn(mouse_pos):
                 if main[1].Clicked(mouse_action):
-                    pg.mouse.set_cursor(self.cursor[main[0]])
+                    # pg.mouse.set_cursor(self.cursor[main[0]])
                     self.interaction = main[0]
 
         if mouse_action[2] or self.interaction == None:
-            pg.mouse.set_cursor(
-                self.cursor_default)
+            # pg.mouse.set_cursor(
+            #     # self.cursor_default)
             self.interaction = None

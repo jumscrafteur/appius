@@ -65,8 +65,8 @@ def SceneGameRun(self):
     self.hud_manager["main"].update(self.mouse_pos, self.mouse_action)
     self.world.update(self.drag_start, self.drag_end,
                       self.mouse_pos, self.mouse_action, self.camera, self.mini_map)
-    self.evenement.game_speed = self.hud_manager["time"].update(
-        self.evenement.game_speed, self.mouse_pos, self.mouse_action)
+    # self.evenement.game_speed = self.hud_manager["time"].update(
+    #     self.evenement.game_speed, self.mouse_pos, self.mouse_action)
     self.mini_map.update_mode_interactive(
         self.mouse_pos, self.mouse_action, self.camera)
     self.world.update_live_event()
@@ -128,7 +128,8 @@ def SceneGameHandleEvents(self, event):
         if event.button == 1:
             self.mouse_action[0] = True
             self.drag_start = event.pos
-            print("pressdown")
+            self.evenement.game_speed = self.hud_manager["time"].update(
+                self.evenement.game_speed, event.pos, self.mouse_action)
         elif event.button == 2:
             self.mouse_action[1] = True
         elif event.button == 3:

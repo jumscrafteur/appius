@@ -76,7 +76,7 @@ class Building:
         self.risk_collapse = n
 
     def _construct_me(self, world, offset):
-        print("i was called")
+
         world.Building[self.grid_x].remove(
             world.Building[self.grid_x][self.grid_y])
         self.map[0] += offset

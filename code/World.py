@@ -58,9 +58,6 @@ class World:
                     # NOTION_ADD_SOMETHING_HERE
                     # mapRender.blit(building.tileImage[road_shifting_util(building)],
                     #                (building.map[0], building.map[1]))
-                # building.map[0] += self.boundary[0]/2
-                # mapRender.blit(GRASS_IMAGE.convert_alpha(),
-                #                (building.map[0], building.map[1]-building.imageOffset))
 
         render = {"map": mapRender, "grid": gridRender}
         return render
@@ -221,9 +218,6 @@ class World:
                     if type(type_check) == Chemins:
                         self.road_list.remove(type_check)
                         temp = self.world.Building[grid_pos[0]][grid_pos[1]]
-
-                        self.render["map"].blit(
-                            GRASS_IMAGE, (temp.map[0], temp.map[1]))
                         self.road_system[grid_pos[0]][grid_pos[1]] = None
                         north = get_nearby_tile(temp.grid, "north")
                         south = get_nearby_tile(temp.grid, "south")
