@@ -7,6 +7,8 @@ from World import World
 from Camera import Camera
 from Minimap import Minimap
 from Evenement import Evenement
+from Walker import Walker
+from Utils import cartCoToIsoCo
 
 
 def SceneGameCreate(self):
@@ -43,8 +45,6 @@ def SceneGameCreate(self):
         self.world.boundary[0], self.world.boundary[1], 144, 111, self.world.world, ((self.game.screen_width - 154, 60)))
     self.counter = 0
 
-    self.evenement = Evenement()
-
 
 def SceneGameRun(self):
 
@@ -74,7 +74,14 @@ def SceneGameRun(self):
     self.world.layer_1_draw(self.camera, self.game.screen)
     # ----------------------------------------------
     # 2nd layer: draw walker
-
+    for walker in self.game.save.walkers:
+        posX, posY = cartCoToIsoCo(*walker.pos)
+        posX *= 60
+        posY *= 60
+        posX += self.world.boundary[0]/2 - 20
+        posY += 0
+        self.game.screen.blit(
+            walker.sprite.convert_alpha(), (posX, posY))
     # --------------------------------------------------
     # 3rd layer: draw tree,mountain,rock,  and building
     self.world.layer_3_draw(self.camera, self.game.screen, self.counter)
@@ -105,6 +112,10 @@ def SceneGameHandleEvents(self, event):
     if event.type in [pygame.KEYUP, pygame.KEYDOWN]:
         if event.key in [pygame.K_LEFT, pygame.K_RIGHT, pygame.K_DOWN, pygame.K_UP]:
             self.camera.keys[event.key] = not self.camera.keys[event.key]
+        if event.key == pygame.K_l:
+            pos = self.game.save.walkers[0].pos
+            pos = pos[0] + 1, pos[1] + 1
+            self.game.save.walkers[0].pos = pos
         # elif event.unicode == '+':
         #     self.world.zoom += scaleDelta
         # elif event.unicode == '-':

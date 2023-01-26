@@ -15,13 +15,11 @@ class Save():
             for y in range(MAP_SIZE[1]):
                 self.map.Building[x].append(Grass((x, y)))
 
-                
-        #ajout chemins
-        X=20
+        # ajout chemins
+        X = 20
         for k in range(X):
-            self.map.Building[k].remove(Grass((X,k)))
-            self.map.Building[k].append(Chemins((X,k)))
-
+            self.map.Building[k].remove(Grass((X, k)))
+            self.map.Building[k].append(Chemins((X, k)))
 
         self.walkers = []
         self.pop = 0
