@@ -23,6 +23,9 @@ class World:
         self.buildable = ["house", "hammer", "water", "sword"]
         self.available = ["shovel", "house",
                           "hammer", "water", "sword", "road"]
+        self.road_list = []
+        self.road_system = [
+            [False] * self.grid_lx for _ in range(self.grid_ly)]
         # rendering
         self.render = self.creation_surface()
         # etc
@@ -30,8 +33,7 @@ class World:
         # self.road_build_pathway = []
         self.zone_region = []
         self.on_mouse_temp = None
-        # self.zoom = 1
-        self.road_system = [[None] * self.grid_lx for _ in range(self.grid_ly)]
+
         # mini_map
         self.grid = False
         self.overlay_mode = "normal"
@@ -47,15 +49,18 @@ class World:
                 grid = [(x + self.boundary[0]/2, y)
                         for x, y in grid]
                 pygame.draw.polygon(gridRender, (0, 0, 0), grid, 1)
+                building.map[0] += self.boundary[0]/2
+                mapRender.blit(GRASS_IMAGE.convert_alpha(),
+                               (building.map[0], building.map[1]-building.imageOffset))
                 if building.name == "road":
-                    building.map[0] += self.boundary[0]/2
-                    mapRender.blit(building.tileImage[road_shifting_util(building)],
-                                   (building.map[0], building.map[1]))
-
-                else:
-                    building.map[0] += self.boundary[0]/2
-                    mapRender.blit(GRASS_IMAGE.convert_alpha(),
-                                   (building.map[0], building.map[1]-building.imageOffset))
+                    self.road_list.append(building)
+                    set_neighborhood_likeliness(building, self.world.Building)
+                    # NOTION_ADD_SOMETHING_HERE
+                    # mapRender.blit(building.tileImage[road_shifting_util(building)],
+                    #                (building.map[0], building.map[1]))
+                # building.map[0] += self.boundary[0]/2
+                # mapRender.blit(GRASS_IMAGE.convert_alpha(),
+                #                (building.map[0], building.map[1]-building.imageOffset))
 
         render = {"map": mapRender, "grid": gridRender}
         return render
@@ -131,8 +136,10 @@ class World:
                 set_neighborhood_likeliness(
                     self.world.Building[grid_pos[0]][grid_pos[1]], self.world.Building)
                 # road_entity.map[0] += self.boundary[0]/2
-                self.render["map"].blit(
-                    road_entity.tileImage[road_shifting_util(road_entity)], (road_entity.map[0], road_entity.map[1]))
+                # self.render["map"].blit(
+                #     road_entity.tileImage[road_shifting_util(road_entity)], (road_entity.map[0], road_entity.map[1]))
+                self.road_list.append(
+                    self.world.Building[grid_pos[0]][grid_pos[1]])
 
                 # print("---------------")
                 if road_entity.north:
@@ -141,32 +148,32 @@ class World:
                         temporary = self.world.Building[x][y]
                         set_neighborhood_likeliness(
                             temporary, self.world.Building)
-                        self.render["map"].blit(temporary.tileImage[road_shifting_util(
-                            temporary)], (temporary.map[0], temporary.map[1]))
+                        # self.render["map"].blit(temporary.tileImage[road_shifting_util(
+                        #     temporary)], (temporary.map[0], temporary.map[1]))
                 if road_entity.south:
                     x, y = get_nearby_tile(road_entity.grid, "south")
                     if 0 <= x <= 39 and 0 <= y <= 39:
                         temporary = self.world.Building[x][y]
                         set_neighborhood_likeliness(
                             temporary, self.world.Building)
-                        self.render["map"].blit(temporary.tileImage[road_shifting_util(
-                            temporary)], (temporary.map[0], temporary.map[1]))
+                        # self.render["map"].blit(temporary.tileImage[road_shifting_util(
+                        #     temporary)], (temporary.map[0], temporary.map[1]))
                 if road_entity.west:
                     x, y = get_nearby_tile(road_entity.grid, "west")
                     if 0 <= x <= 39 and 0 <= y <= 39:
                         temporary = self.world.Building[x][y]
                         set_neighborhood_likeliness(
                             temporary, self.world.Building)
-                        self.render["map"].blit(temporary.tileImage[road_shifting_util(
-                            temporary)], (temporary.map[0], temporary.map[1]))
+                        # self.render["map"].blit(temporary.tileImage[road_shifting_util(
+                        #     temporary)], (temporary.map[0], temporary.map[1]))
                 if road_entity.east:
                     x, y = get_nearby_tile(road_entity.grid, "east")
                     if 0 <= x <= 39 and 0 <= y <= 39:
                         temporary = self.world.Building[x][y]
                         set_neighborhood_likeliness(
                             temporary, self.world.Building)
-                        self.render["map"].blit(temporary.tileImage[road_shifting_util(
-                            temporary)], (temporary.map[0], temporary.map[1]))
+                        # self.render["map"].blit(temporary.tileImage[road_shifting_util(
+                        #     temporary)], (temporary.map[0], temporary.map[1]))
 
                 # mini_map
                 grid = road_entity.iso_poly
@@ -184,7 +191,6 @@ class World:
                 if tile_type.size == 1:
                     tile_type._construct_me(
                         self.world, self.boundary[0]/2)
-                    self.world.listBuilding.append(tile_type)
                 elif tile_type.size == 2:
                     tile_type._contruct_big_house(
                         self.world, self.boundary[0]/2)
@@ -213,10 +219,11 @@ class World:
                     # self.render["map"].blit(
                     #     temp.tileImage, (temp.map[0], temp.map[1]))
                     if type(type_check) == Chemins:
+                        self.road_list.remove(type_check)
                         temp = self.world.Building[grid_pos[0]][grid_pos[1]]
 
                         self.render["map"].blit(
-                            temp.tileImage, (temp.map[0], temp.map[1]))
+                            GRASS_IMAGE, (temp.map[0], temp.map[1]))
                         self.road_system[grid_pos[0]][grid_pos[1]] = None
                         north = get_nearby_tile(temp.grid, "north")
                         south = get_nearby_tile(temp.grid, "south")
@@ -227,29 +234,29 @@ class World:
                             if type(tile_north) == Chemins:
                                 set_neighborhood_likeliness(
                                     tile_north, self.world.Building)
-                                self.render["map"].blit(tile_north.tileImage[road_shifting_util(
-                                    tile_north)], (tile_north.map[0], tile_north.map[1]))
+                                # self.render["map"].blit(tile_north.tileImage[road_shifting_util(
+                                #     tile_north)], (tile_north.map[0], tile_north.map[1]))
                         if 0 <= south[0] <= 39 and 0 <= south[1] <= 39:
                             tile_south = self.world.Building[south[0]][south[1]]
                             if type(tile_south) == Chemins:
                                 set_neighborhood_likeliness(
                                     tile_south, self.world.Building)
-                                self.render["map"].blit(tile_south.tileImage[road_shifting_util(
-                                    tile_south)], (tile_south.map[0], tile_south.map[1]))
+                                # self.render["map"].blit(tile_south.tileImage[road_shifting_util(
+                                #     tile_south)], (tile_south.map[0], tile_south.map[1]))
                         if 0 <= west[0] <= 39 and 0 <= west[1] <= 39:
                             tile_west = self.world.Building[west[0]][west[1]]
                             if type(tile_west) == Chemins:
                                 set_neighborhood_likeliness(
                                     tile_west, self.world.Building)
-                                self.render["map"].blit(tile_west.tileImage[road_shifting_util(
-                                    tile_west)], (tile_west.map[0], tile_west.map[1]))
+                                # self.render["map"].blit(tile_west.tileImage[road_shifting_util(
+                                #     tile_west)], (tile_west.map[0], tile_west.map[1]))
                         if 0 <= east[0] <= 39 and 0 <= east[1] <= 39:
                             tile_east = self.world.Building[east[0]][east[1]]
                             if type(tile_east) == Chemins:
                                 set_neighborhood_likeliness(
                                     tile_east, self.world.Building)
-                                self.render["map"].blit(tile_east.tileImage[road_shifting_util(
-                                    tile_east)], (tile_east.map[0], tile_east.map[1]))
+                                # self.render["map"].blit(tile_east.tileImage[road_shifting_util(
+                                #     tile_east)], (tile_east.map[0], tile_east.map[1]))
                     # else:
 
                     #     if type_check in self.world.listBuilding:
@@ -276,8 +283,8 @@ class World:
             collision = self.world.Building[grid_pos[0]
                                             ][grid_pos[1]].collision
             offset = img.get_height() - TILE_SIZE
-            print(
-                f"pos{iso_poly},collision{collision},name{self.world.Building[grid_pos[0]][grid_pos[1]]}")
+            # print(
+            #     f"pos{iso_poly},collision{collision},name{self.world.Building[grid_pos[0]][grid_pos[1]]}")
 
             temp_tile = {
                 "image": img,
@@ -378,12 +385,13 @@ class World:
         # self.world.listBuilding = sorted(
         #     sorted(
         #         temp, key=lambda temp: temp.grid_x), key=lambda temp: temp.grid_y)
+        # print(self.world.listBuilding)
         for building in self.world.listBuilding:
             if building.tileImage != None:
                 if building.size == 1:
                     screen.blit(building.tileImage, (
                         building.map[0]+camera.scroll.x, building.map[1]+camera.scroll.y-building.imageOffset))
-                else:
+                elif building.size == 2:
                     screen.blit(building.tileImage, (
                         building.map[0]+camera.scroll.x-building.imageOffset_x, building.map[1]+camera.scroll.y-building.imageOffset_y))
 
@@ -412,6 +420,11 @@ class World:
         screen.fill((0, 0, 0))
         screen.blit(self.render["map"],
                     (camera.scroll.x, camera.scroll.y))
+
+    def layer_road_draw(self, camera, screen):
+        for road in self.road_list:
+            screen.blit(
+                road.tileImage[road_shifting_util(road)], (road.map[0]+camera.scroll.x, road.map[1]+camera.scroll.y))
 
     def layer_3_draw(self, camera, screen, time):
         temp = self.world.listBuilding

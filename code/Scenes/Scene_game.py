@@ -44,6 +44,8 @@ def SceneGameCreate(self):
     self.mini_map = Minimap(
         self.world.boundary[0], self.world.boundary[1], 144, 111, self.world.world, ((self.game.screen_width - 154, 60)))
     self.counter = 0
+    # evenement
+    self.evenement = Evenement()
 
 
 def SceneGameRun(self):
@@ -72,6 +74,7 @@ def SceneGameRun(self):
     # DRAW TO MAP
     # 1er layer: draw only grass and roads
     self.world.layer_1_draw(self.camera, self.game.screen)
+    self.world.layer_road_draw(self.camera, self.game.screen)
     # ----------------------------------------------
     # 2nd layer: draw walker
     for walker in self.game.save.walkers:

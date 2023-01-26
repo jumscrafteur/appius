@@ -7,7 +7,7 @@ def type_of_tile(grid, name):
     x, y = grid
     match name:
         case "house":
-            return BigHousing((x, y))
+            return Housing((x, y))
         case "hammer":
             return B_Engineering((x, y))
         case "sword":
@@ -76,12 +76,14 @@ class Building:
         self.risk_collapse = n
 
     def _construct_me(self, world, offset):
+        print("i was called")
         world.Building[self.grid_x].remove(
             world.Building[self.grid_x][self.grid_y])
         self.map[0] += offset
         world.Building[self.grid_x].insert(self.grid_y,
                                            self)
-        world.listBuilding.append(self)
+        if type(self) != Chemins:
+            world.listBuilding.append(self)
 
     def _destroy_me(self, world, offset):
         world.Building[self.grid_x].remove(
@@ -291,6 +293,7 @@ class Chemins(Building):
                           "S-N": pygame.transform.rotozoom(pygame.image.load("Chemins/S-N.png").convert_alpha(), 0, scaleDelta), "W-E": pygame.transform.rotozoom(pygame.image.load("Chemins/W-E.png").convert_alpha(), 0, scaleDelta),
                           "ALL": pygame.transform.rotozoom(pygame.image.load("Chemins/ALL.png").convert_alpha(), 0, scaleDelta)
                           }
+
 
 # test
 
