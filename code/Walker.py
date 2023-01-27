@@ -23,6 +23,8 @@ class Walker():
         self.goal = goal
         self.path_index = 0
         self.my_house = None
+        self.movement_clock = 0
+        self.company = None
 
     def mouv(self, grid):
         self.dir = self.getRandomValideDir(grid)
@@ -92,6 +94,7 @@ class Prefect(Walker):
     def __init__(self, spawnpoint=(0, 0), goal=None):
         super().__init__(spawnpoint, goal)
         self.type = "Prefect"
+        self.travailleur = 0
         self.unemployed = False
         self.headquarter = None
         self.missionaire = None
@@ -136,6 +139,14 @@ class Walkers():
         self.listWalker = {"Citizen": [], "Prefect": [],
                            "Engineer": [], "Immigrant": []}
         self.pop = 0
+        self.possible_prefect = 0
+        self.possible_engi = 0
+
+    def _get_possible_prefect(self):
+        return self.pop*4 - len(self.listWalker["Prefect"])
+
+    def _get_possible_engi(self):
+        return self.pop*4 - len(self.listWalker["Engineer"])
 
     def _get_pop(self):
         return self.pop

@@ -83,7 +83,7 @@ class Building:
         world.Building[self.grid_x].insert(self.grid_y,
                                            self)
         if type(self) == Housing:
-            road_system[self.grid_x][self.grid_y] = True
+            road_system[self.grid_x][self.grid_y] = 'S'
         else:
             road_system[self.grid_x][self.grid_y] = 'X'
         if type(self) != Chemins:
@@ -103,8 +103,24 @@ class Building:
         x, y = self.grid
         _surrounding = [(x-2, y-2), (x-2, y-1), (x-2, y), (x-2, y+1), (x-2, y+2), (x-1, y-2), (x-1, y-1), (x-1, y), (x-1, y+1), (x-1, y+2), (x, y-2), (x, y-1),
                         (x, y+1), (x, y+2), (x+1, y-2), (x+1, y-1), (x+1, y), (x+1, y+1), (x+1, y+2), (x+2, y-2), (x+2, y-1), (x+2, y), (x+2, y+1), (x+2, y+2)]
+        _surrounding = [(x, y) for (x, y) in _surrounding if 0 <=
+                        x < MAP_SIZE[0] and 0 <= y < MAP_SIZE[1]]
         for cell in _surrounding:
             if type(world.Building[cell[0]][cell[1]]) == Chemins:
+                return cell
+            else:
+                continue
+        return False
+
+    def close_to_prefect(self, world):
+        x, y = self.grid
+        _surrounding = [(x-1, y-1), (x-1, y), (x-1, y+1),
+                        (x, y-1), (x, y+1),
+                        (x+1, y-1), (x+1, y), (x+1, y+1)]
+        _surrounding = [(x, y) for (x, y) in _surrounding if 0 <=
+                        x < MAP_SIZE[0] and 0 <= y < MAP_SIZE[1]]
+        for cell in _surrounding:
+            if type(world.Building[cell[0]][cell[1]]) == Prefecture:
                 return cell
             else:
                 continue
@@ -135,6 +151,8 @@ class Tent (Building):
 
     def _destroy_me(self, world, offset, road_system, H_R):
         if self.habitant in H_R.listWalker["Citizen"]:
+            if not self.habitant.unemployed:
+                self.habitant.company.list_employer.remove(self.habitant)
             H_R.listWalker["Citizen"].remove(self.habitant)
         H_R.calcul_pop()
         self.habitant = None
@@ -158,6 +176,7 @@ class Prefecture(Building):
         self.price_building = 30
         self.personnage = None
         self.statut = {"Prefecture": 1, "P_feu": 0, "P_collapse": 0}
+        self.list_employer = []
 
     def is_employed(self):
         return self.personnage != None
