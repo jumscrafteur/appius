@@ -89,7 +89,7 @@ class Building:
         if type(self) != Chemins:
             world.listBuilding.append(self)
 
-    def _destroy_me(self, world, offset, road_system):
+    def _destroy_me(self, world, offset, road_system, H_R):
         if self in world.listBuilding:
             world.listBuilding.remove(self)
         world.Building[self.grid_x].remove(
@@ -98,6 +98,17 @@ class Building:
                                            Grass((self.grid_x, self.grid_y)))
         road_system[self.grid_x][self.grid_y] = False
         world.Building[self.grid_x][self.grid_y].map[0] += offset
+
+    def close_to_road(self, world):
+        x, y = self.grid
+        _surrounding = [(x-2, y-2), (x-2, y-1), (x-2, y), (x-2, y+1), (x-2, y+2), (x-1, y-2), (x-1, y-1), (x-1, y), (x-1, y+1), (x-1, y+2), (x, y-2), (x, y-1),
+                        (x, y+1), (x, y+2), (x+1, y-2), (x+1, y-1), (x+1, y), (x+1, y+1), (x+1, y+2), (x+2, y-2), (x+2, y-1), (x+2, y), (x+2, y+1), (x+2, y+2)]
+        for cell in _surrounding:
+            if type(world.Building[cell[0]][cell[1]]) == Chemins:
+                return cell
+            else:
+                continue
+        return False
 
 
 class Tent (Building):
@@ -113,6 +124,7 @@ class Tent (Building):
         self.price_building = 0
         self.statut = {"Panneau": 1, "Construction": 0, "Tent": 0,
                        "T_feu": 0, "T_collapse": 0}  # statut du batiment
+        self.habitant = None
 
     def update_NB(self):
         self.currentNB += 1
@@ -120,6 +132,13 @@ class Tent (Building):
     def up_date_statut(self):  # a faire
         self.statut
         return None
+
+    def _destroy_me(self, world, offset, road_system, H_R):
+        if self.habitant in H_R.listWalker["Citizen"]:
+            H_R.listWalker["Citizen"].remove(self.habitant)
+        H_R.calcul_pop()
+        self.habitant = None
+        super()._destroy_me(world, offset, road_system, H_R)
 
 
 class Prefecture(Building):
@@ -130,10 +149,27 @@ class Prefecture(Building):
         self.tileImage = pygame.transform.rotozoom(
             self.tileImage, 0, scaleDelta)
         self.imageOffset = self.tileImage.get_height()-TILE_SIZE
+        self.flag = pygame.image.load(
+            "fonction_render/house/Security_00004.png").convert_alpha()
+        self.flag = pygame.transform.rotozoom(
+            self.flag, 0, scaleDelta)
+
         self.name = 'Prefecture'
         self.price_building = 30
         self.personnage = None
         self.statut = {"Prefecture": 1, "P_feu": 0, "P_collapse": 0}
+
+    def is_employed(self):
+        return self.personnage != None
+
+    def show_flag(self, screen, camera):
+        pos_x = self.map[0]+camera.scroll.x + \
+            (self.tileImage.get_height()+self.flag.get_height())*0.35
+        pos_y = self.map[1]+camera.scroll.y - \
+            (self.tileImage.get_width()+self.flag.get_width())*0.22
+
+        screen.blit(
+            self.flag, (pos_x, pos_y))
 
     def up_date_statut():
         return None
@@ -362,9 +398,9 @@ class BigHousing(Building):
         relative_2._construct_me(world, offset)
         relative_3._construct_me(world, offset)
 
-    def _destroy_big_house(self, world, offset):
+    def _destroy_big_house(self, world, offset, H_R):
         for sur in self.surrond:
-            sur._destroy_me(world, offset)
+            sur._destroy_me(world, offset, H_R)
 
 
 class Housing(Building):

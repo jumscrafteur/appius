@@ -63,7 +63,7 @@ class World:
         render = {"map": mapRender, "grid": gridRender}
         return render
 
-    def update(self, drag_start, drag_end, mouse_pos, mouse_action, camera, mini_map):
+    def update(self, drag_start, drag_end, mouse_pos, mouse_action, camera, mini_map, H_R):
         drag_process = mouse_action[0]
         self.on_mouse_temp = None
         if not mouse_action[0] and self.temp_tile != []:
@@ -73,7 +73,7 @@ class World:
                     if temp["type"] in self.buildable:
                         self.construction(temp, mini_map)
                     elif temp["type"] == "shovel":
-                        self.destruction(temp, mini_map)
+                        self.destruction(temp, mini_map, H_R)
                     elif temp["type"] == "road":
                         self.cheminement(temp, mini_map)
             self.hud["main"].interaction = None
@@ -192,7 +192,7 @@ class World:
                 # réduction de l'argent
                 self.save.PO -= tile_type.price_building
 
-    def destruction(self, temp, mini_map):
+    def destruction(self, temp, mini_map, H_R):
         grid_pos = temp["grid"]
         collision = temp["collision"]
         if collision:
@@ -201,10 +201,10 @@ class World:
                 if type_check.canRemove:
                     if type_check.size == 1:
                         type_check._destroy_me(
-                            self.world, self.boundary[0]/2, self.road_system)
+                            self.world, self.boundary[0]/2, self.road_system, H_R)
                     elif type_check.size == 2:
                         type_check._destroy_big_house(
-                            self.world, self.boundary[0]/2, self.road_system)
+                            self.world, self.boundary[0]/2, self.road_system, H_R)
                     if type(type_check) == Chemins:
                         if type_check in self.road_list:
                             self.road_list.remove(type_check)
@@ -242,7 +242,7 @@ class World:
 
                     #     if type_check in self.world.listBuilding:
                     #         self.world.listBuilding.remove(type_check)
-                    # mini_map
+                    # mini_mapF
                     grid = type_check.iso_poly
                     mini_map.update_surface(grid, "grass")
                     # réduction de l'argent
@@ -276,9 +276,9 @@ class World:
             }
             return temp_tile
 
-    def update_live_event(self):
+    def update_live_event(self, H_R):
         self.set_building_on_fire()
-        self.turn_building_to_rumble()
+        self.turn_building_to_rumble(H_R)
 
     def set_building_on_fire(self):
         for building in self.world.listBuilding:
@@ -293,19 +293,17 @@ class World:
         screen.blit(JUST_A_BURNING_MEMORY[animation], (
                     building.map[0]+camera.scroll.x+JUST_A_BURNING_MEMORY[animation].get_width()/4, building.map[1]-JUST_A_BURNING_MEMORY[animation].get_width()/8+camera.scroll.y))
 
-    def turn_building_to_rumble(self):
+    def turn_building_to_rumble(self, H_R):
         for building in self.world.listonFire:
             if building.useless and not building.onFire:
                 self.world.listonFire.remove(building)
                 grid_pos = building.grid
-                self.world.Building[grid_pos[0]].remove(
-                    self.world.Building[grid_pos[0]][grid_pos[1]])
+                old = self.world.Building[grid_pos[0]][grid_pos[1]]
+                old._destroy_me(self.world, self.boundary
+                                [0]/2, self.road_system, H_R)
                 rumble = type_of_tile(grid_pos, "rumble")
-                rumble.map[0] = building.map[0]
-                self.world.Building[grid_pos[0]].insert(grid_pos[1],
-                                                        rumble)
-
-                self.world.listBuilding.append(rumble)
+                rumble._construct_me(
+                    self.world, self.boundary[0]/2, self.road_system)
 
     def draw_grid(self, camera, screen):
         screen.blit(self.render["grid"],
@@ -369,6 +367,9 @@ class World:
                 if building.size == 1:
                     screen.blit(building.tileImage, (
                         building.map[0]+camera.scroll.x, building.map[1]+camera.scroll.y-building.imageOffset))
+                    if type(building) == Prefecture:
+                        if building.is_employed():
+                            building.show_flag(screen, camera)
                 elif building.size == 2:
                     screen.blit(building.tileImage, (
                         building.map[0]+camera.scroll.x-building.imageOffset_x, building.map[1]+camera.scroll.y-building.imageOffset_y))
@@ -416,6 +417,7 @@ class World:
         self.draw_burning_and_collapse(camera, screen, time)
         if self.overlay_mode == "normal":
             self.draw_building(camera, screen)
+
         elif self.overlay_mode == "fire":
             self.draw_overlay_pillar(screen, camera)
 

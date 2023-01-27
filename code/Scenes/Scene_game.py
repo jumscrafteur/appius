@@ -64,12 +64,12 @@ def SceneGameRun(self):
     self.camera.movement_arrow()
     self.hud_manager["main"].update(self.mouse_pos, self.mouse_action)
     self.world.update(self.drag_start, self.drag_end,
-                      self.mouse_pos, self.mouse_action, self.camera, self.mini_map)
+                      self.mouse_pos, self.mouse_action, self.camera, self.mini_map, self.H_R)
     # self.evenement.game_speed = self.hud_manager["time"].update(
     #     self.evenement.game_speed, self.mouse_pos, self.mouse_action)
     self.mini_map.update_mode_interactive(
         self.mouse_pos, self.mouse_action, self.camera)
-    self.world.update_live_event()
+    self.world.update_live_event(self.H_R)
 
     # DRAW TO MAP
     # 1er layer: draw only grass and roads

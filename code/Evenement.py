@@ -1,7 +1,8 @@
 import pygame
-from const import FIRE_THRESHOLD, COLLAPSE_THESHOLD, BURNING_TIME
+from const import FIRE_THRESHOLD, COLLAPSE_THESHOLD, BURNING_TIME, MAP_SIZE
 from Building import Housing, Tent, Prefecture
 from Walker import Walker, Prefect
+import random
 
 
 class Evenement:
@@ -9,12 +10,12 @@ class Evenement:
     def __init__(self) -> None:
         self.timer = pygame.time.get_ticks()
         self.game_speed = 1
-        self.day = 0.025
+        self.day = 0.05
 
         self.day_pass = 0
         self.month = self.day_pass / 5
         self.year = self.month / 12
-        self.path_index = 0
+        self.movement = 0
         self.pop = 0
 
     def calendar_update(self):
@@ -26,13 +27,13 @@ class Evenement:
     def change_building_timer(self, listonFire):
         for building in listonFire:
             if building.onFire:
-                building.time_under_effect += self.day*self.game_speed
+                building.time_under_effect += self.day*0.5*self.game_speed
 
     def change_risk_fire(self, listBuilding):
         for building in listBuilding:
             if building.canFire:
                 # print(f"risk{building.risk_fire}")
-                building.risk_fire += self.day*self.game_speed
+                building.risk_fire += self.day*0.5*self.game_speed
 
     def set_on_fire(self, listBuilding):
         for building in listBuilding:
@@ -88,18 +89,20 @@ class Evenement:
             if arrived:
                 if walker.my_house != None:
                     self.building_sign_to_house(
-                        walker.pos, world.Building, world.listBuilding, offset)
+                        walker, world.Building, world.listBuilding, offset, road_system)
                     H_R.pop += 1
                     H_R.listWalker["Citizen"].append(walker)
                 H_R.listWalker["Immigrant"].remove(walker)
 
-    def building_sign_to_house(self, pos, Building, listBuilding, offset):
-        x, y = pos
+    def building_sign_to_house(self, walker, Building, listBuilding, offset, road_system):
+        x, y = walker.pos
         if Building[x][y] in listBuilding:
             listBuilding.remove(Building[x][y])
         Building[x].remove(Building[x][y])
         Building[x].insert(y, Tent((x, y)))
+        road_system[x][y] = 'X'
         Building[x][y].map[0] += offset
+        Building[x][y].habitant = walker
         listBuilding.append(Building[x][y])
 
     def walker_move(self, walker):
@@ -113,34 +116,82 @@ class Evenement:
         return False
 
     def employing_prefect(self, world, H_R):
-        # # print(H_R.pop)
-        # print(H_R.listWalker["Prefect"])
-        place_vacant = H_R.pop // 2 - len(H_R.listWalker["Prefect"])
-        # print(world.listBuilding)
         for building in world.listBuilding:
             if type(building) == Prefecture:
                 if building.personnage == None:
-                    if place_vacant > 0:
-                        prefect = Prefect((20, 0))
-                        prefect.headquarter = building
-                        building.personnage = prefect
-                        H_R.listWalker["Prefect"].append(prefect)
+                    if H_R.pop >= 4 and len(H_R.listWalker["Prefect"])*4 < H_R.pop:
+                        spawnpoint = building.close_to_road(world)
+                        if not spawnpoint:
+                            print("prefect too far from road")
+                        else:
+                            prefect = Prefect(spawnpoint)
+                            prefect.headquarter = building
+                            building.personnage = prefect
+                            H_R.listWalker["Prefect"].append(prefect)
 
         for prefect in H_R.listWalker["Prefect"]:
-            if prefect.headquarter not in world.listBuilding:
+            if prefect.headquarter not in world.listBuilding or not prefect.headquarter.close_to_road(world) or len(H_R.listWalker["Prefect"])*4 > H_R.pop:
+                prefect.headquarter.personnage = None
+                prefect.headquarter = None
                 H_R.listWalker["Prefect"].remove(prefect)
 
-    def Patrol(self, H_R, road_system):
+    def Patrol(self, H_R, road_system, world):
         for prefect in H_R.listWalker["Prefect"]:
-            print("bouger")
-            prefect.mouv(road_system)
+            if not prefect.missionaire and road_system[prefect.pos[0]][prefect.pos[1]] == True:
+                self.movement += self.day*self.game_speed
+                if self.movement > 1:
+                    prefect.mouv(road_system)
+                    self.movement = 0
+            prefect.work(world.listBuilding)
+
+    def Find_Fire(self, H_R, world, road_system):
+        for onFire in world.listonFire:
+            for prefect in H_R.listWalker["Prefect"]:
+                if not prefect.missionaire:
+                    prefect.missionaire = onFire
+                    x, y = onFire.grid
+                    surround = [(x+1, y), (x, y-1), (x-1, y), (x, y+1)]
+                    surround = [(x, y) for (x, y) in surround if 0 <=
+                                x < MAP_SIZE[0] and 0 <= y < MAP_SIZE[1]]
+                    surround = [(x, y) for (x, y) in surround if road_system[x]
+                                [y] != 'X']
+                    prefect.returning = False
+                    prefect.goal = random.choice(surround)
+                    prefect.path_finding(road_system)
+                    prefect.path_index = 0
+        for prefect in H_R.listWalker["Prefect"]:
+            if prefect.missionaire not in world.listonFire:
+                if road_system[prefect.pos[0]][prefect.pos[1]] != True and not prefect.returning:
+                    road = self.find_road_in_map(road_system)
+                    if not road:
+                        prefect.goal = (20, 0)
+                    else:
+                        prefect.goal = road
+                    prefect.path_finding(road_system)
+                    print(prefect.path)
+                    prefect.path_index = 0
+                    prefect.returning = True
+                prefect.missionaire = None
+            arrived = self.walker_move(prefect)
+            if arrived:
+                if prefect.missionaire != None:
+                    prefect.missionaire.time_under_effect = BURNING_TIME
+
+    def find_road_in_map(self, road_system):
+        for x in range(MAP_SIZE[0]):
+            for y in range(MAP_SIZE[1]):
+                if road_system[x][y] == True:
+                    return (x, y)
+        return False
 
     def update(self, world, H_R, road_system, offset):
+        # print(H_R.pop)
         self.calendar_update()
+        self.employing_prefect(world, H_R)
         self.change_risk_fire(world.listBuilding)
         self.set_on_fire(world.listBuilding)
         self.change_building_timer(world.listonFire)
         self.done_burning(world.listonFire)
         self.vacane_slot(world, H_R, road_system, offset)
-        self.employing_prefect(world, H_R)
-        self.Patrol(H_R, road_system)
+        self.Find_Fire(H_R, world, road_system)
+        self.Patrol(H_R, road_system, world)

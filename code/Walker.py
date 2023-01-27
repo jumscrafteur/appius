@@ -44,8 +44,9 @@ class Walker():
 
         isNextPosAPath = False
         if isNextPosInRange:
-            isNextPosAPath = grid[nextPos[1]][nextPos[0]] == True
-            # isNextPosAPath = type(grid[nextPos[1]][nextPos[0]]) == Chemins
+
+            isNextPosAPath = grid[nextPos[0]][nextPos[1]] == True
+            # isNextPosAPath = type(grid[nextPos[0]][nextPos[1]]) == Chemins
 
         isNextPosBackward = dir == (self.dir[0]*-1, self.dir[1]*-1)
 
@@ -81,7 +82,7 @@ class Engineer(Walker):
             for j in range(self.pos[1]-r, self.pos[1]+r):
                 for b in Buildings.listBuilding.keys():                 # a refaire
                     for k in Buildings.listBuilding[b]:
-                        if ((i, j) == k.pos) and (k.risk_collapse > 0):
+                        if ((i, j) == k.grid) and (k.risk_collapse > 0):
                             k._set_risk_collapse(0)
 
 
@@ -91,22 +92,26 @@ class Prefect(Walker):
         self.type = "Prefect"
         self.unemployed = False
         self.headquarter = None
+        self.missionaire = None
+        self.returning = False
+        self.rayonDAction = 2
         self.sprite = pygame.image.load(
             "Walkers/Prefec/citizen02_00615.png").convert_alpha()
 
-    def work(self, Buildings):
+    def work(self, listBuilding):
         r = self.rayonDAction
-        assert (type(Buildings) == Buildings)
+
+        # assert (type(Buildings) == Buildings)
         for i in range(self.pos[0]-r, self.pos[0]+r):  # a refaire
             for j in range(self.pos[1]-r, self.pos[1]+r):
-                for b in Buildings.listBuilding:
-                    if ((i, j) == b.pos) and (b.risk_fire > 0):
+                for b in listBuilding:
+                    if ((i, j) == b.grid) and (b.risk_fire > 0):
                         b._set_riskfire(0)
 
 
 class Citizen(Walker):
-    def __init__(self, save):
-        Walker.__init__(self, save)
+    def __init__(self, spawnpoint=(0, 0), goal=None):
+        super().__init__(spawnpoint, goal)
         self.type = "Citizen"
 
     def work(self, Buildings):
@@ -116,7 +121,7 @@ class Citizen(Walker):
             for j in range(self.pos[1]-r, self.pos[1]+r):
                 for b in Buildings.listBuilding:
                     if (b.type == 'Tent'):
-                        if ((i, j) == b.pos) and (b.currentNB < b.capacity):
+                        if ((i, j) == b.grid) and (b.currentNB < b.capacity):
                             b.updateNB()
                             break
 
