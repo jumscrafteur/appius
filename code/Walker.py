@@ -65,6 +65,8 @@ class Walker():
         if self.goal != None:
             self.path = A_star(
                 (self.pos[0], self.pos[1]), (self.goal[0], self.goal[1]), grid)
+            self.dirs = [(0, -1)]+[(self.path[i+1][0] - self.path[i][0], self.path[i+1][1] - self.path[i][1])
+                                   for i in range(len(self.path) - 1)]
 
 
 class Engineer(Walker):
