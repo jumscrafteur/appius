@@ -118,27 +118,33 @@ class Walker():
             self.dir_path = [(0, -1)]+[(self.path[i+1][0] - self.path[i][0], self.path[i+1][1] - self.path[i][1])
                                        for i in range(len(self.path) - 1)]
 
-    def smooth(self, world):
+    def smooth(self, world, end=False):
         # if self.pos == self.target:
         #     self.coef = (0, 0)
         #     self.movement_clock = 0
         # else:
-        self.target = (self.pos[0] + self.dir[0],
-                       self.pos[1] + self.dir[1])
-        if 0 <= self.target[0] < MAP_SIZE[0] and 0 <= self.target[1] < MAP_SIZE[1]:
-            debut = polygon_center(
-                world.Building[self.pos[0]][self.pos[1]].iso_poly)
-            end = polygon_center(
-                world.Building[self.target[0]][self.target[1]].iso_poly)
-
-            distance = -pygame.math.Vector2(
-                debut[0], debut[1]) + pygame.math.Vector2(end[0], end[1])
-            # print(distance*self.movement_clock)
-            # if self.movement_clock >= 1:
-            #     self.movement_clock = 0
+        if end:
+            print("inside end")
             self.sprite = self.sprite_list[self.dir][round((
                 self.movement_clock*10) % 9)]
-            self.coef = distance*self.movement_clock
+            self.coef = (0, 0)
+        else:
+            self.target = (self.pos[0] + self.dir[0],
+                           self.pos[1] + self.dir[1])
+            if 0 <= self.target[0] < MAP_SIZE[0] and 0 <= self.target[1] < MAP_SIZE[1]:
+                debut = polygon_center(
+                    world.Building[self.pos[0]][self.pos[1]].iso_poly)
+                end = polygon_center(
+                    world.Building[self.target[0]][self.target[1]].iso_poly)
+
+                distance = -pygame.math.Vector2(
+                    debut[0], debut[1]) + pygame.math.Vector2(end[0], end[1])
+                # print(distance*self.movement_clock)
+                # if self.movement_clock >= 1:
+                #     self.movement_clock = 0
+                self.sprite = self.sprite_list[self.dir][round((
+                    self.movement_clock*10) % 9)]
+                self.coef = distance*self.movement_clock
 
 
 class Engineer(Walker):
@@ -208,8 +214,10 @@ class Prefect(Walker):
             ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Prefect/citizen02_00681.png").convert_alpha(
             ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Prefect/citizen02_00697.png").convert_alpha(
             ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Prefect/citizen02_00705.png").convert_alpha(), 0, scaleDelta)],
-            "action": pygame.transform.rotozoom(pygame.image.load("Walkers/Prefect/citizen02_00907.png").convert_alpha(
-            ), 0, scaleDelta)}
+            "action": [pygame.transform.rotozoom(pygame.image.load("Walkers/Prefect/citizen02_00907.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Prefect/citizen02_00900.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Prefect/citizen02_00884.png").convert_alpha(
+            ), 0, scaleDelta)]}
         self.sprite = pygame.transform.rotozoom(pygame.image.load("Walkers/Prefect/citizen02_00615.png").convert_alpha(
         ), 0, scaleDelta)
 

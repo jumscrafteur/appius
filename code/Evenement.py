@@ -120,7 +120,11 @@ class Evenement:
             walker.pos = new_pos
             walker.dir = new_dir
             # walker.target = next_pos
-            walker.smooth(world)
+            if walker.path_index >= len(walker.path)-1 or walker.path_index >= len(walker.dir_path)-1:
+                # print("end it")
+                walker.smooth(world, True)
+            else:
+                walker.smooth(world)
             walker.path_index += self.day*self.game_speed
             walker.movement_clock = abs(int(walker.path_index) -
                                         walker.path_index)
@@ -143,10 +147,14 @@ class Evenement:
                             building.list_employer.append(_)
                             count += 1
 
-                        spawnpoint = building.close_to_road(world)
-                        if not spawnpoint:
-                            print("prefect too far from road")
-                        else:
+                    spawnpoint = building.close_to_road(world)
+                    if not spawnpoint:
+                        if building.personnage != None:
+                            H_R.listWalker["Prefect"].remove(prefect)
+                            building.personnage = None
+                        print("prefect too far from road")
+                    else:
+                        if len(building.list_employer) >= 4:
                             prefect = Prefect(spawnpoint)
                             prefect.headquarter = building
                             prefect.returning = False
@@ -207,8 +215,9 @@ class Evenement:
             arrived = self.walker_move(prefect, world)
             if arrived:
                 if prefect.missionaire != None:
-                    prefect.sprite = prefect.sprite_list["action"]
-                    prefect.missionaire.time_under_effect = BURNING_TIME
+                    prefect.sprite = prefect.sprite_list["action"][round(
+                        prefect.missionaire.time_under_effect) % 3]
+                    prefect.missionaire.time_under_effect += BURNING_TIME*0.005 * self.game_speed
                 if prefect.missionaire == None:
                     prefect.returning = False
 
