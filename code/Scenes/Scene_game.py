@@ -53,8 +53,10 @@ def SceneGameRun(self):
     #
     self.clock.tick(60)
     self.counter = int(self.game.tick/10)
-    self.hud_manager["fps"].text = 'fps={}'.format(round(self.clock.get_fps()))
-    self.hud_manager["Po"].text = 'Po={}'.format(round(self.game.save.PO))
+    self.hud_manager["fps"].text = 'fps ={}'.format(
+        round(self.clock.get_fps()))
+    self.hud_manager["Po"].text = 'Po ={}'.format(round(self.game.save.PO))
+    self.hud_manager["pop"].text = 'Population ={}'.format(round(self.H_R.pop))
     # update
     self.camera.movement_arrow()
     # self.camera.movement_mouse()
