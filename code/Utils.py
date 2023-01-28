@@ -332,3 +332,14 @@ def overlay_util(number):
         return "75-90"
     elif stat > 90:
         return ">90"
+
+
+def polygon_center(vertices):
+    x_sum = 0
+    y_sum = 0
+    for vertex in vertices:
+        x_sum += vertex[0]
+        y_sum += vertex[1]
+    center_x = x_sum / len(vertices)
+    center_y = y_sum / len(vertices)
+    return (center_x, center_y)

@@ -2,7 +2,7 @@ from Building import Chemins
 import random
 import pygame
 from const import *
-from Utils import cartCoToIsoCo, A_star
+from Utils import A_star, polygon_center
 
 
 class Walker():
@@ -17,20 +17,22 @@ class Walker():
         self.pos = spawnpoint
         self.rayonDAction = 0
         self.unemployed = True  # unemployed pour définir la statut d'un walker
-        self.sprite = pygame.image.load(
-            "Walkers/Citizen01/Citizen01_00001.png").convert_alpha()
+        self.sprite = pygame.transform.rotozoom(pygame.image.load("Walkers/Citizen01/Citizen01_00001.png").convert_alpha(
+        ), 0, scaleDelta)
+        self.dir_path = []
         self.path = [self.pos]
         self.goal = goal
         self.path_index = 0
         self.my_house = None
         self.movement_clock = 0
         self.company = None
+        self.target = (0, 0)
+        self.coef = (0, 0)
+        self.time_index = 0
 
-    def mouv(self, grid):
+    def mouv(self, grid, world):
         self.dir = self.getRandomValideDir(grid)
-
-        self.pos = (self.pos[0] + self.dir[0],
-                    self.pos[1] + self.dir[1])
+        self.smooth(world)
 
     def getRandomValideDir(self, grid):
         dirs = [dir for dir in [(0, -1), (1, 0), (0, 1), (-1, 0)]
@@ -60,8 +62,8 @@ class Walker():
 
     def draw(self, camera, screen, world):
         cell_relative = world.Building[self.pos[0]][self.pos[1]]
-        pos_x = cell_relative.map[0]
-        pox_y = cell_relative.map[1]
+        pos_x = cell_relative.map[0]+self.coef[0]
+        pox_y = cell_relative.map[1]+self.coef[1]
         screen.blit(self.sprite.convert_alpha(),
                     (pos_x+camera.scroll.x, pox_y+camera.scroll.y))
 
@@ -69,8 +71,28 @@ class Walker():
         if self.goal != None:
             self.path = A_star(
                 (self.pos[0], self.pos[1]), (self.goal[0], self.goal[1]), grid)
-            self.dirs = [(0, -1)]+[(self.path[i+1][0] - self.path[i][0], self.path[i+1][1] - self.path[i][1])
-                                   for i in range(len(self.path) - 1)]
+            self.dir_path = [(0, -1)]+[(self.path[i+1][0] - self.path[i][0], self.path[i+1][1] - self.path[i][1])
+                                       for i in range(len(self.path) - 1)]
+
+    def smooth(self, world):
+        # if self.pos == self.target:
+        #     self.coef = (0, 0)
+        #     self.movement_clock = 0
+        # else:
+        self.target = (self.pos[0] + self.dir[0],
+                       self.pos[1] + self.dir[1])
+        if 0 <= self.target[0] < MAP_SIZE[0] and 0 <= self.target[1] < MAP_SIZE[1]:
+            debut = polygon_center(
+                world.Building[self.pos[0]][self.pos[1]].iso_poly)
+            end = polygon_center(
+                world.Building[self.target[0]][self.target[1]].iso_poly)
+
+            distance = -pygame.math.Vector2(
+                debut[0], debut[1]) + pygame.math.Vector2(end[0], end[1])
+            # print(distance*self.movement_clock)
+            # if self.movement_clock >= 1:
+            #     self.movement_clock = 0
+            self.coef = distance*self.movement_clock
 
 
 class Engineer(Walker):
@@ -100,12 +122,21 @@ class Prefect(Walker):
         self.missionaire = None
         self.returning = False
         self.rayonDAction = 2
-        self.sprite = pygame.image.load(
-            "Walkers/Prefec/citizen02_00615.png").convert_alpha()
+        self.sprite = {"N": [pygame.transform.rotozoom(pygame.image.load("Walkers/Prefec/citizen02_00615.png").convert_alpha(
+        ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Prefec/citizen02_00639.png").convert_alpha(), 0, scaleDelta)],
+            "S": [pygame.transform.rotozoom(pygame.image.load("Walkers/Prefec/citizen02_00627.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Prefec/citizen02_00651.png").convert_alpha(), 0, scaleDelta)],
+            "W": [pygame.transform.rotozoom(pygame.image.load("Walkers/Prefec/citizen02_00629.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Prefec/citizen02_00645.png").convert_alpha(), 0, scaleDelta)],
+            "E": [pygame.transform.rotozoom(pygame.image.load("Walkers/Prefec/citizen02_00689.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Prefec/citizen02_00665.png").convert_alpha(), 0, scaleDelta)],
+            "action": pygame.transform.rotozoom(pygame.image.load("Walkers/Prefec/citizen02_00907.png").convert_alpha(
+            ), 0, scaleDelta)}
+        self.sprite = pygame.transform.rotozoom(pygame.image.load("Walkers/Prefec/citizen02_00907.png").convert_alpha(
+        ), 0, scaleDelta)
 
     def work(self, listBuilding):
         r = self.rayonDAction
-
         # assert (type(Buildings) == Buildings)
         for i in range(self.pos[0]-r, self.pos[0]+r):  # a refaire
             for j in range(self.pos[1]-r, self.pos[1]+r):

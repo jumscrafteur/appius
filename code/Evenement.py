@@ -78,6 +78,7 @@ class Evenement:
                             spawning = Walker((20, 39))
                             spawning.goal = building.grid
                             spawning.path_finding(road_system)
+                            spawning.path_index = 0
                             spawning.my_house = building
                             H_R.listWalker["Immigrant"].append(spawning)
                             building.available = False
@@ -89,7 +90,7 @@ class Evenement:
                     walker.path_finding(road_system)
                     walker.path_index = 0
                     walker.my_house = None
-            arrived = self.walker_move(walker)
+            arrived = self.walker_move(walker, world)
             if arrived:
                 if walker.my_house != None:
                     self.building_sign_to_house(
@@ -109,13 +110,20 @@ class Evenement:
         Building[x][y].habitant = walker
         listBuilding.append(Building[x][y])
 
-    def walker_move(self, walker):
+    def walker_move(self, walker, world):
         if walker.path != None:
-            if walker.path_index >= len(walker.path):
+            if walker.path_index >= len(walker.path) or walker.path_index >= len(walker.dir_path):
                 return True
+
             new_pos = walker.path[int(walker.path_index)]
+            new_dir = walker.dir_path[int(walker.path_index)]
             walker.pos = new_pos
+            walker.dir = new_dir
+            # walker.target = next_pos
+            walker.smooth(world)
             walker.path_index += self.day*self.game_speed
+            walker.movement_clock = abs(int(walker.path_index) -
+                                        walker.path_index)
 
         return False
 
@@ -126,10 +134,15 @@ class Evenement:
                     unemployed = [
                         a for a in H_R.listWalker["Citizen"] if a.unemployed == True]
                     if len(unemployed) > 4:
+                        count = 0
                         for _ in unemployed:
+                            if count >= 4:
+                                break
                             _.unemployed = False
                             _.company = building
                             building.list_employer.append(_)
+                            count += 1
+
                         spawnpoint = building.close_to_road(world)
                         if not spawnpoint:
                             print("prefect too far from road")
@@ -150,10 +163,15 @@ class Evenement:
     def Patrol(self, H_R, road_system, world):
         for prefect in H_R.listWalker["Prefect"]:
             if prefect.missionaire == None and prefect.returning == False:
-                prefect.movement_clock += self.day*self.game_speed
-                if prefect.movement_clock > 1:
-                    prefect.mouv(road_system)
-                    prefect.movement_clock = 0
+                prefect.time_index += self.day*self.game_speed
+                prefect.movement_clock = abs(int(prefect.time_index) -
+                                             prefect.time_index)
+                prefect.mouv(road_system, world)
+                # print(int(prefect.movement_clock))
+                if int(prefect.time_index) >= 1:
+                    prefect.pos = (prefect.pos[0] + prefect.dir[0],
+                                   prefect.pos[1] + prefect.dir[1])
+                    prefect.time_index = 0
             prefect.work(world.listBuilding)
 
     def Find_Fire(self, H_R, world, road_system):
@@ -183,11 +201,10 @@ class Evenement:
                             prefect.goal = min(road, key=lambda point: manhattan_distance(
                                 point, prefect.headquarter.grid))
                         prefect.path_finding(road_system)
-                        print(prefect.path)
                         prefect.path_index = 0
                         prefect.returning = True
                     prefect.missionaire = None
-            arrived = self.walker_move(prefect)
+            arrived = self.walker_move(prefect, world)
             if arrived:
                 if prefect.missionaire != None:
                     prefect.missionaire.time_under_effect = BURNING_TIME
@@ -203,8 +220,6 @@ class Evenement:
         return pile
 
     def update(self, world, H_R, road_system, offset):
-        # print(H_R.pop)
-        print(H_R.listWalker["Prefect"])
         self.calendar_update()
         self.employing_prefect(world, H_R)
         self.change_risk_fire(world)

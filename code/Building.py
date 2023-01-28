@@ -193,6 +193,12 @@ class Prefecture(Building):
     def up_date_statut():
         return None
 
+    def _destroy_me(self, world, offset, road_system, H_R):
+        for employer in self.list_employer:
+            if employer in H_R.listWalker["Citizen"]:
+                employer.unemployed = True
+        super()._destroy_me(world, offset, road_system, H_R)
+
 
 class Water_well(Building):  # puit
     def __init__(self, pos):
