@@ -1,6 +1,6 @@
 import pygame
 from const import FIRE_THRESHOLD, COLLAPSE_THESHOLD, BURNING_TIME, MAP_SIZE
-from Building import Housing, Tent, Prefecture
+from Building import Housing, Tent, Prefecture, Tent_niv_2, Water_well
 from Walker import Walker, Prefect
 from Utils import manhattan_distance
 import random
@@ -189,7 +189,8 @@ class Evenement:
             surround = [(x, y) for (x, y) in surround if 0 <=
                         x < MAP_SIZE[0] and 0 <= y < MAP_SIZE[1]]
             surround = [(x, y) for (x, y) in surround if road_system[x]
-                        [y] != 'X']
+                        [y] != 'X' and road_system[x]
+                        [y] != 'S']
             if surround != []:
                 for prefect in H_R.listWalker["Prefect"]:
                     if not prefect.missionaire:
@@ -201,7 +202,7 @@ class Evenement:
         for prefect in H_R.listWalker["Prefect"]:
             if prefect.missionaire != None:
                 if prefect.missionaire not in world.listonFire:
-                    if road_system[prefect.pos[0]][prefect.pos[1]] != True and not prefect.returning:
+                    if road_system[prefect.pos[0]][prefect.pos[1]] != True and (not prefect.returning or road_system[prefect.pos[0]][prefect.pos[1]] != True):
                         road = self.find_road_in_map(road_system)
                         if not road:
                             prefect.goal = (20, 0)
@@ -229,9 +230,38 @@ class Evenement:
                     pile.append((x, y))
         return pile
 
+    def water_affection(self, world):
+        for water in world.listBuilding:
+            if type(water) == Water_well:
+                x, y = water.grid
+                surrounding = [(x-2, y-2), (x-2, y-1), (x-2, y), (x-2, y+1), (x-2, y+2), (x-1, y-2), (x-1, y-1), (x-1, y), (x-1, y+1), (x-1, y+2), (x, y-2), (x, y-1),
+                               (x, y+1), (x, y+2), (x+1, y-2), (x+1, y-1), (x+1, y), (x+1, y+1), (x+1, y+2), (x+2, y-2), (x+2, y-1), (x+2, y), (x+2, y+1), (x+2, y+2)]
+                surrounding = [(x, y) for (x, y) in surrounding if 0 <=
+                               x < MAP_SIZE[0] and 0 <= y < MAP_SIZE[1] and (type(world.Building[x][y]) == Tent or type(world.Building[x][y]) == Tent_niv_2)]
+
+                for a in surrounding:
+                    x, y = a
+                    # if type(world.Building[x][y]) == Tent or type(world.Building[x][y]) == Tent_niv_2:
+                    if world.Building[x][y].water_source == None:
+                        world.Building[x][y].water_source = water
+                        water.distribute.append(world.Building[x][y])
+
+    def house_evolution_devolution(self, world):
+        for building in world.listBuilding:
+            if type(building) == Tent:
+                if building.water_source != None:
+                    building._evoluer(world)
+            if type(building) == Tent_niv_2:
+                if building.water_source == None:
+                    building._devoluer(world)
+
     def update(self, world, H_R, road_system, offset):
+        # print(world.listBuilding)
+        print(H_R.pop)
         self.calendar_update()
         self.employing_prefect(world, H_R)
+        self.water_affection(world)
+        self.house_evolution_devolution(world)
         self.change_risk_fire(world)
         self.set_on_fire(world.listBuilding)
         self.change_building_timer(world.listonFire)

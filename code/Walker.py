@@ -123,9 +123,8 @@ class Walker():
         #     self.coef = (0, 0)
         #     self.movement_clock = 0
         # else:
-        if end:
-            print("inside end")
-            self.sprite = self.sprite_list[self.dir][round((
+        if end or self.dir == (0, 0):
+            self.sprite = self.sprite_list[(1, 0)][round((
                 self.movement_clock*10) % 9)]
             self.coef = (0, 0)
         else:

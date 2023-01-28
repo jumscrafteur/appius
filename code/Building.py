@@ -136,11 +136,12 @@ class Tent (Building):
         self.tileImage = pygame.transform.rotozoom(
             self.tileImage, 0, scaleDelta)
         self.imageOffset = self.tileImage.get_height()-TILE_SIZE
-        self.name = 'Prefecture'
+        self.name = 'Tent'
         self.price_building = 0
         self.statut = {"Panneau": 1, "Construction": 0, "Tent": 0,
                        "T_feu": 0, "T_collapse": 0}  # statut du batiment
         self.habitant = None
+        self.water_source = None
 
     def update_NB(self):
         self.currentNB += 1
@@ -157,6 +158,47 @@ class Tent (Building):
         H_R.calcul_pop()
         self.habitant = None
         super()._destroy_me(world, offset, road_system, H_R)
+
+    def _evoluer(self, world):
+        temp = self.habitant
+        if self in world.listBuilding:
+            world.listBuilding.remove(self)
+        pos = world.Building[self.grid_x][self.grid_y].map[0]
+        # well = self.water_source
+        world.Building[self.grid_x].remove(
+            self)
+        world.Building[self.grid_x].insert(self.grid_y,
+                                           Tent_niv_2((self.grid_x, self.grid_y)))
+        world.Building[self.grid_x][self.grid_y].map[0] = pos
+        world.Building[self.grid_x][self.grid_y].habitant = temp
+        # world.Building[self.grid_x][self.grid_y].water_source = well
+        self.habitant.my_house = world.Building[self.grid_x][self.grid_y]
+        world.listBuilding.append(world.Building[self.grid_x][self.grid_y])
+
+
+class Tent_niv_2(Tent):
+    def __init__(self, pos):
+        super().__init__(pos)
+        self.tileImage = pygame.image.load(
+            "fonction_render/house/Housng1a_00019.png").convert_alpha()
+        self.tileImage = pygame.transform.rotozoom(
+            self.tileImage, 0, scaleDelta)
+        self.imageOffset = self.tileImage.get_height()-TILE_SIZE
+
+    def _devoluer(self, world):
+
+        temp = self.habitant
+        if self in world.listBuilding:
+            world.listBuilding.remove(self)
+        pos = world.Building[self.grid_x][self.grid_y].map[0]
+        world.Building[self.grid_x].remove(
+            self)
+        world.Building[self.grid_x].insert(self.grid_y,
+                                           Tent((self.grid_x, self.grid_y)))
+        world.Building[self.grid_x][self.grid_y].map[0] = pos
+        world.Building[self.grid_x][self.grid_y].habitant = temp
+        self.habitant.my_house = world.Building[self.grid_x][self.grid_y]
+        world.listBuilding.append(world.Building[self.grid_x][self.grid_y])
 
 
 class Prefecture(Building):
@@ -211,6 +253,12 @@ class Water_well(Building):  # puit
         self.imageOffset = self.tileImage.get_height()-TILE_SIZE
         self.price_building = 5
         self.name = 'water_well'
+        self.distribute = []
+
+    def _destroy_me(self, world, offset, road_system, H_R):
+        for _ in self.distribute:
+            _.water_source = None
+        super()._destroy_me(world, offset, road_system, H_R)
 
 
 class Senat(Building):

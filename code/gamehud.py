@@ -101,7 +101,8 @@ class Hudbigleft:
         self.interaction = None
         self.width = width
         self.height = height
-
+        self.overlay = InfoShow(
+            self.width-160, 30, "normal", 20, (255, 255, 255))
         self.paneling_017 = pg.image.load(
             "ingamehud/paneling_00017.png").convert_alpha()
 
@@ -192,6 +193,7 @@ class Hudbigleft:
                        "wagon": self.cursor_default, "X": self.cursor_default, "notice": self.cursor_default, "bell": self.cursor_default}
 
     def draw(self, screen):
+        # self.overlay.draw(screen)
         screen.blit(self.paneling_017, (self.width - 162, 4+21))
         screen.blit(self.map_panels_00003, (self.width - 162, 575))
         # screen.blit(self.map_panels_00003, (self.width - 162, 1000))
@@ -202,6 +204,7 @@ class Hudbigleft:
             mini.show(screen)
         for main in self.main_button.values():
             main.show(screen)
+        self.overlay.draw(screen)
 
     def update(self, mouse_pos, mouse_action):
         for main in self.main_button.items():

@@ -108,8 +108,13 @@ def SceneGameHandleEvents(self, event):
                 self.world.grid = True
         elif event.unicode == 'n':
             self.world.overlay_mode = "normal"
+            self.hud_manager["main"].overlay.text = "normal"
         elif event.unicode == 'f':
             self.world.overlay_mode = "fire"
+            self.hud_manager["main"].overlay.text = "fire"
+        elif event.unicode == 'w':
+            self.world.overlay_mode = "water"
+            self.hud_manager["main"].overlay.text = "water"
     if event.type in [pygame.KEYUP, pygame.KEYDOWN]:
         if event.key in [pygame.K_LEFT, pygame.K_RIGHT, pygame.K_DOWN, pygame.K_UP]:
             self.camera.keys[event.key] = not self.camera.keys[event.key]

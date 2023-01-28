@@ -207,6 +207,8 @@ OVERLAY = {"fond": pygame.transform.rotozoom(pygame.image.load("fonction_render/
            ">90": stat_90
            }
 
+OVERLAY_WATER = {"nowater": pygame.transform.rotozoom(pygame.image.load("fonction_render/house/Land2a_00001.png"), 0, scaleDelta),
+                 "yeswater": pygame.transform.rotozoom(pygame.image.load("fonction_render/house/Land2a_00017.png"), 0, scaleDelta)}
 
 thickarrow_strings = (  # sized 24x24
     "XX                      ",

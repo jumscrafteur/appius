@@ -263,7 +263,9 @@ class World:
             offset = img.get_height() - TILE_SIZE
             # print(
             #     f"pos{iso_poly},collision{collision},name{self.world.Building[grid_pos[0]][grid_pos[1]]}")
-
+            if isinstance(self.world.Building[grid_pos[0]][grid_pos[1]], Tent):
+                print(
+                    f"water{self.world.Building[grid_pos[0]][grid_pos[1]].water_source}")
             temp_tile = {
                 "image": img,
                 "render_pos": render_pos,
@@ -395,6 +397,15 @@ class World:
                 screen.blit(RUMBLE_OF_BUILDING, (
                     building.map[0]+camera.scroll.x, building.map[1]+camera.scroll.y))
 
+    def draw_overlay_water(self, screen, camera):
+        for building in self.world.listBuilding:
+            if type(building) == Water_well or (isinstance(building, Tent) and building.water_source != None):
+                screen.blit(OVERLAY_WATER["yeswater"], (
+                    building.map[0]+camera.scroll.x, building.map[1]+camera.scroll.y))
+            else:
+                screen.blit(OVERLAY_WATER["nowater"], (
+                    building.map[0]+camera.scroll.x, building.map[1]+camera.scroll.y))
+
     def layer_1_draw(self, camera, screen):
         screen.fill((0, 0, 0))
         screen.blit(self.render["map"],
@@ -420,6 +431,8 @@ class World:
 
         elif self.overlay_mode == "fire":
             self.draw_overlay_pillar(screen, camera)
+        elif self.overlay_mode == "water":
+            self.draw_overlay_water(screen, camera)
 
     def layer_4_draw(self, camera, screen):
         for temp_tile in self.temp_tile:
