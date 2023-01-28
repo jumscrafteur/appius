@@ -16,7 +16,49 @@ class Walker():
         self.dir = (0, 0)
         self.pos = spawnpoint
         self.rayonDAction = 0
-        self.unemployed = True  # unemployed pour définir la statut d'un walker
+        self.unemployed = True  # unemployed pour définir la statut d'un walker]
+        self.sprite_list = {
+            (0, -1): [pygame.transform.rotozoom(pygame.image.load("Walkers/Citizen01/Citizen01_00001.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Citizen01/Citizen01_00009.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Citizen01/Citizen01_00017.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Citizen01/Citizen01_00025.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Citizen01/Citizen01_00033.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Citizen01/Citizen01_00041.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Citizen01/Citizen01_00065.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Citizen01/Citizen01_00073.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Citizen01/Citizen01_00081.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Citizen01/Citizen01_00089.png").convert_alpha(), 0, scaleDelta)],
+            (0, 1): [pygame.transform.rotozoom(pygame.image.load("Walkers/Citizen01/Citizen01_00005.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Citizen01/Citizen01_00013.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Citizen01/Citizen01_00021.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Citizen01/Citizen01_00029.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Citizen01/Citizen01_00037.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Citizen01/Citizen01_00045.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Citizen01/Citizen01_00053.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Citizen01/Citizen01_00069.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Citizen01/Citizen01_00077.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Citizen01/Citizen01_00093.png").convert_alpha(), 0, scaleDelta)],
+            (-1, 0): [pygame.transform.rotozoom(pygame.image.load("Walkers/Citizen01/Citizen01_00007.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Citizen01/Citizen01_00015.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Citizen01/Citizen01_00023.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Citizen01/Citizen01_00031.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Citizen01/Citizen01_00039.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Citizen01/Citizen01_00047.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Citizen01/Citizen01_00055.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Citizen01/Citizen01_00071.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Citizen01/Citizen01_00079.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Citizen01/Citizen01_00095.png").convert_alpha(), 0, scaleDelta)],
+            (1, 0): [pygame.transform.rotozoom(pygame.image.load("Walkers/Citizen01/Citizen01_00003.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Citizen01/Citizen01_00011.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Citizen01/Citizen01_00019.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Citizen01/Citizen01_00027.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Citizen01/Citizen01_00035.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Citizen01/Citizen01_00043.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Citizen01/Citizen01_00051.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Citizen01/Citizen01_00059.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Citizen01/Citizen01_00067.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Citizen01/Citizen01_00091.png").convert_alpha(), 0, scaleDelta)]
+        }
         self.sprite = pygame.transform.rotozoom(pygame.image.load("Walkers/Citizen01/Citizen01_00001.png").convert_alpha(
         ), 0, scaleDelta)
         self.dir_path = []
@@ -62,8 +104,10 @@ class Walker():
 
     def draw(self, camera, screen, world):
         cell_relative = world.Building[self.pos[0]][self.pos[1]]
-        pos_x = cell_relative.map[0]+self.coef[0]
-        pox_y = cell_relative.map[1]+self.coef[1]
+        pos_x = cell_relative.map[0]+self.coef[0] + \
+            (2*TILE_SIZE-self.sprite.get_width())*0.5
+        pox_y = cell_relative.map[1]+self.coef[1] + \
+            (TILE_SIZE-self.sprite.get_height())*0.5
         screen.blit(self.sprite.convert_alpha(),
                     (pos_x+camera.scroll.x, pox_y+camera.scroll.y))
 
@@ -92,6 +136,8 @@ class Walker():
             # print(distance*self.movement_clock)
             # if self.movement_clock >= 1:
             #     self.movement_clock = 0
+            self.sprite = self.sprite_list[self.dir][round((
+                self.movement_clock*10) % 9)]
             self.coef = distance*self.movement_clock
 
 
@@ -122,17 +168,49 @@ class Prefect(Walker):
         self.missionaire = None
         self.returning = False
         self.rayonDAction = 2
-        self.sprite = {"N": [pygame.transform.rotozoom(pygame.image.load("Walkers/Prefec/citizen02_00615.png").convert_alpha(
-        ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Prefec/citizen02_00639.png").convert_alpha(), 0, scaleDelta)],
-            "S": [pygame.transform.rotozoom(pygame.image.load("Walkers/Prefec/citizen02_00627.png").convert_alpha(
-            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Prefec/citizen02_00651.png").convert_alpha(), 0, scaleDelta)],
-            "W": [pygame.transform.rotozoom(pygame.image.load("Walkers/Prefec/citizen02_00629.png").convert_alpha(
-            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Prefec/citizen02_00645.png").convert_alpha(), 0, scaleDelta)],
-            "E": [pygame.transform.rotozoom(pygame.image.load("Walkers/Prefec/citizen02_00689.png").convert_alpha(
-            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Prefec/citizen02_00665.png").convert_alpha(), 0, scaleDelta)],
-            "action": pygame.transform.rotozoom(pygame.image.load("Walkers/Prefec/citizen02_00907.png").convert_alpha(
+        self.sprite_list = {(0, -1): [pygame.transform.rotozoom(pygame.image.load("Walkers/Prefect/citizen02_00615.png").convert_alpha(
+        ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Prefect/citizen02_00623.png").convert_alpha(
+        ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Prefect/citizen02_00631.png").convert_alpha(
+        ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Prefect/citizen02_00639.png").convert_alpha(
+        ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Prefect/citizen02_00647.png").convert_alpha(
+        ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Prefect/citizen02_00655.png").convert_alpha(
+        ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Prefect/citizen02_00663.png").convert_alpha(
+        ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Prefect/citizen02_00679.png").convert_alpha(
+        ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Prefect/citizen02_00695.png").convert_alpha(
+        ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Prefect/citizen02_00703.png").convert_alpha(), 0, scaleDelta)],
+            (0, 1): [pygame.transform.rotozoom(pygame.image.load("Walkers/Prefect/citizen02_00619.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Prefect/citizen02_00627.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Prefect/citizen02_00635.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Prefect/citizen02_00643.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Prefect/citizen02_00651.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Prefect/citizen02_00659.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Prefect/citizen02_00667.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Prefect/citizen02_00683.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Prefect/citizen02_00699.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Prefect/citizen02_00707.png").convert_alpha(), 0, scaleDelta)],
+            (-1, 0): [pygame.transform.rotozoom(pygame.image.load("Walkers/Prefect/citizen02_00621.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Prefect/citizen02_00629.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Prefect/citizen02_00637.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Prefect/citizen02_00645.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Prefect/citizen02_00653.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Prefect/citizen02_00661.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Prefect/citizen02_00677.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Prefect/citizen02_00685.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Prefect/citizen02_00693.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Prefect/citizen02_00709.png").convert_alpha(), 0, scaleDelta)],
+            (1, 0): [pygame.transform.rotozoom(pygame.image.load("Walkers/Prefect/citizen02_00617.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Prefect/citizen02_00625.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Prefect/citizen02_00633.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Prefect/citizen02_00641.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Prefect/citizen02_00649.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Prefect/citizen02_00665.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Prefect/citizen02_00673.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Prefect/citizen02_00681.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Prefect/citizen02_00697.png").convert_alpha(
+            ), 0, scaleDelta), pygame.transform.rotozoom(pygame.image.load("Walkers/Prefect/citizen02_00705.png").convert_alpha(), 0, scaleDelta)],
+            "action": pygame.transform.rotozoom(pygame.image.load("Walkers/Prefect/citizen02_00907.png").convert_alpha(
             ), 0, scaleDelta)}
-        self.sprite = pygame.transform.rotozoom(pygame.image.load("Walkers/Prefec/citizen02_00907.png").convert_alpha(
+        self.sprite = pygame.transform.rotozoom(pygame.image.load("Walkers/Prefect/citizen02_00615.png").convert_alpha(
         ), 0, scaleDelta)
 
     def work(self, listBuilding):

@@ -207,6 +207,7 @@ class Evenement:
             arrived = self.walker_move(prefect, world)
             if arrived:
                 if prefect.missionaire != None:
+                    prefect.sprite = prefect.sprite_list["action"]
                     prefect.missionaire.time_under_effect = BURNING_TIME
                 if prefect.missionaire == None:
                     prefect.returning = False
