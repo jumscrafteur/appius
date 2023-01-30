@@ -47,12 +47,19 @@ class Time_Wizard:
         # print(f"speed:{time}")
         if self.decrease.IsHoverOn(mouse_pos):
             if mouse_action[0]:
+                if self.ispause:
+                    time = self.history
+                    self.ispause = False
+
                 if time <= 0.25:
                     time = 0.25
                 else:
                     time -= 0.25
         elif self.increase.IsHoverOn(mouse_pos):
             if mouse_action[0]:
+                if self.ispause:
+                    time = self.history
+                    self.ispause = False
                 if time >= 2:
                     time = 2.0
                 else:
