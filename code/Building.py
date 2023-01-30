@@ -160,20 +160,23 @@ class Tent (Building):
         super()._destroy_me(world, offset, road_system, H_R)
 
     def _evoluer(self, world):
-        temp = self.habitant
-        if self in world.listBuilding:
-            world.listBuilding.remove(self)
-        pos = world.Building[self.grid_x][self.grid_y].map[0]
-        # well = self.water_source
-        world.Building[self.grid_x].remove(
-            self)
-        world.Building[self.grid_x].insert(self.grid_y,
-                                           Tent_niv_2((self.grid_x, self.grid_y)))
-        world.Building[self.grid_x][self.grid_y].map[0] = pos
-        world.Building[self.grid_x][self.grid_y].habitant = temp
-        # world.Building[self.grid_x][self.grid_y].water_source = well
-        self.habitant.my_house = world.Building[self.grid_x][self.grid_y]
-        world.listBuilding.append(world.Building[self.grid_x][self.grid_y])
+        if self not in world.listonFire:
+            temp = self.habitant
+            if self in world.listBuilding:
+                world.listBuilding.remove(self)
+            pos = world.Building[self.grid_x][self.grid_y].map[0]
+            well = self.water_source
+            well.distribute.remove(self)
+            world.Building[self.grid_x].remove(
+                self)
+            world.Building[self.grid_x].insert(self.grid_y,
+                                               Tent_niv_2((self.grid_x, self.grid_y)))
+            world.Building[self.grid_x][self.grid_y].map[0] = pos
+            world.Building[self.grid_x][self.grid_y].habitant = temp
+            world.Building[self.grid_x][self.grid_y].water_source = well
+            well.distribute.append(world.Building[self.grid_x][self.grid_y])
+            self.habitant.my_house = world.Building[self.grid_x][self.grid_y]
+            world.listBuilding.append(world.Building[self.grid_x][self.grid_y])
 
 
 class Tent_niv_2(Tent):
@@ -186,19 +189,19 @@ class Tent_niv_2(Tent):
         self.imageOffset = self.tileImage.get_height()-TILE_SIZE
 
     def _devoluer(self, world):
-
-        temp = self.habitant
-        if self in world.listBuilding:
-            world.listBuilding.remove(self)
-        pos = world.Building[self.grid_x][self.grid_y].map[0]
-        world.Building[self.grid_x].remove(
-            self)
-        world.Building[self.grid_x].insert(self.grid_y,
-                                           Tent((self.grid_x, self.grid_y)))
-        world.Building[self.grid_x][self.grid_y].map[0] = pos
-        world.Building[self.grid_x][self.grid_y].habitant = temp
-        self.habitant.my_house = world.Building[self.grid_x][self.grid_y]
-        world.listBuilding.append(world.Building[self.grid_x][self.grid_y])
+        if self not in world.listonFire:
+            temp = self.habitant
+            if self in world.listBuilding:
+                world.listBuilding.remove(self)
+            pos = world.Building[self.grid_x][self.grid_y].map[0]
+            world.Building[self.grid_x].remove(
+                self)
+            world.Building[self.grid_x].insert(self.grid_y,
+                                               Tent((self.grid_x, self.grid_y)))
+            world.Building[self.grid_x][self.grid_y].map[0] = pos
+            world.Building[self.grid_x][self.grid_y].habitant = temp
+            self.habitant.my_house = world.Building[self.grid_x][self.grid_y]
+            world.listBuilding.append(world.Building[self.grid_x][self.grid_y])
 
 
 class Prefecture(Building):
@@ -256,8 +259,10 @@ class Water_well(Building):  # puit
         self.distribute = []
 
     def _destroy_me(self, world, offset, road_system, H_R):
-        for _ in self.distribute:
-            _.water_source = None
+        if self.distribute != []:
+            for _ in self.distribute:
+                # self.distribute.remove(_)
+                _.water_source = None
         super()._destroy_me(world, offset, road_system, H_R)
 
 

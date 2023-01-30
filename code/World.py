@@ -263,9 +263,9 @@ class World:
             offset = img.get_height() - TILE_SIZE
             # print(
             #     f"pos{iso_poly},collision{collision},name{self.world.Building[grid_pos[0]][grid_pos[1]]}")
-            if isinstance(self.world.Building[grid_pos[0]][grid_pos[1]], Tent):
-                print(
-                    f"water{self.world.Building[grid_pos[0]][grid_pos[1]].water_source}")
+            # if isinstance(self.world.Building[grid_pos[0]][grid_pos[1]], Tent):
+            #     print(
+            #         f"water{self.world.Building[grid_pos[0]][grid_pos[1]].water_source}")
             temp_tile = {
                 "image": img,
                 "render_pos": render_pos,
@@ -382,7 +382,10 @@ class World:
 
     def draw_overlay_pillar(self, screen, camera):
         for building in self.world.listBuilding:
-            if not building.useless and building.tileImage != None:
+            if type(building) == Prefecture:
+                screen.blit(building.tileImage, (
+                    building.map[0]+camera.scroll.x, building.map[1]+camera.scroll.y-building.imageOffset))
+            elif not building.useless and building.tileImage != None:
                 screen.blit(OVERLAY["fond"], (
                     building.map[0]+camera.scroll.x, building.map[1]+camera.scroll.y))
                 if building.canFire:
@@ -399,7 +402,10 @@ class World:
 
     def draw_overlay_water(self, screen, camera):
         for building in self.world.listBuilding:
-            if type(building) == Water_well or (isinstance(building, Tent) and building.water_source != None):
+            if type(building) == Water_well:
+                screen.blit(building.tileImage, (
+                    building.map[0]+camera.scroll.x, building.map[1]+camera.scroll.y-building.imageOffset))
+            elif (isinstance(building, Tent) and building.water_source != None):
                 screen.blit(OVERLAY_WATER["yeswater"], (
                     building.map[0]+camera.scroll.x, building.map[1]+camera.scroll.y))
             else:

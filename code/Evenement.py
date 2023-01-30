@@ -202,7 +202,7 @@ class Evenement:
         for prefect in H_R.listWalker["Prefect"]:
             if prefect.missionaire != None:
                 if prefect.missionaire not in world.listonFire:
-                    if road_system[prefect.pos[0]][prefect.pos[1]] != True and (not prefect.returning or road_system[prefect.pos[0]][prefect.pos[1]] != True):
+                    if road_system[prefect.pos[0]][prefect.pos[1]] != True and not prefect.returning:
                         road = self.find_road_in_map(road_system)
                         if not road:
                             prefect.goal = (20, 0)
@@ -213,6 +213,16 @@ class Evenement:
                         prefect.path_index = 0
                         prefect.returning = True
                     prefect.missionaire = None
+            elif road_system[prefect.pos[0]][prefect.pos[1]] != True and prefect.returning == False:
+                road = self.find_road_in_map(road_system)
+                if not road:
+                    prefect.goal = (20, 0)
+                else:
+                    prefect.goal = min(road, key=lambda point: manhattan_distance(
+                        point, prefect.headquarter.grid))
+                prefect.path_finding(road_system)
+                prefect.path_index = 0
+                prefect.returning = True
             arrived = self.walker_move(prefect, world)
             if arrived:
                 if prefect.missionaire != None:
@@ -232,6 +242,7 @@ class Evenement:
 
     def water_affection(self, world):
         for water in world.listBuilding:
+
             if type(water) == Water_well:
                 x, y = water.grid
                 surrounding = [(x-2, y-2), (x-2, y-1), (x-2, y), (x-2, y+1), (x-2, y+2), (x-1, y-2), (x-1, y-1), (x-1, y), (x-1, y+1), (x-1, y+2), (x, y-2), (x, y-1),
@@ -257,7 +268,7 @@ class Evenement:
 
     def update(self, world, H_R, road_system, offset):
         # print(world.listBuilding)
-        print(H_R.pop)
+        # print(H_R.pop)
         self.calendar_update()
         self.employing_prefect(world, H_R)
         self.water_affection(world)
