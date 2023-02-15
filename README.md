@@ -1,10 +1,5 @@
-# Appius
+# Projet Appius
 
-## Vérification GitLab
+Recommencement du projet appius
 
-- [ ] Duc
-- [ ] Ines
-- [x] Hugo
-- [ ] Mael
-- [x] Tuan
-- [x] Yacine
+L'ensemble du code du projet de programmation est disponible [dans la branche legacy](https://github.com/jumscrafteur/appius/tree/legacy)
