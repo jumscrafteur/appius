@@ -11,7 +11,8 @@
   "spellright.documentTypes": [
     "markdown",
     "latex",
-    "plaintext"
+    "plaintext",
+    "python"
   ],
   "python.analysis.typeCheckingMode": "basic",
 }

@@ -2,4 +2,7 @@ saves/*.save
 
 **/__pycache__
 
+assets/**/*
+!assets/extract.py
+
 **/.DS_Store
