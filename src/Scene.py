@@ -1,19 +1,20 @@
 from typing import Callable, Optional
 
 import pygame
+from Const import SceneIds
 from Game import Game
 
 
 class Scene:
     def __init__(
         self,
-        id: int,
+        id: SceneIds,
         createFunc=None,
         runFunc=None,
         destroyFunc=None,
         handleEventsFunc=None,
     ):
-        self.id: int = id
+        self.id: SceneIds = id
         self.game: Optional[Game] = None
 
         self.createFunc: Callable[[Scene], None] = (

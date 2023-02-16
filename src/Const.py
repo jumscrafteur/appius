@@ -1,1 +1,6 @@
-SCENES_IDS = {"Scene1": 1, "Scene2": 2}
+from enum import Enum
+
+
+class SceneIds(Enum):
+    Scene1 = 1
+    Scene2 = 2

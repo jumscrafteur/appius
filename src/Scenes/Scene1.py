@@ -1,5 +1,5 @@
 import pygame
-from Const import SCENES_IDS
+from Const import SceneIds
 from Scene import Scene
 
 
@@ -14,9 +14,7 @@ def run(self):
 def event(self, event):
     if event.type == pygame.KEYDOWN:
         if event.key == pygame.K_SPACE:
-            self.game.switchScene(SCENES_IDS["Scene2"])
+            self.game.switchScene(SceneIds.Scene2)
 
 
-SCENE = Scene(
-    SCENES_IDS["Scene1"], createFunc=create, runFunc=run, handleEventsFunc=event
-)
+SCENE = Scene(SceneIds.Scene1, createFunc=create, runFunc=run, handleEventsFunc=event)
