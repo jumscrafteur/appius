@@ -7,8 +7,8 @@ from Scene import Scene
 
 def create(self):
     AssetManager.load("menu_background", "0/fired/00001.png")
-    AssetManager.assets["menu_background"] = pygame.transform.scale_by(
-        AssetManager.assets["menu_background"], 1.5
+    AssetManager.transform(
+        "menu_background", lambda asset: pygame.transform.scale_by(asset, 1.5)
     )
     AssetManager.createPanel("panel", 20, 22)
 

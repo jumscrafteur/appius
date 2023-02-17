@@ -1,5 +1,5 @@
 import os
-from typing import List
+from typing import Callable, List
 
 import pygame
 from Const import ASSET_PATH
@@ -13,6 +13,11 @@ def load(name: str, path: str):
 
 def get(name: str):
     return assets[name]
+
+
+def transform(name: str, transformation: Callable[[pygame.Surface], pygame.Surface]):
+    assets[name] = transformation(assets[name])
+    pass
 
 
 def loadPuzzleAsset(
