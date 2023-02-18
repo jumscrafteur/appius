@@ -12,8 +12,13 @@ def create(self):
     )
     AssetManager.createPanel("panel", 20, 22)
 
+    testBtn = AssetManager.ButtonText(
+        AssetManager.BUTTON_TYPES.PRIMARY, (7, 1), "salut"
+    )
+
     drawCenter(self.game.screen, AssetManager.get("menu_background"))
     drawCenter(self.game.screen, AssetManager.get("panel"))
+    drawCenter(self.game.screen, testBtn.neutralSurface)
 
 
 def run(self):

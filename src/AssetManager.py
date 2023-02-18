@@ -1,5 +1,5 @@
 import os
-from typing import Callable, List
+from typing import Callable, List, Tuple, TypedDict
 
 import pygame
 from Const import ASSET_PATH
@@ -21,18 +21,77 @@ def transform(name: str, transformation: Callable[[pygame.Surface], pygame.Surfa
 
 
 def loadPuzzleAsset(
-    name: str, pathList: List[str], size: int, horizontalCount: int, verticalCount: int
+    name: str,
+    pathList: List[str],
+    size: Tuple[int, int],
+    horizontalCount: int,
+    verticalCount: int,
 ):
-    asset = pygame.Surface((size * horizontalCount, size * verticalCount))
+    asset = pygame.Surface((size[0] * horizontalCount, size[1] * verticalCount))
 
     for x in range(horizontalCount):
         for y in range(verticalCount):
             tileImage = pygame.image.load(
                 os.path.join(ASSET_PATH, pathList[x + y * horizontalCount])
             )
-            asset.blit(tileImage, (x * size, y * size))
+            asset.blit(tileImage, (x * size[0], y * size[1]))
 
     assets[name] = asset
+
+
+class ButtonSchema(TypedDict):
+    tileSelector: Callable[[Tuple[int, int], Tuple[int, int]], Tuple[int, int]]
+    tileSize: Tuple[int, int]
+    neutral: List[List[pygame.Surface]]
+    over: List[List[pygame.Surface]]
+
+
+class BUTTON_TYPES:
+    PRIMARY: ButtonSchema = {
+        "tileSelector": lambda pos, buttonSize: (0, 0)
+        if pos[0] == 0
+        else (2, 0)
+        if pos[0] == buttonSize[0] - 1
+        else (1, 0),
+        "tileSize": (16, 25),
+        "neutral": [
+            [
+                pygame.image.load(os.path.join(ASSET_PATH, f"paneling/000{i}.png"))
+                for i in range(22, 25)
+            ]
+        ],
+        "over": [
+            [
+                pygame.image.load(os.path.join(ASSET_PATH, f"paneling/000{i}.png"))
+                for i in range(25, 28)
+            ]
+        ],
+    }
+
+
+class ButtonText:
+    def __init__(self, theme: ButtonSchema, size: Tuple[int, int], text: str) -> None:
+        neutralSurface = pygame.Surface(
+            (theme["tileSize"][0] * size[0], theme["tileSize"][1] * size[1])
+        )
+        overSurface = pygame.Surface(
+            (theme["tileSize"][0] * size[0], theme["tileSize"][1] * size[1])
+        )
+
+        for x in range(size[0]):
+            for y in range(size[1]):
+                tileIndex = theme["tileSelector"]((x, y), size)
+                neutralSurface.blit(
+                    theme["neutral"][tileIndex[1]][tileIndex[0]],
+                    (x * theme["tileSize"][0], y * theme["tileSize"][1]),
+                )
+                overSurface.blit(
+                    theme["over"][tileIndex[1]][tileIndex[0]],
+                    (x * theme["tileSize"][0], y * theme["tileSize"][1]),
+                )
+
+        self.neutralSurface = neutralSurface
+        self.overSurface = overSurface
 
 
 PANEL_ASSETS_MAP = {
