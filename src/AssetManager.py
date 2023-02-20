@@ -1,8 +1,9 @@
 import os
-from typing import Callable, List, Tuple, TypedDict
+from typing import Annotated, Callable, Dict, List, Tuple, TypedDict
 
 import pygame
 from Const import ASSET_PATH
+from LayoutManager import drawCenter
 
 assets = {}
 
@@ -39,11 +40,55 @@ def loadPuzzleAsset(
     assets[name] = asset
 
 
+FONT_LETTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!\"%*()-+=:;'?\\/,._äáàâëéèêïíìîöóòôüúùûçñæßÄÉÜÑÆŒœÁÂÀÊÈÍÎÌÓÔÒÖÚÛÙ¡¿^°ÅØåø "
+
+FontType = Annotated[Tuple[pygame.Surface], len(FONT_LETTERS)]
+
+
+class FONTS:
+    base: FontType = tuple(
+        pygame.image.load(os.path.join(ASSET_PATH, f"fonts/{i:05}.png"))
+        for i in range(1, 1 + len(FONT_LETTERS))
+    )
+
+
+def getTextAsSurface(
+    font: Annotated[Tuple[pygame.Surface], 3], text: str, spacing: int = 2
+) -> pygame.Surface:
+    textTotalSize = [0, 0]
+    fontDict: Dict[str, pygame.Surface] = {
+        c: fontTile for c, fontTile in zip(FONT_LETTERS, font)
+    }
+
+    for c in text:
+        if c == " ":
+            textTotalSize[0] += 12
+            continue
+
+        textTotalSize[0] += fontDict[c].get_size()[0] + spacing
+        textTotalSize[1] = max(textTotalSize[1], fontDict[c].get_size()[1])
+
+    textSurface = pygame.Surface(textTotalSize)
+    textSurface.fill((0, 0, 0, 0))
+
+    offset = 0
+    for c in text:
+        if c == " ":
+            offset += 12
+            continue
+        sprite = fontDict[c]
+        textSurface.blit(sprite, (offset, 0))
+        offset += sprite.get_size()[0] + spacing
+
+    return textSurface.convert_alpha()
+
+
 class ButtonSchema(TypedDict):
     tileSelector: Callable[[Tuple[int, int], Tuple[int, int]], Tuple[int, int]]
     tileSize: Tuple[int, int]
     neutral: List[List[pygame.Surface]]
     over: List[List[pygame.Surface]]
+    font: FontType
 
 
 class BUTTON_TYPES:
@@ -66,11 +111,50 @@ class BUTTON_TYPES:
                 for i in range(25, 28)
             ]
         ],
+        "font": FONTS.base,
     }
 
 
-class ButtonText:
-    def __init__(self, theme: ButtonSchema, size: Tuple[int, int], text: str) -> None:
+class Button:
+    def __init__(
+        self,
+        neutralSurface: pygame.Surface,
+        overSurface: pygame.Surface,
+        pos: Tuple[int, int],
+        clickEvent: Callable,
+    ) -> None:
+        self.neutralSurface = neutralSurface
+        self.overSurface = overSurface
+
+        self.rect = pygame.Rect(pos, overSurface.get_size())
+
+        self.overed = False
+        self.position = pos
+
+        self.clickEvent = clickEvent
+
+    def render(self, destSurface: pygame.Surface):
+        destSurface.blit(
+            self.overSurface if self.overed else self.neutralSurface, self.position
+        )
+
+    def checkOver(self):
+        self.overed = self.rect.collidepoint(pygame.mouse.get_pos())
+
+    def checkClick(self):
+        if self.rect.collidepoint(pygame.mouse.get_pos()):
+            self.clickEvent()
+
+
+class ButtonText(Button):
+    def __init__(
+        self,
+        theme: ButtonSchema,
+        pos: Tuple[int, int],
+        size: Tuple[int, int],
+        text: str,
+        clickEvent: Callable,
+    ) -> None:
         neutralSurface = pygame.Surface(
             (theme["tileSize"][0] * size[0], theme["tileSize"][1] * size[1])
         )
@@ -90,8 +174,12 @@ class ButtonText:
                     (x * theme["tileSize"][0], y * theme["tileSize"][1]),
                 )
 
-        self.neutralSurface = neutralSurface
-        self.overSurface = overSurface
+        textSurface = getTextAsSurface(FONTS.base, text)
+
+        drawCenter(neutralSurface, textSurface)
+        drawCenter(overSurface, textSurface)
+
+        super(ButtonText, self).__init__(neutralSurface, overSurface, pos, clickEvent)
 
 
 PANEL_ASSETS_MAP = {

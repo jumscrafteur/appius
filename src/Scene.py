@@ -1,6 +1,7 @@
-from typing import Callable, Optional
+from typing import Callable, List, Optional
 
 import pygame
+from AssetManager import Button
 from Const import SceneIds
 from Game import Game
 
@@ -32,6 +33,8 @@ class Scene:
         self.handleEventsFunc: Callable[[Scene, pygame.event.Event], None] = (
             handleEventsFunc if handleEventsFunc else lambda scene, event: None
         )
+
+        self.buttons: List[Button] = []
 
     def create(self, game):
         self.game = game
