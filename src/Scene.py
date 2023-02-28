@@ -2,7 +2,7 @@ from typing import Callable, List, Optional
 
 import pygame
 from AssetManager import Button
-from Const import SceneIds
+from Const import CustomEvent, SceneIds
 from Game import Game
 
 
@@ -50,10 +50,13 @@ class Scene:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.game.end()
-            if event.type == pygame.USEREVENT:
-                event.action()
+            if event.type == CustomEvent.SwitchScene:
+                self.game.switchScene(event.id)
 
             self.handleEventsFunc(self, event)
 
     def destroy(self):
+        assert self.game
+
+        self.game.screen.fill((0, 0, 0))
         self.destroyFunc(self)

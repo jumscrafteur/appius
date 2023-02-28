@@ -12,7 +12,7 @@ def load(name: str, path: str):
     assets[name] = pygame.image.load(os.path.join(ASSET_PATH, path))
 
 
-def get(name: str):
+def get(name: str) -> pygame.Surface:
     return assets[name]
 
 
@@ -59,10 +59,11 @@ def getTextAsSurface(
     fontDict: Dict[str, pygame.Surface] = {
         c: fontTile for c, fontTile in zip(FONT_LETTERS, font)
     }
+    spaceSize = 5
 
     for c in text:
         if c == " ":
-            textTotalSize[0] += 12
+            textTotalSize[0] += spaceSize
             continue
 
         textTotalSize[0] += fontDict[c].get_size()[0] + spacing
@@ -74,7 +75,7 @@ def getTextAsSurface(
     offset = 0
     for c in text:
         if c == " ":
-            offset += 12
+            offset += spaceSize
             continue
         sprite = fontDict[c]
         textSurface.blit(sprite, (offset, 0))
@@ -126,7 +127,12 @@ class Button:
         self.neutralSurface = neutralSurface
         self.overSurface = overSurface
 
-        self.rect = pygame.Rect(pos, overSurface.get_size())
+        pos = tuple(pos[i] - overSurface.get_size()[i] // 2 for i in range(2))
+
+        self.rect = pygame.Rect(
+            pos,
+            overSurface.get_size(),
+        )
 
         self.overed = False
         self.position = pos

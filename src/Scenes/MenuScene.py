@@ -1,7 +1,7 @@
 import AssetManager
 import pygame
-from Const import SceneIds
-from LayoutManager import drawCenter
+from Const import CustomEvent, SceneIds
+from LayoutManager import GenerateGridLayout, drawCenter
 from Scene import Scene
 
 
@@ -14,15 +14,93 @@ def create(self: Scene):
     )
     AssetManager.createPanel("panel", 20, 22)
 
-    testBtn = AssetManager.ButtonText(
-        AssetManager.BUTTON_TYPES.PRIMARY,
-        tuple(v // 2 for v in self.game.screen.get_size()),
-        (7, 1),
-        "Salut",
-        lambda: print("salut"),
+    panelBtnSize = (17, 1)
+    panelBtnTheme = AssetManager.BUTTON_TYPES.PRIMARY
+
+    panelBtnList = [
+        [
+            (
+                "Start new career",
+                lambda: pygame.event.post(
+                    pygame.event.Event(CustomEvent.SwitchScene, {"id": SceneIds.Title})
+                ),
+            ),
+            (
+                "Load saved game",
+                lambda: pygame.event.post(
+                    pygame.event.Event(CustomEvent.SwitchScene, {"id": SceneIds.Title})
+                ),
+            ),
+            (
+                "City Construction Kit",
+                lambda: pygame.event.post(
+                    pygame.event.Event(CustomEvent.SwitchScene, {"id": SceneIds.Title})
+                ),
+            ),
+            (
+                "Caesar III assignment editor",
+                lambda: pygame.event.post(
+                    pygame.event.Event(CustomEvent.SwitchScene, {"id": SceneIds.Title})
+                ),
+            ),
+            (
+                "Options",
+                lambda: pygame.event.post(
+                    pygame.event.Event(CustomEvent.SwitchScene, {"id": SceneIds.Title})
+                ),
+            ),
+            (
+                "Exit",
+                self.game.end,
+            ),
+        ]
+    ]
+
+    btnLayout = GenerateGridLayout(
+        self.game.screen.get_width() // 2,
+        self.game.screen.get_height() // 2,
+        len(panelBtnList),
+        len(panelBtnList[0]),
+        0,
+        16,
+        panelBtnSize[0] * panelBtnTheme["tileSize"][0],
+        panelBtnSize[1] * panelBtnTheme["tileSize"][1],
     )
 
-    self.buttons.append(testBtn)
+    for row in panelBtnList:
+        for button in row:
+            self.buttons.append(
+                AssetManager.ButtonText(
+                    panelBtnTheme,
+                    next(btnLayout),
+                    panelBtnSize,
+                    button[0],
+                    button[1],
+                )
+            )
+
+    # testBtn = AssetManager.ButtonText(
+    #     AssetManager.BUTTON_TYPES.PRIMARY,
+    #     btnLayout.__next__(),
+    #     (12, 1),
+    #     "mon bouton 1",
+    #     lambda: pygame.event.post(
+    #         pygame.event.Event(CustomEvent.SwitchScene, {"id": SceneIds.Title})
+    #     ),
+    # )
+
+    # testBtn2 = AssetManager.ButtonText(
+    #     AssetManager.BUTTON_TYPES.PRIMARY,
+    #     btnLayout.__next__(),
+    #     (12, 1),
+    #     "mon bouton 2",
+    #     lambda: pygame.event.post(
+    #         pygame.event.Event(CustomEvent.SwitchScene, {"id": SceneIds.Title})
+    #     ),
+    # )
+
+    # self.buttons.append(testBtn)
+    # self.buttons.append(testBtn2)
 
     drawCenter(self.game.screen, AssetManager.get("menu_background"))
     drawCenter(self.game.screen, AssetManager.get("panel"))

@@ -31,7 +31,7 @@ class Game:
         assert self.actualScene is not None
 
         while self.running:
-            # Verifie if the scene selected exist
+            # Vérifie if the scene selected exist
             if self.actualScene not in self.sceneMap.keys():
                 raise Exception(
                     f"Invalid Scene ID ({self.actualScene}) valid : [{self.sceneMap.keys()}]"
