@@ -1,5 +1,5 @@
 import os
-from typing import Annotated, Callable, Dict, List, Tuple, TypedDict
+from typing import Annotated, Callable, Dict, List, Optional, Tuple, TypedDict
 
 import pygame
 from Const import ASSET_PATH
@@ -70,7 +70,8 @@ def getTextAsSurface(
         textTotalSize[1] = max(textTotalSize[1], fontDict[c].get_size()[1])
 
     textSurface = pygame.Surface(textTotalSize)
-    textSurface.fill((0, 0, 0, 0))
+    textSurface.fill((255, 255, 255))
+    textSurface.set_colorkey((255, 255, 255))
 
     offset = 0
     for c in text:
@@ -81,7 +82,7 @@ def getTextAsSurface(
         textSurface.blit(sprite, (offset, 0))
         offset += sprite.get_size()[0] + spacing
 
-    return textSurface.convert_alpha()
+    return textSurface
 
 
 class ButtonSchema(TypedDict):
@@ -123,6 +124,7 @@ class Button:
         overSurface: pygame.Surface,
         pos: Tuple[int, int],
         clickEvent: Callable,
+        visible: bool = True,
     ) -> None:
         self.neutralSurface = neutralSurface
         self.overSurface = overSurface
@@ -135,14 +137,20 @@ class Button:
         )
 
         self.overed = False
-        self.position = pos
+        self.relativePosition = pos
+
+        self.absolutePosition = pos
 
         self.clickEvent = clickEvent
 
+        self.visible = visible
+
     def render(self, destSurface: pygame.Surface):
-        destSurface.blit(
-            self.overSurface if self.overed else self.neutralSurface, self.position
-        )
+        if self.visible:
+            destSurface.blit(
+                self.overSurface if self.overed else self.neutralSurface,
+                self.relativePosition,
+            )
 
     def checkOver(self):
         self.overed = self.rect.collidepoint(pygame.mouse.get_pos())
@@ -180,7 +188,7 @@ class ButtonText(Button):
                     (x * theme["tileSize"][0], y * theme["tileSize"][1]),
                 )
 
-        textSurface = getTextAsSurface(FONTS.base, text)
+        textSurface = getTextAsSurface(theme["font"], text)
 
         drawCenter(neutralSurface, textSurface)
         drawCenter(overSurface, textSurface)
@@ -227,7 +235,7 @@ PANEL_ASSETS_MAP = {
 }
 
 
-def createPanel(name: str, horizontalCount: int, verticalCount: int):
+def createPanelBackground(name: str, horizontalCount: int, verticalCount: int):
     # si (0,0):
     #     coins haut gauche
     # si (horizontalCount - 1,0):
@@ -281,3 +289,87 @@ def createPanel(name: str, horizontalCount: int, verticalCount: int):
             pass
 
     assets[name] = asset
+
+
+class Panel:
+    def __init__(self, visible):
+        self.visible = visible
+        self.buttons: List[Button] = []
+        self.backgroundSurfaceAsset: Optional[str] = None
+
+        self.rect = None
+
+    def setVisibility(self, visibility: bool):
+        self.checkOver()
+        self.visible = visibility
+
+        for btn in self.buttons:
+            btn.visible = visibility
+
+    def open(self):
+        self.setVisibility(True)
+
+    def close(self):
+        self.setVisibility(False)
+
+    def addButton(self, btn: Button):
+        assert self.backgroundSurfaceAsset
+
+        screenSize = pygame.display.get_window_size()
+        panelSize = get(self.backgroundSurfaceAsset).get_size()
+
+        panelRelativePosition = btn.relativePosition
+
+        absolutePosition = tuple(
+            (screenSize[i] - panelSize[i]) // 2 + panelRelativePosition[i]
+            for i in range(2)
+        )
+
+        btn.absolutePosition = absolutePosition
+
+        btn.rect = pygame.Rect(
+            absolutePosition,
+            btn.overSurface.get_size(),
+        )
+
+        self.buttons.append(btn)
+
+    def setBackground(self, bgSurfaceAssetName: str):
+        self.backgroundSurfaceAsset = bgSurfaceAssetName
+        bgSurface = get(bgSurfaceAssetName)
+
+        screenSize = pygame.display.get_window_size()
+
+        pos = tuple((screenSize[i] - bgSurface.get_size()[i]) // 2 for i in range(2))
+
+        self.rect = pygame.Rect(
+            pos,
+            bgSurface.get_size(),
+        )
+
+    def render(self, destSurface: pygame.Surface):
+        assert self.backgroundSurfaceAsset
+
+        if not self.visible:
+            return
+
+        outSurface = get(self.backgroundSurfaceAsset).copy()
+
+        for btn in self.buttons:
+            btn.render(outSurface)
+
+        drawCenter(destSurface, outSurface)
+
+    def checkClick(self):
+        assert self.rect
+
+        if self.visible and self.rect.collidepoint(pygame.mouse.get_pos()):
+            for button in self.buttons:
+                button.checkClick()
+
+    def checkOver(self):
+        assert self.rect
+
+        if self.visible and self.rect.collidepoint(pygame.mouse.get_pos()):
+            for button in self.buttons:
+                button.checkOver()

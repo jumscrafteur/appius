@@ -1,7 +1,7 @@
 from typing import Callable, List, Optional
 
 import pygame
-from AssetManager import Button
+from AssetManager import Button, Panel
 from Const import CustomEvent, SceneIds
 from Game import Game
 
@@ -35,6 +35,7 @@ class Scene:
         )
 
         self.buttons: List[Button] = []
+        self.panels: List[Panel] = []
 
     def create(self, game):
         self.game = game
