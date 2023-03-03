@@ -1,9 +1,10 @@
 from typing import Callable, List, Optional
 
 import pygame
-from AssetManager import Button, Panel
 from Const import CustomEvent, SceneIds
 from Game import Game
+
+from Assets import Button, Panel
 
 
 class Scene:

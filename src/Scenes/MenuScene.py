@@ -1,25 +1,26 @@
-import AssetManager
 import pygame
 from Const import CustomEvent, SceneIds
 from LayoutManager import GenerateGridLayout, drawCenter
 from Scene import Scene
 
+import Assets
+
 
 def create(self: Scene):
     assert self.game
 
-    AssetManager.load("menu_background", "0/fired/00001.png")
-    AssetManager.transform(
+    Assets.load("menu_background", "0/fired/00001.png")
+    Assets.transform(
         "menu_background", lambda asset: pygame.transform.scale_by(asset, 1.5)
     )
 
-    p = AssetManager.Panel(True)
+    p = Assets.Panel(True)
 
-    AssetManager.createPanelBackground("panel", 20, 22)
+    Assets.createPanelBackground("panel", 20, 22)
     p.setBackground("panel")
 
     panelBtnSize = (17, 1)
-    panelBtnTheme = AssetManager.BUTTON_TYPES.PRIMARY
+    panelBtnTheme = Assets.BUTTON_TYPES.PRIMARY
 
     panelBtnList = [
         [
@@ -62,7 +63,7 @@ def create(self: Scene):
 
     assert p.backgroundSurfaceAsset
 
-    panelBgSurface = AssetManager.get(p.backgroundSurfaceAsset)
+    panelBgSurface = Assets.getAsset(p.backgroundSurfaceAsset)
 
     btnLayout = GenerateGridLayout(
         panelBgSurface.get_width() // 2,
@@ -78,7 +79,7 @@ def create(self: Scene):
     for row in panelBtnList:
         for button in row:
             p.addButton(
-                AssetManager.ButtonText(
+                Assets.ButtonText(
                     panelBtnTheme,
                     next(btnLayout),
                     panelBtnSize,
@@ -92,7 +93,7 @@ def create(self: Scene):
 
 def run(self: Scene):
     assert self.game
-    drawCenter(self.game.screen, AssetManager.get("menu_background"))
+    drawCenter(self.game.screen, Assets.getAsset("menu_background"))
 
     for button in self.buttons:
         button.render(self.game.screen)

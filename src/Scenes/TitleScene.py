@@ -1,18 +1,19 @@
-import AssetManager
 import pygame
 from Const import SceneIds
 from LayoutManager import drawCenter
 from Scene import Scene
 
+from Assets import getAsset, load
+
 
 def create(self: Scene):
-    AssetManager.load("title_screen", "C3title/00001.png")
+    load("title_screen", "C3title/00001.png")
 
 
 def run(self: Scene):
     assert self.game is not None
 
-    drawCenter(self.game.screen, AssetManager.get("title_screen"))
+    drawCenter(self.game.screen, getAsset("title_screen"))
 
 
 def event(self: Scene, event):
